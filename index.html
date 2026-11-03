@@ -31,8 +31,7 @@ button:disabled{opacity:.6}
 .btn-clear{background:var(--accent); color:#fff}
 .btn-test{background:#37474f; color:#fff; grid-column:span 2}
 .btn-mute{background:#2a2a2a; color:var(--text); grid-column:span 2; padding:12px; font-size:14px}
-
-.log-wrap{width:100%; max-width:520px; background:var(--card);
+​.log-wrap{width:100%; max-width:520px; background:var(--card);
 border-radius:16px; padding:12px; margin-bottom:14px;
 border:1px solid #2f2f2f}
 .log-head{display:flex; justify-content:space-between; align-items:center;
@@ -48,8 +47,7 @@ background:#242424; border-right:4px solid #555; word-break:break-word}
 #log .info{border-right-color:#64b5f6}
 #log .time{color:#8a8a8a; font-size:11px; margin-left:6px}
 #log .hint{color:#ffd54f; font-size:12px; display:block; margin-top:4px}
-
-.table-container{width:100%; max-width:520px; overflow-x:auto;
+​.table-container{width:100%; max-width:520px; overflow-x:auto;
 background:var(--card); border-radius:16px; padding:10px}
 table{width:100%; border-collapse:collapse; font-size:13px}
 th,td{padding:10px 4px; text-align:center; border-bottom:1px solid #333}
@@ -57,8 +55,7 @@ th{color:var(--primary); font-size:12px}
 .btn-delete{background:var(--accent); color:#fff; padding:6px 9px;
 border-radius:8px; border:none; font-size:13px}
 footer{margin:24px 0 10px; font-size:14px; color:#777}
-
-#overlay{display:none; position:fixed; inset:0; background:rgba(0,0,0,.75); z-index:999}
+​#overlay{display:none; position:fixed; inset:0; background:rgba(0,0,0,.75); z-index:999}
 #exportModal{display:none; position:fixed; top:50%; left:50%;
 transform:translate(-50%,-50%); background:var(--card); padding:20px;
 border-radius:16px; z-index:1000; width:86%; max-width:320px;
@@ -68,19 +65,16 @@ text-align:center; border:1px solid var(--primary)}
 </style>
 </head>
 <body>
-
-<h2>نقشه‌بردار هوشمند</h2>
+​<h2>نقشه‌بردار هوشمند</h2>
 <div id="map"></div>
-
-<div class="controls">
-<button class="btn-capture" id="btnCapture">📍 ثبت نقطه جدید</button>
+​<div class="controls">
+<button class="btn-capture" id="btnCapture" onclick="captureLocation()">📍 ثبت نقطه جدید</button>
 <button class="btn-export" onclick="showExportModal()">💾 خروجی</button>
 <button class="btn-clear" onclick="clearTable()">🗑️ پاکسازی</button>
 <button class="btn-test" onclick="runDiagnostics()">🩺 تست سریع و عیب‌یابی</button>
 <button class="btn-mute" id="btnMute" onclick="toggleSound()">🔊 صدا: روشن</button>
 </div>
-
-<!-- پنل اطلاع‌رسانی وضعیت و خطا -->
+​<!-- پنل اطلاع‌رسانی وضعیت و خطا -->
 <div class="log-wrap">
 <div class="log-head">
 <span>گزارش وضعیت برنامه</span>
@@ -88,8 +82,7 @@ text-align:center; border:1px solid var(--primary)}
 </div>
 <div id="log"></div>
 </div>
-
-<div class="table-container">
+​<div class="table-container">
 <table id="pointsTable">
 <thead>
 <tr><th>#</th><th>عرض</th><th>طول</th><th>ارتفاع</th><th>حذف</th></tr>
@@ -97,30 +90,25 @@ text-align:center; border:1px solid var(--primary)}
 <tbody></tbody>
 </table>
 </div>
-
-<div id="overlay" onclick="hideExportModal()"></div>
+​<div id="overlay" onclick="hideExportModal()"></div>
 <div id="exportModal">
 <h3>خروجی را انتخاب کنید</h3>
 <button onclick="exportData('csv')" style="background:var(--primary); color:#000">CSV (اکسل)</button>
 <button onclick="exportData('txt')" style="background:var(--purple); color:#000">فایل متنی TXT</button>
 <button onclick="hideExportModal()" style="background:#333; color:#eee">انصراف</button>
 </div>
-
-<footer>تهیه‌کننده: احمد نوری</footer>
-
-<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+​<footer>تهیه‌کننده: احمد نوری</footer>
+​<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 <script>
 /* ============ صدا (Web Audio - بدون فایل خارجی) ============ */
 let audioCtx = null, soundOn = true;
-
-function initAudio(){
+​function initAudio(){
 if(!audioCtx){
 try{ audioCtx = new (window.AudioContext || window.webkitAudioContext)(); }catch(e){}
 }
 if(audioCtx && audioCtx.state === 'suspended') audioCtx.resume();
 }
-
-function tone(freq, dur, type, vol){
+​function tone(freq, dur, type, vol){
 if(!soundOn) return;
 initAudio();
 if(!audioCtx) return;
@@ -134,19 +122,16 @@ g.gain.exponentialRampToValueAtTime(0.0001, audioCtx.currentTime + dur);
 o.connect(g); g.connect(audioCtx.destination);
 o.start(); o.stop(audioCtx.currentTime + dur + 0.02);
 }
-
-function soundClick(){ tone(880, 0.07, 'triangle', 0.12); }
+​function soundClick(){ tone(880, 0.07, 'triangle', 0.12); }
 function soundSuccess(){ tone(660,0.12,'sine',0.2); setTimeout(()=>tone(990,0.16,'sine',0.2),110); }
 function soundError(){ tone(180,0.35,'sawtooth',0.22); setTimeout(()=>tone(120,0.4,'sawtooth',0.2),160); }
 function soundWarn(){ tone(440,0.15,'square',0.15); setTimeout(()=>tone(330,0.2,'square',0.15),150); }
-
-function toggleSound(){
+​function toggleSound(){
 soundOn = !soundOn;
 document.getElementById('btnMute').innerText = soundOn ? '🔊 صدا: روشن' : '🔇 صدا: خاموش';
 if(soundOn) soundClick();
 }
-
-/* ============ پنل گزارش پایین صفحه ============ */
+​/* ============ پنل گزارش پایین صفحه ============ */
 function log(msg, type, hint){
 const box = document.getElementById('log');
 const div = document.createElement('div');
@@ -160,89 +145,74 @@ if(type === 'ok') soundSuccess();
 else if(type === 'err') soundError();
 else if(type === 'warn') soundWarn();
 }
-
-/* ============ نقشه ============ */
+​/* ============ نقشه ============ */
 let map, markers = [], points = [], pointCounter = 1;
-
-function initMap(){
+​function initMap(){
 map = L.map('map').setView([32.42, 53.66], 5);
 L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
 attribution: '© OpenStreetMap'
 }).addTo(map);
 }
 initMap();
-
-/* ============ بررسی پروتکل امن ============ */
+​/* ============ بررسی پروتکل امن ============ */
 function isSecureContextOk(){
 const p = location.protocol;
 const h = location.hostname;
 return p === 'https:' || h === 'localhost' || h === '127.0.0.1' || h === '';
 }
-
-/* ============ تست سریع / عیب‌یابی ============ */
+​/* ============ تست سریع / عیب‌یابی ============ */
 function runDiagnostics(){
 soundClick();
 log('🩺 شروع تست سریع سیستم…', 'info');
-
-setTimeout(() => {
+​setTimeout(() => {
 log('پروتکل صفحه: <b>' + location.protocol + '</b> — میزبان: <b>' +
 (location.hostname || 'محلی') + '</b>', 'info');
-
-if(!isSecureContextOk()){
+​if(!isSecureContextOk()){
 log('❌ پروتکل امن نیست؛ به همین دلیل مرورگر GPS را مسدود می‌کند.',
 'err',
-'راه‌حل: فایل را روی HTTPS اجرا کنید (CodePen، GitHub Pages یا localhost). باز کردن فایل با file:// کار نمی‌کند.');
+'راه‌حل: فایل را روی GitHub Pages با HTTPS اجرا کنید.');
 } else {
-log('✅ پروتکل امن است؛ از این نظر محدودیتی وجود ندارد.', 'ok');
+log('✅ پروتکل امن است (HTTPS).', 'ok');
 }
-
-if(!navigator.geolocation){
+​if(!navigator.geolocation){
 log('❌ این مرورگر از Geolocation پشتیبانی نمی‌کند.', 'err',
 'از Chrome یا Firefox به‌روز استفاده کنید.');
 } else {
 log('✅ مرورگر از Geolocation پشتیبانی می‌کند.', 'ok');
 }
-
-if(navigator.permissions && navigator.permissions.query){
+​if(navigator.permissions && navigator.permissions.query){
 navigator.permissions.query({name:'geolocation'}).then(res => {
 const st = res.state;
-if(st === 'granted') log('✅ مجوز موقعیت مکانی قبلاً داده شده است.', 'ok');
-else if(st === 'prompt') log('ℹ️ مجوز موقعیت هنوز پرسیده نشده؛ با زدن «ثبت نقطه جدید» پرسیده می‌شود.', 'warn');
-else log('❌ مجوز موقعیت مکانی رد شده است.', 'err',
-'در Chrome اندروید: آیکن قفل کنار آدرس ← Permissions ← Location ← Allow، سپس صفحه را رفرش کنید.');
+if(st === 'granted') log('✅ مجوز موقعیت مکانی داده شده است.', 'ok');
+else if(st === 'prompt') log('ℹ️ مجوز هنوز صادر نشده؛ روی «ثبت نقطه جدید» بزنید تا پیام درخواست مجوز ظاهر شود.', 'warn');
+else log('❌ مجوز موقعیت مکانی مسدود شده است.', 'err',
+'در مرورگر روی آیکن تنظیمات/قفل کنار آدرس سایت کلیک کرده و دسترسی Location را روی Allow قرار دهید.');
 }).catch(()=>{});
 } else {
-log('ℹ️ مرورگر امکان خواندن وضعیت مجوز را نمی‌دهد (مشکلی نیست).', 'info');
+log('ℹ️ بررسی مستقیم مجوز توسط مرورگر پشتیبانی نمی‌شود (مشکلی نیست).', 'info');
 }
-
-log('تست پایان یافت. نتیجهٔ نهایی هنگام زدن دکمهٔ ثبت مشخص می‌شود.', 'info');
+​log('تست پایان یافت.', 'info');
 }, 250);
 }
-
-/* ============ ثبت نقطه ============ */
+​/* ============ ثبت نقطه ============ */
 function captureLocation(){
 soundClick();
 const btn = document.getElementById('btnCapture');
-
-if(!isSecureContextOk()){
-log('❌ برنامه اجرا نشد: صفحه روی پروتکل ناامن (' + location.protocol + ') باز شده است.',
+​if(!isSecureContextOk()){
+log('❌ خطای امنیت: صفحه باید حتما روی HTTPS بارگذاری شود.',
 'err',
-'مرورگر فقط روی https:// اجازه دسترسی به GPS می‌دهد. کد را در CodePen یا GitHub Pages بگذارید و لینک https را باز کنید.');
+'لطفاً از آدرس HTTPS در GitHub Pages استفاده کنید.');
 return;
 }
-
-if(!navigator.geolocation){
-log('❌ برنامه اجرا نشد: مرورگر از GPS پشتیبانی نمی‌کند.', 'err',
-'مرورگر را به‌روزرسانی کنید یا از Chrome استفاده کنید.');
+​if(!navigator.geolocation){
+log('❌ خطا: مرورگر شما قابلیت GPS را ندارد.', 'err');
 return;
 }
-
-const original = btn.innerText;
+​const original = btn.innerText;
 btn.innerText = '⏳ در حال دریافت موقعیت…';
 btn.disabled = true;
-log('درخواست موقعیت ارسال شد؛ منتظر پاسخ GPS بمانید…', 'info');
-
-navigator.geolocation.getCurrentPosition(
+log('درخواست موقعیت ارسال شد؛ پیام تایید مجوز را پذیرفته و منتظر پاسخ GPS بمانید…', 'info');
+​navigator.geolocation.getCurrentPosition(
 pos => {
 btn.innerText = original; btn.disabled = false;
 const lat = pos.coords.latitude;
@@ -250,13 +220,11 @@ const lng = pos.coords.longitude;
 const alt = (pos.coords.altitude !== null && !isNaN(pos.coords.altitude))
 ? pos.coords.altitude.toFixed(2) : 'نامشخص';
 const acc = pos.coords.accuracy ? pos.coords.accuracy.toFixed(0) : '?';
-
-addPoint(lat, lng, alt);
+​addPoint(lat, lng, alt);
 const m = L.marker([lat, lng]).addTo(map);
 markers.push(m);
 map.setView([lat, lng], 17);
-
-log('✅ نقطه ' + (pointCounter - 1) + ' ثبت شد — عرض: ' + lat.toFixed(6) +
+​log('✅ نقطه ' + (pointCounter - 1) + ' ثبت شد — عرض: ' + lat.toFixed(6) +
 ' | طول: ' + lng.toFixed(6) + ' | ارتفاع: ' + alt + ' | دقت: ±' + acc + ' متر',
 'ok');
 },
@@ -265,35 +233,32 @@ btn.innerText = original; btn.disabled = false;
 let hint = '';
 switch(err.code){
 case 1:
-log('❌ برنامه اجرا نشد: اجازهٔ دسترسی به موقعیت رد شد. (کد خطا: 1)',
+log('❌ دسترسی به موقعیت رد شد (Permission Denied).',
 'err',
-'در Chrome اندروید: آیکن قفل/تنظیمات کنار آدرس ← Permissions ← Location ← Allow، بعد صفحه را رفرش کنید.');
+'در مرورگر گوشی، روی آیکن کنار آدرس (قفل یا تنظیمات) بزنید، وارد Permissions یا Site Settings شوید و Location را Allow کنید.');
 break;
 case 2:
-log('❌ برنامه اجرا نشد: موقعیت در دسترس نیست؛ GPS روشن یا سیگنال موجود نیست. (کد خطا: 2)',
+log('❌ موقعیت یافت نشد (Position Unavailable).',
 'err',
-'GPS گوشی را روشن کنید و در فضای باز بایستید؛ گاهی چند ثانیه تا یک دقیقه طول می‌کشد.');
+'GPS گوشی را روشن کرده و در فضای باز امتحان کنید.');
 break;
 case 3:
-log('❌ برنامه اجرا نشد: زمان درخواست تمام شد. (کد خطا: 3)', 'err',
-'دوباره تلاش کنید یا GPS را روشن کرده و به فضای باز بروید.');
+log('❌ زمان دریافت موقعیت به پایان رسید (Timeout).', 'err',
+'دوباره روی ثبت نقطه کلیک کنید.');
 break;
 default:
-log('❌ برنامه اجرا نشد: خطای ناشناخته — ' + err.message, 'err',
-'صفحه را رفرش کنید و دوباره امتحان کنید.');
+log('❌ خطای دریافت موقعیت: ' + err.message, 'err');
 }
 },
-{ enableHighAccuracy: true, timeout: 15000, maximumAge: 0 }
+{ enableHighAccuracy: true, timeout: 20000, maximumAge: 0 }
 );
 }
-
-/* ============ جدول ============ */
+​/* ============ جدول ============ */
 function addPoint(lat, lng, alt){
 points.push({ id: pointCounter++, lat, lng, alt });
 updateTable();
 }
-
-function updateTable(){
+​function updateTable(){
 const tbody = document.querySelector('#pointsTable tbody');
 tbody.innerHTML = '';
 points.forEach((p, i) => {
@@ -306,8 +271,7 @@ tr.innerHTML = '<td>' + p.id + '</td>' +
 tbody.appendChild(tr);
 });
 }
-
-function deletePoint(i){
+​function deletePoint(i){
 soundClick();
 if(markers[i]) map.removeLayer(markers[i]);
 markers.splice(i, 1);
@@ -315,8 +279,7 @@ points.splice(i, 1);
 updateTable();
 log('نقطه حذف شد. تعداد باقی‌مانده: ' + points.length, 'warn');
 }
-
-function clearTable(){
+​function clearTable(){
 soundClick();
 if(!points.length){ log('لیست خالی است؛ چیزی برای پاک کردن نیست.', 'info'); return; }
 if(confirm('کل لیست پاک شود؟')){
@@ -326,8 +289,7 @@ updateTable();
 log('همهٔ نقاط پاک شد.', 'warn');
 }
 }
-
-/* ============ خروجی ============ */
+​/* ============ خروجی ============ */
 function showExportModal(){
 soundClick();
 if(!points.length){ log('خروجی ممکن نیست: هیچ نقطه‌ای ثبت نشده است.', 'warn'); return; }
@@ -338,8 +300,7 @@ function hideExportModal(){
 document.getElementById('exportModal').style.display = 'none';
 document.getElementById('overlay').style.display = 'none';
 }
-
-function exportData(type){
+​function exportData(type){
 soundClick();
 let content = type === 'csv'
 ? 'شماره,عرض جغرافیایی,طول جغرافیایی,ارتفاع\n'
@@ -357,18 +318,12 @@ document.body.appendChild(a); a.click(); a.remove();
 hideExportModal();
 log('✅ خروجی ' + type.toUpperCase() + ' با ' + points.length + ' نقطه ساخته شد.', 'ok');
 }
-
-/* ============ پیام خوش‌آمد ============ */
+​/* ============ پیام خوش‌آمد ============ */
 window.addEventListener('load', () => {
 log('برنامه بارگذاری شد. وضعیت: آماده.', 'ok');
 if(!isSecureContextOk()){
-log('⚠️ توجه: صفحه روی پروتکل ناامن باز شده و GPS کار نخواهد کرد.',
-'err',
-'کد را در CodePen یا GitHub Pages (لینک https) اجرا کنید یا روی localhost تست کنید.');
+log('⚠️ توجه: صفحه روی HTTPS باز نشده است و GPS کار نخواهد کرد.', 'err');
 }
-setTimeout(() => {
-log('برای بررسی کامل، دکمهٔ «تست سریع و عیب‌یابی» را بزنید.', 'info');
-}, 600);
 });
 </script>
 </body>
