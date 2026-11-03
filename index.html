@@ -1,3 +1,5 @@
+<link rel="manifest" href="./manifest.json">
+<meta name="theme-color" content="#03dac6">
 <!DOCTYPE html>
 <html lang="fa" dir="rtl">
 <head>
@@ -11,6 +13,15 @@
 --accent:#cf6679; --purple:#bb86fc; --warn:#ffb74d; --ok:#69f0ae;
 }
 *{box-sizing:border-box}
+<script>
+if ("serviceWorker" in navigator) {
+  window.addEventListener("load", function () {
+    navigator.serviceWorker.register("./sw.js")
+      .then(() => console.log("PWA آماده است"))
+      .catch(error => console.error(error));
+  });
+}
+</script>
 body{
 font-family:Tahoma,sans-serif; background:var(--bg); color:var(--text);
 margin:0; padding:12px; display:flex; flex-direction:column; align-items:center;
