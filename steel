@@ -1,0 +1,515 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#102d43">
+<title>SAHROUD STEEL</title>
+
+<style>
+*{box-sizing:border-box}
+body{
+ margin:0;
+ background:#edf2f6;
+ color:#183246;
+ font-family:Tahoma,Arial,sans-serif;
+ font-size:14px;
+}
+header{
+ background:#102d43;
+ color:white;
+ text-align:center;
+ padding:20px 10px;
+}
+header h1{margin:0;font-size:24px}
+header p{color:#c9e2ec}
+main{max-width:900px;margin:auto;padding:12px}
+.card{
+ background:white;
+ padding:15px;
+ border-radius:12px;
+ margin-bottom:13px;
+ box-shadow:0 2px 7px #00000010;
+}
+h2{font-size:16px;color:#17617a;margin-top:0}
+.grid{
+ display:grid;
+ grid-template-columns:repeat(2,minmax(0,1fr));
+ gap:12px;
+}
+label{display:block;margin-bottom:6px}
+input,select{
+ width:100%;
+ padding:12px;
+ border:1px solid #cbd7df;
+ border-radius:8px;
+ font-size:14px;
+ background:white;
+}
+button{
+ padding:13px 16px;
+ border:0;
+ border-radius:8px;
+ font-family:inherit;
+ font-size:14px;
+ cursor:pointer;
+}
+.primary{background:#12617d;color:white}
+.secondary{background:#e2edf2;color:#17465c}
+.actions{display:flex;gap:9px;flex-wrap:wrap;margin-top:14px}
+#drawing{
+ display:block;
+ width:100%;
+ height:auto;
+ background:#f8fbfd;
+ border:1px solid #ccd9e0;
+ border-radius:8px;
+}
+.result{
+ background:#edf6f8;
+ padding:12px;
+ border-radius:8px;
+ margin:9px 0;
+ line-height:2;
+}
+.warning{
+ background:#fff3dc;
+ border-right:4px solid #d99b20;
+ padding:12px;
+ line-height:2;
+ border-radius:6px;
+}
+#errorBox{
+ display:none;
+ background:#ffe9e9;
+ color:#a40000;
+ padding:12px;
+ margin:10px 0;
+ border-radius:8px;
+ direction:rtl;
+ line-height:2;
+}
+.small{font-size:12px;color:#71818c;line-height:2}
+footer{text-align:center;padding:18px;color:#71818c}
+@media(max-width:520px){
+ .grid{grid-template-columns:1fr}
+}
+@media print{
+ .no-print{display:none}
+}
+</style>
+</head>
+
+<body>
+
+<header>
+<h1>SAHROUD STEEL</h1>
+<p>سامانه مقدماتی محاسبات سوله</p>
+نسخه 0.3
+</header>
+
+<main>
+
+<div class="warning">
+این نسخه برای آزمایش عملکرد ترسیم و محاسبات مقدماتی است.
+نتایج آن طراحی نهایی سازه یا محاسبات قابل ارائه به نظام مهندسی نیست.
+</div>
+
+<div id="errorBox"></div>
+
+<section class="card">
+<h2>۱. مشخصات پروژه</h2>
+
+<div class="grid">
+
+<div>
+<label>نام پروژه</label>
+<input id="project" value="سوله صنعتی">
+</div>
+
+<div>
+<label>شهر</label>
+<select id="city">
+<option>شاهرود</option>
+<option>سمنان</option>
+<option>دامغان</option>
+<option>مشهد</option>
+<option>سبزوار</option>
+<option>تهران</option>
+<option>گرگان</option>
+<option>اصفهان</option>
+<option>سایر شهرها</option>
+</select>
+</div>
+
+<div>
+<label>سرعت باد (متر بر ثانیه)</label>
+<input id="wind" type="number" value="30">
+</div>
+
+<div>
+<label>بار برف زمین (kN/m²)</label>
+<input id="snow" type="number" value="1">
+</div>
+
+</div>
+</section>
+
+<section class="card">
+<h2>۲. هندسه سوله</h2>
+
+<div class="grid">
+
+<div>
+<label>دهانه (متر)</label>
+<input id="span" type="number" value="20">
+</div>
+
+<div>
+<label>طول سوله (متر)</label>
+<input id="length" type="number" value="40">
+</div>
+
+<div>
+<label>فاصله قاب‌ها (متر)</label>
+<input id="spacing" type="number" value="5">
+</div>
+
+<div>
+<label>ارتفاع ستون (متر)</label>
+<input id="height" type="number" value="6">
+</div>
+
+<div>
+<label>ارتفاع تاج (متر)</label>
+<input id="ridge" type="number" value="8">
+</div>
+
+</div>
+
+<div class="actions no-print">
+<button type="button" class="primary" id="drawButton">
+ترسیم قاب
+</button>
+
+<button type="button" class="primary" id="calcButton">
+محاسبات مقدماتی
+</button>
+</div>
+
+</section>
+
+<section class="card">
+<h2>۳. نمایش قاب سوله</h2>
+
+<svg id="drawing"
+xmlns="http://www.w3.org/2000/svg"
+viewBox="0 0 700 400"
+width="700"
+height="400">
+
+<text x="350" y="200"
+text-anchor="middle"
+font-size="20"
+fill="#12617d">
+در حال آماده‌سازی قاب
+</text>
+
+</svg>
+
+<p class="small" id="drawStatus">
+وضعیت ترسیم: آماده
+</p>
+</section>
+
+<section class="card">
+<h2>۴. بارهای سقف</h2>
+
+<div class="grid">
+
+<div>
+<label>بار مرده (kN/m²)</label>
+<input id="dead" type="number" value="0.35">
+</div>
+
+<div>
+<label>بار زنده (kN/m²)</label>
+<input id="live" type="number" value="0.75">
+</div>
+
+<div>
+<label>ضریب نمونه برف</label>
+<input id="snowFactor" type="number" value="1">
+</div>
+
+</div>
+</section>
+
+<section class="card">
+<h2>۵. نتایج محاسبات</h2>
+<div id="results">هنوز محاسبه‌ای انجام نشده است.</div>
+</section>
+
+<section class="card no-print">
+<h2>۶. ذخیره و چاپ</h2>
+
+<div class="actions">
+<button class="primary" type="button" id="saveButton">
+ذخیره پروژه
+</button>
+
+<button class="secondary" type="button" id="printButton">
+چاپ گزارش
+</button>
+</div>
+</section>
+
+</main>
+
+<footer>SAHROUD STEEL</footer>
+
+<script>
+
+(function(){
+
+"use strict";
+
+function byId(id){
+ return document.getElementById(id);
+}
+
+function number(id){
+ var x=parseFloat(byId(id).value);
+ return isFinite(x)?x:0;
+}
+
+function showError(message){
+ var box=byId("errorBox");
+ box.style.display="block";
+ box.textContent="خطا: "+message;
+}
+
+function clearError(){
+ byId("errorBox").style.display="none";
+ byId("errorBox").textContent="";
+}
+
+function validate(){
+ var span=number("span");
+ var length=number("length");
+ var spacing=number("spacing");
+ var height=number("height");
+ var ridge=number("ridge");
+
+ if(span<=0 || length<=0 || spacing<=0 || height<=0){
+  showError("ابعاد سوله باید بزرگ‌تر از صفر باشند.");
+  return false;
+ }
+
+ if(ridge<=height){
+  showError("ارتفاع تاج باید از ارتفاع ستون بیشتر باشد.");
+  return false;
+ }
+
+ var ids=["wind","snow","dead","live","snowFactor"];
+
+ for(var i=0;i<ids.length;i++){
+  if(number(ids[i])<0){
+   showError("مقادیر بار نباید منفی باشند.");
+   return false;
+  }
+ }
+
+ clearError();
+ return true;
+}
+
+function drawFrame(){
+
+ if(!validate())return;
+
+ var span=number("span");
+ var height=number("height");
+ var ridge=number("ridge");
+
+ var svg=byId("drawing");
+
+ var left=110;
+ var right=590;
+ var bottom=290;
+
+ var scale=480/span;
+
+ var topColumn=bottom-height*scale*0.48;
+ var topRidge=bottom-ridge*scale*0.48;
+
+ var roofAngle=Math.atan2(
+  ridge-height,
+  span/2
+ )*180/Math.PI;
+
+ var content="";
+
+ content+='<line x1="40" y1="290" x2="660" y2="290" stroke="#777" stroke-width="2"/>';
+
+ content+='<path d="M '+left+' '+bottom+
+ ' L '+left+' '+topColumn+
+ ' L 350 '+topRidge+
+ ' L '+right+' '+topColumn+
+ ' L '+right+' '+bottom+
+ '" fill="none" stroke="#12617d" stroke-width="9" stroke-linejoin="round"/>';
+
+ content+='<line x1="'+left+'" y1="310" x2="'+right+'" y2="310" stroke="#536b7b" stroke-width="2"/>';
+
+ content+='<text x="350" y="340" text-anchor="middle" font-size="17" fill="#23465b">دهانه '+span+' متر</text>';
+
+ content+='<text x="350" y="'+(topRidge-15)+'" text-anchor="middle" font-size="16" fill="#12617d">ارتفاع تاج '+ridge+' متر</text>';
+
+ content+='<text x="90" y="'+((bottom+topColumn)/2)+'" text-anchor="end" font-size="14" fill="#23465b">'+height+' متر</text>';
+
+ content+='<text x="350" y="35" text-anchor="middle" font-size="20" fill="#12617d">قاب پرتال سوله</text>';
+
+ content+='<text x="350" y="380" text-anchor="middle" font-size="13" fill="#71818c">زاویه هندسی سقف: '+roofAngle.toFixed(2)+' درجه</text>';
+
+ svg.innerHTML=content;
+
+ byId("drawStatus").textContent="وضعیت ترسیم: قاب با موفقیت رسم شد.";
+
+}
+
+function calculate(){
+
+ if(!validate())return;
+
+ var span=number("span");
+ var length=number("length");
+ var spacing=number("spacing");
+
+ var dead=number("dead");
+ var live=number("live");
+ var snow=number("snow");
+ var sf=number("snowFactor");
+ var wind=number("wind");
+
+ var area=span*length;
+
+ var deadTotal=area*dead;
+ var liveTotal=area*live;
+ var snowTotal=area*snow*sf;
+
+ var frameArea=span*spacing;
+
+ var frameDead=frameArea*dead;
+ var frameLive=frameArea*live;
+ var frameSnow=frameArea*snow*sf;
+
+ var q=0.613*wind*wind/1000;
+
+ var frames=Math.ceil(length/spacing)+1;
+
+ var html="";
+
+ html+='<div class="result"><b>مشخصات هندسی</b><br>';
+ html+="مساحت افقی بام: "+area.toFixed(2)+" مترمربع<br>";
+ html+="تعداد تقریبی قاب‌ها: "+frames+"<br>";
+ html+="دهانه: "+span+" متر<br>";
+ html+="طول: "+length+" متر</div>";
+
+ html+='<div class="result"><b>بارهای کلی</b><br>';
+ html+="بار مرده: "+deadTotal.toFixed(2)+" کیلونیوتن<br>";
+ html+="بار زنده: "+liveTotal.toFixed(2)+" کیلونیوتن<br>";
+ html+="برآورد ساده برف: "+snowTotal.toFixed(2)+" کیلونیوتن</div>";
+
+ html+='<div class="result"><b>بارهای یک قاب داخلی</b><br>';
+ html+="بار مرده: "+frameDead.toFixed(2)+" کیلونیوتن<br>";
+ html+="بار زنده: "+frameLive.toFixed(2)+" کیلونیوتن<br>";
+ html+="برآورد ساده برف: "+frameSnow.toFixed(2)+" کیلونیوتن</div>";
+
+ html+='<div class="result"><b>فشار سرعت پایه باد</b><br>';
+ html+="سرعت باد: "+wind+" متر بر ثانیه<br>";
+ html+="فشار سرعت پایه: "+q.toFixed(3)+" کیلونیوتن بر مترمربع</div>";
+
+ html+='<div class="warning">این محاسبات مقدماتی هستند. ضرایب آیین‌نامه‌ای باد، برف، فشار داخلی و خارجی و ترکیبات بار اعمال نشده‌اند. این نتایج برای طراحی یا اجرای سازه کافی نیستند.</div>';
+
+ byId("results").innerHTML=html;
+
+ drawFrame();
+
+}
+
+function saveProject(){
+
+ var ids=[
+ "project","city","wind","snow","span","length",
+ "spacing","height","ridge","dead","live","snowFactor"
+ ];
+
+ var data={version:"0.3",values:{}};
+
+ for(var i=0;i<ids.length;i++){
+  data.values[ids[i]]=byId(ids[i]).value;
+ }
+
+ var blob=new Blob(
+  [JSON.stringify(data,null,2)],
+  {type:"application/json"}
+ );
+
+ var url=URL.createObjectURL(blob);
+
+ var a=document.createElement("a");
+ a.href=url;
+ a.download="SAHROUD_STEEL.json";
+ a.click();
+
+ setTimeout(function(){
+  URL.revokeObjectURL(url);
+ },1000);
+
+}
+
+byId("drawButton").addEventListener("click",function(){
+ try{
+  drawFrame();
+ }catch(e){
+  showError(e.message);
+ }
+});
+
+byId("calcButton").addEventListener("click",function(){
+ try{
+  calculate();
+ }catch(e){
+  showError(e.message);
+ }
+});
+
+byId("saveButton").addEventListener("click",function(){
+ try{
+  saveProject();
+ }catch(e){
+  showError(e.message);
+ }
+});
+
+byId("printButton").addEventListener("click",function(){
+ window.print();
+});
+
+window.addEventListener("error",function(e){
+ showError(e.message || "خطای ناشناخته جاوااسکریپت");
+});
+
+try{
+ drawFrame();
+ calculate();
+}catch(e){
+ showError(e.message);
+}
+
+})();
+
+</script>
+
+</body>
+</html>
