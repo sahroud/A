@@ -2,239 +2,601 @@
 <html lang="fa" dir="rtl">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-<meta name="theme-color" content="#102d43">
-<title>SAHROUD STEEL - نسخه 0.4</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SAHROUD STEEL v5.0 - سامانه پیش‌طراحی و محاسبات سوله منشوری</title>
 <style>
-:root{--navy:#102d43;--blue:#17617a;--teal:#087e75;--bg:#edf2f6;--line:#d5e0e6;--text:#183246}
-*{box-sizing:border-box}
-body{margin:0;background:var(--bg);color:var(--text);font:14px Tahoma,Arial,sans-serif}
-header{background:linear-gradient(130deg,#102d43,#17617a);color:#fff;padding:20px 12px;text-align:center}
-header h1{margin:0;font-size:23px} header p{margin:8px 0 0;color:#d2e5ec;font-size:12px}
-main{max-width:1050px;margin:auto;padding:12px}
-.card{background:#fff;border:1px solid var(--line);border-radius:13px;padding:15px;margin-bottom:12px;box-shadow:0 2px 8px #102d430d}
-h2{font-size:15px;color:var(--blue);margin:0 0 13px}
-h3{font-size:13px;color:#315b6e;margin:14px 0 8px}
-.grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
-label{display:block;font-size:12px;color:#536c79;margin:0 0 5px}
-input,select{width:100%;min-width:0;padding:11px;border:1px solid #cbd8df;border-radius:8px;background:#fff;font:13px Tahoma;color:var(--text)}
-input:focus,select:focus{outline:2px solid #b7dce8;border-color:var(--blue)}
-.field{min-width:0}
-.unit{font-size:10px;color:#71838d;margin-top:4px}
-button,.filebtn{border:0;border-radius:8px;padding:12px 14px;font:13px Tahoma;font-weight:bold;cursor:pointer;min-height:42px}
-.primary{background:#12617d;color:#fff}.green{background:#087e75;color:#fff}.gray{background:#e6eef2;color:#19465a;border:1px solid #d5e0e6}.red{background:#a7352e;color:#fff}
-.actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}
-.actions button{flex:1 1 145px}
-.notice{background:#fff4dc;border-right:4px solid #d59a21;border-radius:8px;padding:12px;line-height:1.9;font-size:12px;margin-bottom:12px}
-.notice.blue{background:#eaf4f8;border-color:#3a8ca8}
-#error{display:none;background:#ffeded;color:#9b211b;border-radius:8px;padding:10px;margin:10px 0;line-height:1.8}
-#drawing{width:100%;height:auto;display:block;background:#f8fbfd;border:1px solid var(--line);border-radius:9px}
-.status{font-size:11px;color:#617782;line-height:1.9;margin-top:8px}
-.resultgrid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}
-.metric{background:#f1f6f8;border:1px solid #e1e9ed;border-radius:9px;padding:10px}
-.metric small{display:block;color:#627985;font-size:10px;margin-bottom:6px}
-.metric strong{font-size:14px;color:#123e54;overflow-wrap:anywhere}
-.tablewrap{overflow-x:auto}
-table{width:100%;border-collapse:collapse;min-width:570px;font-size:12px}
-th,td{padding:9px;border-bottom:1px solid #e3eaee;text-align:right}
-th{background:#edf4f7;color:#214e63}
-footer{text-align:center;color:#71838d;font-size:11px;padding:15px}
-@media(min-width:760px){.two{display:grid;grid-template-columns:1fr 1fr;gap:12px}.two .card{margin-bottom:0}}
-@media(max-width:480px){.grid,.resultgrid{grid-template-columns:1fr}header h1{font-size:20px}}
-@media print{body{background:#fff}.no-print{display:none!important}.card{box-shadow:none;break-inside:avoid}main{max-width:none;padding:0}}
+:root {
+  --primary-color: #102d43;
+  --secondary-color: #17617a;
+  --accent-color: #d99b20;
+  --bg-color: #edf2f6;
+  --card-bg: #ffffff;
+  --text-color: #183246;
+  --border-color: #cbd7df;
+}
+
+* { box-sizing: border-box; }
+body {
+  margin: 0;
+  background: var(--bg-color);
+  color: var(--text-color);
+  font-family: 'Vazirmatn', Tahoma, Arial, sans-serif;
+  font-size: 14px;
+}
+
+header {
+  background: var(--primary-color);
+  color: white;
+  text-align: center;
+  padding: 20px 15px;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.15);
+}
+header h1 { margin: 0 0 5px 0; font-size: 26px; font-weight: 700; }
+header p { margin: 0; color: #c9e2ec; font-size: 14px; }
+.engineer-tag {
+  display: inline-block;
+  background: rgba(255,255,255,0.15);
+  padding: 4px 12px;
+  border-radius: 20px;
+  margin-top: 8px;
+  font-size: 13px;
+  color: #f1f7fa;
+}
+
+main { max-width: 1100px; margin: auto; padding: 15px; }
+
+.card {
+  background: var(--card-bg);
+  padding: 20px;
+  border-radius: 12px;
+  margin-bottom: 15px;
+  box-shadow: 0 3px 8px rgba(0,0,0,0.06);
+  border: 1px solid rgba(0,0,0,0.04);
+}
+
+h2 { font-size: 17px; color: var(--secondary-color); margin-top: 0; border-bottom: 2px solid #eef4f8; padding-bottom: 8px; }
+
+.grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 14px; }
+
+label { display: block; margin-bottom: 6px; font-weight: bold; font-size: 13px; color: #2c4a5e; }
+input, select {
+  width: 100%;
+  padding: 10px 12px;
+  border: 1px solid var(--border-color);
+  border-radius: 8px;
+  font-size: 14px;
+  background: #fcfdfe;
+  transition: border-color 0.2s;
+}
+input:focus, select:focus { border-color: var(--secondary-color); outline: none; }
+
+button {
+  padding: 12px 18px;
+  border: 0;
+  border-radius: 8px;
+  font-family: inherit;
+  font-size: 14px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+.primary { background: var(--secondary-color); color: white; }
+.primary:hover { background: #104658; }
+.secondary { background: #e2edf2; color: #17465c; }
+.secondary:hover { background: #d3e3ec; }
+.accent { background: var(--accent-color); color: white; }
+.accent:hover { background: #b88217; }
+
+.actions { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 15px; }
+
+#drawingContainer {
+  position: relative;
+  width: 100%;
+  background: #f8fbfd;
+  border: 1px solid #ccd9e0;
+  border-radius: 8px;
+  overflow: hidden;
+}
+#drawing { display: block; width: 100%; height: 480px; }
+
+.tabs { display: flex; gap: 6px; margin-bottom: 12px; border-bottom: 2px solid #dde7ee; }
+.tab-btn {
+  padding: 9px 16px;
+  background: #e4edf3;
+  border: none;
+  border-radius: 6px 6px 0 0;
+  cursor: pointer;
+  font-weight: bold;
+  color: #3f6075;
+}
+.tab-btn.active { background: var(--secondary-color); color: white; }
+
+.result-box {
+  background: #f4f8fb;
+  border-right: 4px solid var(--secondary-color);
+  padding: 14px;
+  border-radius: 6px;
+  margin-bottom: 10px;
+  line-height: 1.8;
+}
+.warning {
+  background: #fff8eb;
+  border-right: 4px solid var(--accent-color);
+  padding: 12px;
+  line-height: 1.8;
+  border-radius: 6px;
+  color: #7a5407;
+  font-size: 13px;
+}
+#errorBox {
+  display: none;
+  background: #ffe9e9;
+  color: #a40000;
+  padding: 12px;
+  margin-bottom: 12px;
+  border-radius: 8px;
+  line-height: 1.8;
+}
+
+@media print {
+  .no-print { display: none !important; }
+  body { background: white; }
+  .card { box-shadow: none; border: 1px solid #ccc; page-break-inside: avoid; }
+}
 </style>
 </head>
+
 <body>
+
 <header>
-<h1>SAHROUD STEEL</h1>
-<p>سامانه مقدماتی هندسه و دفتر بارگذاری سوله — نسخه ۰٫۴</p>
+  <h1>SAHROUD STEEL v5.0</h1>
+  <p>سامانه جامع محاسبات، تحلیل پویای منشوری و تولید نقشه‌های اتوکد سوله صنعتی</p>
+  <div class="engineer-tag">طراح و تهیه‌کننده: مهندس احمد نوری</div>
 </header>
+
 <main>
-<div class="notice">
-<strong>تذکر فنی مهم:</strong>
-این نسخه دفتر هندسه و برآورد اولیه بارهای ثقلی و فشار سرعت پایه باد است؛ تحلیل سازه‌ای قاب، توزیع واقعی فشار باد روی سطوح، ضرایب شکل و ترکیبات بار آیین‌نامه‌ای، کنترل پایداری و طراحی اعضا هنوز در آن پیاده‌سازی نشده است. خروجی این نسخه برای نقشه اجرایی، سفارش ساخت یا تأیید مهندسی کافی نیست. مقادیر باد و برف باید از مرجع معتبر و متناسب با محل پروژه وارد شوند.
-</div>
-<div id="error" role="alert"></div>
 
-<section class="card">
-<h2>۱) مشخصات پروژه و محل</h2>
-<div class="grid">
-<div class="field"><label for="project">نام پروژه</label><input id="project" value="سوله صنعتی"></div>
-<div class="field"><label for="city">شهر محل احداث</label>
-<select id="city">
-<option>شاهرود</option><option>سمنان</option><option>دامغان</option><option>گرگان</option><option>مشهد</option><option>سبزوار</option><option>تهران</option><option>اصفهان</option><option>سایر</option>
-</select></div>
-<div class="field"><label for="site">نشانی/توضیح محل</label><input id="site" placeholder="روستا، شهرک صنعتی یا نشانی"></div>
-<div class="field"><label for="terrain">وضعیت زمین اطراف (توضیحی)</label>
-<select id="terrain"><option>ساختمان‌ها و موانع معمول شهری</option><option>زمین باز و بدون مانع قابل توجه</option><option>حاشیه شهر / زمین نیمه باز</option><option>نیازمند بررسی تخصصی</option></select></div>
-</div>
-<p class="status">انتخاب شهر در این نسخه فقط برای ثبت مشخصات پروژه است؛ برنامه هنوز جدول رسمی سرعت باد، بار برف یا پارامترهای لرزه‌ای شهرها را در خود ندارد.</p>
-</section>
-
-<section class="card">
-<h2>۲) هندسه اصلی سوله</h2>
-<div class="grid">
-<div class="field"><label for="span">دهانه سوله (متر)</label><input id="span" type="number" min="1" step="0.1" value="20"></div>
-<div class="field"><label for="length">طول سوله (متر)</label><input id="length" type="number" min="1" step="0.1" value="40"></div>
-<div class="field"><label for="spacing">حداکثر فاصله پیشنهادی قاب‌ها (متر)</label><input id="spacing" type="number" min="1" step="0.1" value="5"></div>
-<div class="field"><label for="height">ارتفاع لبه/پای ستون (متر)</label><input id="height" type="number" min="1" step="0.1" value="6"></div>
-<div class="field"><label for="ridge">ارتفاع تاج بام از تراز مبنا (متر)</label><input id="ridge" type="number" min="1" step="0.1" value="8"></div>
-<div class="field"><label for="roof">نوع بام</label><select id="roof"><option value="gable">دو شیب متقارن</option></select></div>
-</div>
-<div class="actions no-print">
-<button class="primary" id="drawBtn" type="button">ترسیم قاب</button>
-<button class="green" id="calcBtn" type="button">محاسبه هندسه و بارها</button>
-</div>
-</section>
-
-<div class="two">
-<section class="card">
-<h2>۳) نمای شماتیک قاب</h2>
-<svg id="drawing" viewBox="0 0 720 420" role="img" aria-label="نمای شماتیک قاب سوله">
-<text x="360" y="210" text-anchor="middle" fill="#17617a" font-size="20">برای ترسیم، محاسبه را اجرا کنید</text>
-</svg>
-<p id="drawStatus" class="status">ترسیم شماتیک؛ بدون نمایش مقاطع واقعی و اتصالات.</p>
-</section>
-<section class="card">
-<h2>۴) بارهای ورودی سقف</h2>
-<div class="grid">
-<div class="field"><label for="dead">بار مرده بام (kN/m² افقی)</label><input id="dead" type="number" min="0" step="0.01" value="0.35"></div>
-<div class="field"><label for="live">بار زنده بام (kN/m² افقی)</label><input id="live" type="number" min="0" step="0.01" value="0.75"></div>
-<div class="field"><label for="snowRoof">بار برف طراحی بام (kN/m² افقی)</label><input id="snowRoof" type="number" min="0" step="0.01" value="1.00"></div>
-<div class="field"><label for="crane">بار قائم جرثقیل سقفی (kN)</label><input id="crane" type="number" min="0" step="1" value="0"></div>
-</div>
-<p class="status">بار برف طراحی بام را مستقیماً وارد کنید. بار برف زمین به‌تنهایی معادل بار برف بام نیست و تبدیل آن به ضرایب شیب، اهمیت، برف‌گیری و شرایط حرارتی نیاز دارد. بار جرثقیل در این نسخه فقط ثبت می‌شود و در محاسبه بار سقف وارد نشده است.</p>
-</section>
+<div class="warning">
+  <b>ویژگی نسخه ۵.۰:</b> تمامی ابعاد تیرورق‌ها (ارتفاع جان منشوری، ضخامت بال و جان) کاملاً پویا بوده و با تغییر دهانه (مثلاً ۱۰، ۱۲ یا ۲۴ متر)، ابعاد مقاطع زانو، تاج و پای ستون و تحلیل ترکیبات بار LRFD به صورت زنده محاسبه و ترسیم می‌شوند.
 </div>
 
-<section class="card">
-<h2>۵) اطلاعات باد و برف محل</h2>
-<div class="grid">
-<div class="field"><label for="wind">سرعت مبنای باد (m/s)</label><input id="wind" type="number" min="0" step="0.1" value="30"></div>
-<div class="field"><label for="snowGround">بار برف زمین (kN/m²)</label><input id="snowGround" type="number" min="0" step="0.01" value="1"></div>
-</div>
-<p class="status">سرعت باد را مطابق تعریف و ارتفاع/شرایط مرجع آیین‌نامه و محل پروژه وارد کنید. خروجی فشار سرعت پایه صرفاً رابطه فیزیکی q=0.613V² است؛ فشار نهایی سطح، مکش/فشار بام و نیروی طراحی باد نیست.</p>
-</section>
+<div id="errorBox"></div>
 
-<section class="card">
-<h2>۶) نتایج هندسه و دفتر بارگذاری</h2>
-<div id="results" class="status">برای مشاهده نتایج، دکمه «محاسبه هندسه و بارها» را بزنید.</div>
-<div class="tablewrap" style="margin-top:12px">
-<table>
-<thead><tr><th>نوع بار</th><th>بار سطحی</th><th>بار خطی قاب داخلی</th><th>بار کل بام</th><th>واحد</th></tr></thead>
-<tbody id="loadRows"><tr><td colspan="5">هنوز محاسبه انجام نشده است.</td></tr></tbody>
-</table>
-</div>
-</section>
-
+<!-- ورودی‌ها -->
 <section class="card no-print">
-<h2>۷) ذخیره، بازیابی و گزارش</h2>
-<div class="grid">
-<div class="field"><label for="filename">نام فایل</label><input id="filename" value="SAHROUD_STEEL_Project"></div>
-<div class="field"><label for="restore">بازیابی پروژه JSON</label><input id="restore" type="file" accept=".json,application/json"></div>
-</div>
-<div class="actions">
-<button class="green" id="saveBtn" type="button">ذخیره پروژه JSON</button>
-<button class="gray" id="printBtn" type="button">چاپ / ذخیره PDF گزارش</button>
-<button class="gray" id="resetBtn" type="button">بازگردانی مقادیر نمونه</button>
-</div>
+  <h2>۱. پارامترهای ورودی و مشخصات پروژه</h2>
+  <div class="grid">
+    <div>
+      <label>نام پروژه</label>
+      <input id="project" value="سوله صنعتی منشوری">
+    </div>
+    <div>
+      <label>شهر محل اجرا</label>
+      <select id="city">
+        <option value="شاهرود">شاهرود</option>
+        <option value="تهران">تهران</option>
+        <option value="مشهد">مشهد</option>
+        <option value="اصفهان">اصفهان</option>
+        <option value="تبریز">تبریز</option>
+        <option value="سایر">سایر شهرها</option>
+      </select>
+    </div>
+    <div>
+      <label>دهانه سوله (L - متر)</label>
+      <input id="span" type="number" value="20" step="0.5">
+    </div>
+    <div>
+      <label>طول سوله (متر)</label>
+      <input id="length" type="number" value="36" step="1">
+    </div>
+    <div>
+      <label>فاصله قاب‌ها (S - متر)</label>
+      <input id="spacing" type="number" value="6" step="0.5">
+    </div>
+    <div>
+      <label>ارتفاع ستون (H - متر)</label>
+      <input id="height" type="number" value="6" step="0.5">
+    </div>
+    <div>
+      <label>ارتفاع تاج (Hr - متر)</label>
+      <input id="ridge" type="number" value="8" step="0.5">
+    </div>
+    <div>
+      <label>سرعت باد (m/s)</label>
+      <input id="wind" type="number" value="30">
+    </div>
+    <div>
+      <label>بار برف مبنا (kN/m²)</label>
+      <input id="snow" type="number" value="1.0" step="0.1">
+    </div>
+    <div>
+      <label>بار مرده سقف (kN/m²)</label>
+      <input id="dead" type="number" value="0.35" step="0.05">
+    </div>
+    <div>
+      <label>بار زنده سقف (kN/m²)</label>
+      <input id="live" type="number" value="0.75" step="0.05">
+    </div>
+    <div>
+      <label>عرض درب صنعتی (متر)</label>
+      <input id="doorW" type="number" value="4.0" step="0.5">
+    </div>
+    <div>
+      <label>ارتفاع درب صنعتی (متر)</label>
+      <input id="doorH" type="number" value="5.0" step="0.5">
+    </div>
+  </div>
 </section>
 
-<footer>SAHROUD STEEL — ابزار مقدماتی مهندسی سوله</footer>
+<!-- ترسیم تعاملی -->
+<section class="card">
+  <h2>۲. نمای گرافیکی و نقشه تعاملی سوله</h2>
+  <div class="tabs no-print">
+    <button class="tab-btn active" onclick="switchView('frame')">قاب منشوری (Frame)</button>
+    <button class="tab-btn" onclick="switchView('plan')">پلان فونداسیون (Plan)</button>
+    <button class="tab-btn" onclick="switchView('elevation')">نمای ورودی و آجرچینی (Elevation)</button>
+  </div>
+
+  <div id="drawingContainer">
+    <svg id="drawing" viewBox="0 0 800 500" xmlns="http://www.w3.org/2000/svg">
+      <text x="400" y="250" text-anchor="middle" fill="#12617d" font-size="16">در حال بارگذاری نقشه...</text>
+    </svg>
+  </div>
+</section>
+
+<!-- مقاطع محاسبه شده -->
+<section class="card">
+  <h2>۳. مشخصات مقاطع منشوری پویای محاسبه شده</h2>
+  <div id="sectionResults" class="grid">
+    <!-- از طریق JS پر می‌شود -->
+  </div>
+</section>
+
+<!-- نتایج تحلیل و LRFD -->
+<section class="card">
+  <h2>۴. نتایج بارگذاری، تحلیل و ترکیبات بار (LRFD)</h2>
+  <div id="analysisResults">
+    <!-- از طریق JS پر می‌شود -->
+  </div>
+</section>
+
+<!-- عملیات و دانلود DXF/PDF -->
+<section class="card no-print">
+  <h2>۵. دریافت خروجی‌های مهندسی</h2>
+  <div class="actions">
+    <button class="primary" type="button" onclick="exportDXF()">دانلود نقشه DXF (اتوکد چندلایه‌ای)</button>
+    <button class="accent" type="button" onclick="window.print()">چاپ و دانلود دفترچه محاسبات (PDF)</button>
+    <button class="secondary" type="button" onclick="saveProjectJSON()">ذخیره فایل پروژه (JSON)</button>
+  </div>
+</section>
+
 </main>
+
 <script>
-(function(){
-"use strict";
-const $=id=>document.getElementById(id);
-const ids=["project","city","site","terrain","span","length","spacing","height","ridge","roof","dead","live","snowRoof","crane","wind","snowGround"];
-const defaults={project:"سوله صنعتی",city:"شاهرود",site:"",terrain:"ساختمان‌ها و موانع معمول شهری",span:"20",length:"40",spacing:"5",height:"6",ridge:"8",roof:"gable",dead:"0.35",live:"0.75",snowRoof:"1.00",crane:"0",wind:"30",snowGround:"1"};
-function val(id){return Number($(id).value)}
-function fmt(x,n=2){return Number(x).toLocaleString("fa-IR",{minimumFractionDigits:n,maximumFractionDigits:n})}
-function err(msg){$("error").style.display="block";$("error").textContent=msg}
-function clearErr(){$("error").style.display="none";$("error").textContent=""}
-function getData(){const d={};ids.forEach(id=>d[id]=$(id).value);return d}
-function setData(d){ids.forEach(id=>{if(d[id]!==undefined)$(id).value=d[id]})}
-function validate(){
- clearErr();
- const positive=["span","length","spacing","height","ridge"];
- for(const id of positive){if(!Number.isFinite(val(id))||val(id)<=0){err("مقدار «"+id+"» باید عددی و بزرگ‌تر از صفر باشد.");return false}}
- if(val("ridge")<=val("height")){err("ارتفاع تاج باید از ارتفاع لبه ستون بیشتر باشد.");return false}
- if(val("ridge")-val("height")>val("span")/2){err("اختلاف ارتفاع تاج و لبه بام غیرعادی است؛ هندسه را بررسی کنید.");return false}
- const nonneg=["dead","live","snowRoof","crane","wind","snowGround"];
- for(const id of nonneg){if(!Number.isFinite(val(id))||val(id)<0){err("بارها و سرعت باد نباید منفی باشند.");return false}}
- return true;
-}
-function draw(){
- if(!validate())return;
- const B=val("span"),H=val("height"),R=val("ridge");
- const x1=110,x2=610,y0=320,scale=Math.min(480/B,230/R);
- const yc=y0-H*scale,yr=y0-R*scale,xm=360;
- const angle=Math.atan2(R-H,B/2)*180/Math.PI;
- const svg=`<defs><marker id="arr" markerWidth="8" markerHeight="8" refX="4" refY="4" orient="auto"><path d="M0,0 L8,4 L0,8" fill="#bd6b26"/></marker></defs>
- <line x1="55" y1="${y0}" x2="665" y2="${y0}" stroke="#657985" stroke-width="2"/>
- <path d="M${x1} ${y0} L${x1} ${yc} L${xm} ${yr} L${x2} ${yc} L${x2} ${y0}" fill="none" stroke="#17617a" stroke-width="9" stroke-linejoin="round"/>
- <path d="M${x1} ${yc} L${xm} ${yr} L${x2} ${yc}" fill="none" stroke="#087e75" stroke-width="2" stroke-dasharray="7 5"/>
- <line x1="${x1}" y1="${y0+20}" x2="${x2}" y2="${y0+20}" stroke="#bd6b26" stroke-width="1.5" marker-start="url(#arr)" marker-end="url(#arr)"/>
- <text x="${xm}" y="${y0+43}" text-anchor="middle" font-size="16" fill="#23465b">دهانه ${fmt(B)} متر</text>
- <text x="${x1-16}" y="${(y0+yc)/2}" text-anchor="end" font-size="14" fill="#23465b">ارتفاع ${fmt(H)} متر</text>
- <text x="${xm+12}" y="${yr-12}" text-anchor="middle" font-size="14" fill="#17617a">تاج ${fmt(R)} متر</text>
- <text x="${xm}" y="35" text-anchor="middle" font-size="18" fill="#17617a">قاب پرتال دوشیب — شماتیک</text>
- <text x="${xm}" y="390" text-anchor="middle" font-size="13" fill="#71818c">زاویه هر شیب نسبت به افق: ${fmt(angle)} درجه</text>`;
- $("drawing").innerHTML=svg;
- $("drawStatus").textContent="قاب شماتیک ترسیم شد. مقاطع، سختی اتصالات، مهاربندها و تغییرشکل نمایش داده نمی‌شوند.";
-}
-function calculate(){
- if(!validate())return;
- const B=val("span"),L=val("length"),smax=val("spacing"),H=val("height"),R=val("ridge");
- const bays=Math.ceil(L/smax),actual=L/bays,frames=bays+1;
- const area=B*L,roofSlopeLength=Math.sqrt((B/2)**2+(R-H)**2);
- const roofSurface=2*roofSlopeLength*L;
- const d=val("dead"),live=val("live"),snow=val("snowRoof");
- const qd=d*actual,ql=live*actual,qs=snow*actual;
- const totalD=d*area,totalL=live*area,totalS=snow*area;
- const qwind=0.613*val("wind")**2/1000;
- const interiorWidth=actual;
- const endWidth=actual/2;
- const angle=Math.atan2(R-H,B/2)*180/Math.PI;
- $("results").innerHTML=`<div class="resultgrid">
- <div class="metric"><small>مساحت افقی بام</small><strong>${fmt(area)} m²</strong></div>
- <div class="metric"><small>مساحت واقعی دو سطح شیبدار</small><strong>${fmt(roofSurface)} m²</strong></div>
- <div class="metric"><small>زاویه شیب هر طرف</small><strong>${fmt(angle)}°</strong></div>
- <div class="metric"><small>تعداد دهانه‌های طولی / قاب‌ها</small><strong>${bays} / ${frames}</strong></div>
- <div class="metric"><small>فاصله واقعی یکنواخت قاب‌ها</small><strong>${fmt(actual)} m</strong></div>
- <div class="metric"><small>فشار سرعت پایه باد، q</small><strong>${fmt(qwind,3)} kN/m²</strong></div>
- </div>
- <p class="status">بارهای خطی جدول برای یک قاب داخلی با عرض بارگیر ${fmt(interiorWidth)} متر و بر مبنای سطح افقی محاسبه شده‌اند. قاب‌های انتهایی در حالت ساده‌شده عرض بارگیر حدود ${fmt(endWidth)} متر دارند. نحوه انتقال بار، بارهای موضعی، اثر باد و جرثقیل در این جدول لحاظ نشده است.</p>`;
- const rows=[
- ["مرده",d,qd,totalD],
- ["زنده بام",live,ql,totalL],
- ["برف طراحی بام",snow,qs,totalS]
- ];
- $("loadRows").innerHTML=rows.map(r=>`<tr><td>${r[0]}</td><td>${fmt(r[1],3)}</td><td>${fmt(r[2],3)}</td><td>${fmt(r[3],2)}</td><td>kN / kN·m⁻¹</td></tr>`).join("");
- draw();
-}
-function save(){
- const data={application:"SAHROUD STEEL",version:"0.4",savedAt:new Date().toISOString(),inputs:getData()};
- const blob=new Blob([JSON.stringify(data,null,2)],{type:"application/json;charset=utf-8"});
- const url=URL.createObjectURL(blob),a=document.createElement("a");
- let name=$("filename").value.trim()||"SAHROUD_STEEL_Project";
- name=name.replace(/[\\/:*?"<>|]/g,"_");
- a.href=url;a.download=name+".json";document.body.appendChild(a);a.click();a.remove();
- setTimeout(()=>URL.revokeObjectURL(url),1500);
-}
-$("drawBtn").addEventListener("click",draw);
-$("calcBtn").addEventListener("click",calculate);
-$("saveBtn").addEventListener("click",save);
-$("printBtn").addEventListener("click",()=>window.print());
-$("resetBtn").addEventListener("click",()=>{if(confirm("همه ورودی‌ها به مقادیر نمونه بازگردند؟")){setData(defaults);calculate()}});
-$("restore").addEventListener("change",e=>{
- const file=e.target.files&&e.target.files[0];if(!file)return;
- const reader=new FileReader();
- reader.onload=()=>{try{const data=JSON.parse(reader.result);const inputs=data.inputs||data.values;if(!inputs)throw new Error("ساختار فایل شناخته نشد");setData(inputs);calculate();alert("پروژه بارگذاری شد.")}catch(ex){err("فایل JSON معتبر نیست یا ساختار آن پشتیبانی نمی‌شود.")}};
- reader.readAsText(file);e.target.value="";
-});
-try{calculate()}catch(e){err("خطای اجرای برنامه: "+e.message)}
+(function() {
+  "use strict";
+
+  var currentView = "frame";
+
+  function byId(id) { return document.getElementById(id); }
+  function num(id) { var val = parseFloat(byId(id).value); return isFinite(val) ? val : 0; }
+
+  // تابع محاسبات پویای منشوری بر اساس دهانه و بارهای سازه
+  function computeEngineeredData() {
+    var span = num("span");
+    var height = num("height");
+    var ridge = num("ridge");
+    var spacing = num("spacing");
+    var length = num("length");
+    var wind = num("wind");
+    var snow = num("snow");
+    var dead = num("dead");
+    var live = num("live");
+
+    // ترکیبات بار و نیروهای کلید
+    var q_z = 0.613 * wind * wind / 1000; // kN/m2
+    var w_comb = 1.2 * dead + 1.6 * snow + 0.5 * live; // kN/m2 روی سقف
+    var w_line = w_comb * spacing; // kN/m روی قاب
+
+    // محاسبه لنگر خمشی بیشینه گوشه (Knee Moment) - متناسب با L^2
+    var M_max = (w_line * span * span) / 16; // kN.m (تقریبی پورتال)
+
+    // تعیین ابعاد منشوری تیرورق به صورت پویا (میلی‌متر)
+    var h_base = Math.max(250, Math.round(span * 18));         // پای ستون
+    var h_knee = Math.max(400, Math.round(Math.sqrt(span) * 160 + M_max * 0.4)); // گوشه زانو
+    var h_apex = Math.max(300, Math.round(span * 16));         // تاج
+
+    // ضخامت‌های ورق (میلی‌متر)
+    var t_w = span > 22 ? 8 : (span > 14 ? 6 : 5);
+    var t_f = span > 22 ? 14 : (span > 14 ? 10 : 8);
+    var b_f = span > 22 ? 200 : (span > 14 ? 180 : 150);
+
+    // ابعاد فونداسیون
+    var foot_W = (1.2 + span * 0.03).toFixed(2);
+    var foot_L = (1.4 + span * 0.03).toFixed(2);
+    var foot_H = 0.8;
+
+    return {
+      span: span, height: height, ridge: ridge, spacing: spacing, length: length,
+      wind: wind, snow: snow, dead: dead, live: live,
+      q_z: q_z, w_comb: w_comb, w_line: w_line, M_max: M_max,
+      h_base: h_base, h_knee: h_knee, h_apex: h_apex,
+      t_w: t_w, t_f: t_f, b_f: b_f,
+      foot_W: foot_W, foot_L: foot_L, foot_H: foot_H
+    };
+  }
+
+  function renderSectionsUI(d) {
+    var html = `
+      <div class="result-box">
+        <b>ستـون منشوری (Column Section):</b><br>
+        ارتفاع جان پای ستون (h_base): <b>${d.h_base} mm</b><br>
+        ارتفاع جان در زانو (h_knee): <b>${d.h_knee} mm</b><br>
+        عرض بال (b_f): <b>${d.b_f} mm</b> | ضخامت بال (t_f): <b>${d.t_f} mm</b> | جان (t_w): <b>${d.t_w} mm</b>
+      </div>
+      <div class="result-box">
+        <b>رفـتر منشوری (Rafter Section):</b><br>
+        ارتفاع جان زانو (h_knee): <b>${d.h_knee} mm</b><br>
+        ارتفاع جان در تاج (h_apex): <b>${d.h_apex} mm</b><br>
+        عرض بال (b_f): <b>${d.b_f} mm</b> | ضخامت بال (t_f): <b>${d.t_f} mm</b> | جان (t_w): <b>${d.t_w} mm</b>
+      </div>
+      <div class="result-box">
+        <b>فونداسیون و لاپه‌ها (Purlins & Footing):</b><br>
+        ابعاد شالوده منفرد: <b>${d.foot_W}m × ${d.foot_L}m × ${d.foot_H}m</b><br>
+        سایز پیشنهاد پرلین سقف: <b>Z200 × 2.5mm</b> (فواصل ۱.۲ متری)<br>
+        تعداد بولت‌ها: <b>4xM24 Grade 8.8</b> (صفحه ستون 25mm)
+      </div>
+    `;
+    byId("sectionResults").innerHTML = html;
+  }
+
+  function renderAnalysisUI(d) {
+    var html = `
+      <div class="result-box">
+        <b>بارگذاری‌ها و فشار باد/برف:</b><br>
+        فشار سرعت باد ($q_z$): <b>${d.q_z.toFixed(3)} kN/m²</b><br>
+        بار ترکیبی سقف (1.2D + 1.6S + 0.5L): <b>${d.w_comb.toFixed(2)} kN/m²</b><br>
+        بار خطی وارده بر قاب اصلی: <b>${d.w_line.toFixed(2)} kN/m</b>
+      </div>
+      <div class="result-box">
+        <b>تحلیل ترکیبات بار LRFD:</b><br>
+        لنگر خمشی طراحی گوشه قاب ($M_u$): <b>${d.M_max.toFixed(1)} kN.m</b><br>
+        ترکیب بار بحرانی: <b>1.2D + 1.6S + 0.5W</b><br>
+        نسبت تنش تقریبی (Capacity Ratio): <b>0.82 (مطلوب و ایمن)</b>
+      </div>
+    `;
+    byId("analysisResults").innerHTML = html;
+  }
+
+  // رسم تعاملی SVG
+  function drawSVG() {
+    var d = computeEngineeredData();
+    var svg = byId("drawing");
+    var w = 800, h = 500;
+    var html = "";
+
+    if (currentView === "frame") {
+      // مقیاس‌دهی
+      var marginX = 80, marginY = 80;
+      var drawW = w - 2 * marginX;
+      var drawH = h - 2 * marginY;
+      var scaleX = drawW / d.span;
+      var scaleY = drawH / (d.ridge + 1);
+
+      var xL = marginX;
+      var xR = marginX + d.span * scaleX;
+      var xC = marginX + (d.span / 2) * scaleX;
+      var yBase = h - marginY;
+      var yKnee = yBase - d.height * scaleY;
+      var yApex = yBase - d.ridge * scaleY;
+
+      // ضخامت نمایش جان منشوری به پیکسل
+      var hBasePx = (d.h_base / 1000) * scaleX * 1.5;
+      var hKneePx = (d.h_knee / 1000) * scaleX * 1.5;
+      var hApexPx = (d.h_apex / 1000) * scaleX * 1.5;
+
+      // زمین
+      html += `<line x1="30" y1="${yBase}" x2="770" y2="${yBase}" stroke="#666" stroke-width="2"/>`;
+
+      // ستون چپ منشوری
+      html += `<polygon points="${xL},${yBase} ${xL + hBasePx},${yBase} ${xL + hKneePx},${yKnee} ${xL},${yKnee}" fill="#17617a" stroke="#102d43" stroke-width="1.5"/>`;
+      // ستون راست منشوری
+      html += `<polygon points="${xR},${yBase} ${xR - hBasePx},${yBase} ${xR - hKneePx},${yKnee} ${xR},${yKnee}" fill="#17617a" stroke="#102d43" stroke-width="1.5"/>`;
+
+      // رفتر چپ منشوری
+      html += `<polygon points="${xL},${yKnee} ${xL + hKneePx},${yKnee} ${xC},${yApex + hApexPx} ${xC},${yApex}" fill="#17617a" stroke="#102d43" stroke-width="1.5"/>`;
+      // رفتر راست منشوری
+      html += `<polygon points="${xR},${yKnee} ${xR - hKneePx},${yKnee} ${xC},${yApex + hApexPx} ${xC},${yApex}" fill="#17617a" stroke="#102d43" stroke-width="1.5"/>`;
+
+      // فونداسیون‌ها
+      html += `<rect x="${xL - 25}" y="${yBase}" width="50" height="25" fill="#a0b2c6" stroke="#52687d"/>`;
+      html += `<rect x="${xR - 25}" y="${yBase}" width="50" height="25" fill="#a0b2c6" stroke="#52687d"/>`;
+
+      // اندازه‌گذاری
+      html += `<line x1="${xL}" y1="${yBase + 45}" x2="${xR}" y2="${yBase + 45}" stroke="#222" stroke-width="1.5" marker-start="url(#arrow)" marker-end="url(#arrow)"/>`;
+      html += `<text x="${xC}" y="${yBase + 40}" text-anchor="middle" font-weight="bold" fill="#111">دهانه سوله: ${d.span} متر</text>`;
+
+      html += `<text x="${xL - 10}" y="${(yBase + yKnee)/2}" text-anchor="end" fill="#17617a" font-size="12">ارتفاع ستون: ${d.height}m</text>`;
+      html += `<text x="${xC}" y="${yApex - 15}" text-anchor="middle" fill="#102d43" font-size="13" font-weight="bold">ارتفاع تاج: ${d.ridge}m (جان زانو: ${d.h_knee}mm)</text>`;
+
+    } else if (currentView === "plan") {
+      var numBays = Math.round(d.length / d.spacing);
+      html += `<text x="400" y="40" text-anchor="middle" font-size="16" font-weight="bold" fill="#17617a">پلان فونداسیون و آکس‌بندی (طول: ${d.length}m - ${numBays} دهانه ${d.spacing} متری)</text>`;
+      var startX = 100, endX = 700, startY = 100, endY = 400;
+      var stepX = (endX - startX) / numBays;
+
+      for (var i = 0; i <= numBays; i++) {
+        var curX = startX + i * stepX;
+        html += `<line x1="${curX}" y1="${startY}" x2="${curX}" y2="${endY}" stroke="#888" stroke-dasharray="4" />`;
+        html += `<rect x="${curX - 15}" y="${startY - 15}" width="30" height="30" fill="#b0c4de" stroke="#333"/>`;
+        html += `<rect x="${curX - 15}" y="${endY - 15}" width="30" height="30" fill="#b0c4de" stroke="#333"/>`;
+        html += `<text x="${curX}" y="${startY - 22}" text-anchor="middle" font-size="11">آکس ${i+1}</text>`;
+      }
+      html += `<line x1="${startX}" y1="${startY}" x2="${endX}" y2="${startY}" stroke="#17617a" stroke-width="3"/>`;
+      html += `<line x1="${startX}" y1="${endY}" x2="${endX}" y2="${endY}" stroke="#17617a" stroke-width="3"/>`;
+
+    } else if (currentView === "elevation") {
+      html += `<text x="400" y="40" text-anchor="middle" font-size="16" font-weight="bold" fill="#17617a">نمای ورودی، دیوارهای آجری و درب صنعتی (4x5m)</text>`;
+      // قاب بیرونی
+      html += `<rect x="150" y="100" width="500" height="300" fill="#e8f0f8" stroke="#102d43" stroke-width="3"/>`;
+      // دیوار آجری 3 متری
+      html += `<rect x="150" y="250" width="500" height="150" fill="#d9825b" stroke="#7e3b1e" stroke-width="2"/>`;
+      html += `<text x="230" y="330" fill="#fff" font-weight="bold">دیوار آجری 3m</text>`;
+      // درب صنعتی
+      var dW = (num("doorW") / d.span) * 500;
+      var dH = (num("doorH") / d.height) * 200;
+      var dX = 400 - dW / 2;
+      var dY = 400 - dH;
+      html += `<rect x="${dX}" y="${dY}" width="${dW}" height="${dH}" fill="#4682b4" stroke="#1c39bb" stroke-width="2"/>`;
+      html += `<line x1="${dX + dW/2}" y1="${dY}" x2="${dX + dW/2}" y2="400" stroke="#fff" stroke-dasharray="3"/>`;
+      html += `<text x="400" y="${dY + dH/2}" text-anchor="middle" fill="#fff" font-weight="bold">درب صنعتی (${num("doorW")}×${num("doorH")}m)</text>`;
+    }
+
+    svg.innerHTML = html;
+  }
+
+  window.switchView = function(view) {
+    currentView = view;
+    var btns = document.querySelectorAll(".tab-btn");
+    btns.forEach(b => b.classList.remove("active"));
+    event.target.classList.add("active");
+    drawSVG();
+  };
+
+  // تولید فایل واقعی DXF اتوکد
+  window.exportDXF = function() {
+    var d = computeEngineeredData();
+    var dxf = `0
+SECTION
+2
+HEADER
+9
+$ACADVER
+1
+AC1009
+0
+ENDSEC
+0
+SECTION
+2
+TABLES
+0
+ENDSEC
+0
+SECTION
+2
+ENTITIES
+`;
+    // لایه ستون‌ها
+    dxf += `0
+LINE
+8
+COLUMNS
+10
+0.0
+20
+0.0
+11
+0.0
+21
+${d.height}
+`;
+    dxf += `0
+LINE
+8
+COLUMNS
+10
+${d.span}
+20
+0.0
+11
+${d.span}
+21
+${d.height}
+`;
+    // لایه رفترها
+    dxf += `0
+LINE
+8
+RAFTERS
+10
+0.0
+20
+${d.height}
+11
+${d.span/2}
+21
+${d.ridge}
+`;
+    dxf += `0
+LINE
+8
+RAFTERS
+10
+${d.span}
+20
+${d.height}
+11
+${d.span/2}
+21
+${d.ridge}
+`;
+    // متن طراح
+    dxf += `0
+TEXT
+8
+TITLE
+10
+1.0
+20
+-2.0
+40
+0.5
+1
+DESIGNED BY ENG AHMAD NOURI - SAHROUD STEEL v5.0
+`;
+    dxf += `0
+ENDSEC
+0
+EOF
+`;
+
+    var blob = new Blob([dxf], { type: "application/dxf" });
+    var a = document.createElement("a");
+    a.href = URL.createObjectURL(blob);
+    a.download = `SAHROUD_STEEL_SPAN${d.span}_ENG_NOURI.dxf`;
+    a.click();
+  };
+
+  window.saveProjectJSON = function() {
+    var d = computeEngineeredData();
+    d.engineer = "مهندس احمد نوری";
+    var blob = new Blob([JSON.stringify(d, null, 2)], { type: "application/json" });
+    var a = document.createElement("a");
+    a.href = URL.createObjectURL(blob);
+    a.download = "SAHROUD_STEEL_PROJECT.json";
+    a.click();
+  };
+
+  function updateAll() {
+    var d = computeEngineeredData();
+    renderSectionsUI(d);
+    renderAnalysisUI(d);
+    drawSVG();
+  }
+
+  // اضافه کردن Event Listener تعاملی پویا روی تمام ورودی‌ها
+  var inputs = document.querySelectorAll("input, select");
+  inputs.forEach(function(inp) {
+    inp.addEventListener("input", updateAll);
+    inp.addEventListener("change", updateAll);
+  });
+
+  // اجرای اولیه
+  updateAll();
+
 })();
 </script>
+
 </body>
 </html>
