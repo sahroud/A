@@ -3,170 +3,155 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>SAHROUD STEEL v6.0 Pro Enterprise - سامانه محاسبات، آنالیز و تولید نقشه‌های سوله منشوری</title>
+<title>SAHROUD STEEL v6.2 Pro - سامانه محاسبات و ترسیم نقشه‌های سوله منشوری</title>
 <style>
 :root {
---primary-color: #0d233a;
---secondary-color: #165b74;
---accent-color: #c88719;
---bg-color: #eaf0f5;
---card-bg: #ffffff;
---text-color: #142834;
---border-color: #beccdaf4;
+  --primary: #0a1f33;
+  --secondary: #125570;
+  --accent: #d98e12;
+  --bg: #edf2f7;
+  --card: #ffffff;
+  --text: #1a2b3c;
+  --border: #cbd7e3;
 }
 
-• { box-sizing: border-box; }
+* { box-sizing: border-box; }
 body {
-margin: 0;
-background: var(--bg-color);
-color: var(--text-color);
-font-family: 'Vazirmatn', Tahoma, Arial, sans-serif;
-font-size: 13.5px;
+  margin: 0;
+  background: var(--bg);
+  color: var(--text);
+  font-family: 'Vazirmatn', Tahoma, Arial, sans-serif;
+  font-size: 13px;
 }
 
 header {
-background: linear-gradient(135deg, #0a1b2d 0%, #165b74 100%);
-color: white;
-text-align: center;
-padding: 22px 15px;
-box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+  background: linear-gradient(135deg, #071524 0%, #125570 100%);
+  color: white;
+  text-align: center;
+  padding: 20px 15px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.18);
 }
-header h1 { margin: 0 0 6px 0; font-size: 26px; font-weight: 800; letter-spacing: 0.5px; }
-header p { margin: 0; color: #bde0ef; font-size: 13.5px; }
-.engineer-tag {
-display: inline-block;
-background: rgba(255,255,255,0.18);
-padding: 5px 16px;
-border-radius: 20px;
-margin-top: 10px;
-font-size: 13px;
-color: #ffffff;
-border: 1px solid rgba(255,255,255,0.3);
+header h1 { margin: 0 0 5px 0; font-size: 24px; font-weight: 800; }
+header p { margin: 0; color: #bde0ef; font-size: 13px; }
+.engineer-badge {
+  display: inline-block;
+  background: rgba(255,255,255,0.18);
+  padding: 4px 14px;
+  border-radius: 20px;
+  margin-top: 8px;
+  font-size: 12.5px;
+  color: #fff;
+  border: 1px solid rgba(255,255,255,0.25);
 }
 
-main { max-width: 1250px; margin: auto; padding: 16px; }
+main { max-width: 1250px; margin: auto; padding: 15px; }
 
 .card {
-background: var(--card-bg);
-padding: 22px;
-border-radius: 12px;
-margin-bottom: 16px;
-box-shadow: 0 4px 12px rgba(0,0,0,0.05);
-border: 1px solid var(--border-color);
+  background: var(--card);
+  padding: 20px;
+  border-radius: 10px;
+  margin-bottom: 15px;
+  box-shadow: 0 3px 10px rgba(0,0,0,0.04);
+  border: 1px solid var(--border);
 }
 
-h2 { font-size: 16px; color: var(--secondary-color); margin-top: 0; border-bottom: 2px solid #e7eff5; padding-bottom: 9px; }
+h2 { font-size: 15.5px; color: var(--secondary); margin-top: 0; border-bottom: 2px solid #e8f0f6; padding-bottom: 8px; }
 
-.grid-4 { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 14px; }
-.grid-3 { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 14px; }
+.grid-4 { display: grid; grid-template-columns: repeat(auto-fit, minmax(210px, 1fr)); gap: 12px; }
+.grid-3 { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 12px; }
 
-label { display: block; margin-bottom: 6px; font-weight: bold; font-size: 12.5px; color: #1e3c50; }
+label { display: block; margin-bottom: 5px; font-weight: bold; font-size: 12px; color: #1e3a52; }
 input, select {
-width: 100%;
-padding: 10px 12px;
-border: 1px solid var(--border-color);
-border-radius: 8px;
-font-size: 13.5px;
-background: #fbfdfe;
-transition: all 0.2s;
+  width: 100%;
+  padding: 9px 11px;
+  border: 1px solid var(--border);
+  border-radius: 7px;
+  font-size: 13px;
+  background: #fcfefe;
+  transition: all 0.2s;
 }
-input:focus, select:focus { border-color: var(--secondary-color); background: #ffffff; outline: none; box-shadow: 0 0 0 3px rgba(22,91,116,0.12); }
+input:focus, select:focus { border-color: var(--secondary); background: #fff; outline: none; box-shadow: 0 0 0 3px rgba(18,85,112,0.12); }
 
-.city-info-badge {
-background: #eef7fc;
-border-right: 4px solid var(--secondary-color);
-padding: 10px 14px;
-border-radius: 6px;
-margin-top: 6px;
-font-size: 12.5px;
-line-height: 1.8;
-color: #0f3d4f;
+.city-badge {
+  background: #edf7fc;
+  border-right: 4px solid var(--secondary);
+  padding: 10px 14px;
+  border-radius: 6px;
+  font-size: 12.5px;
+  line-height: 1.8;
+  color: #0c384a;
 }
 
 button {
-padding: 12px 20px;
-border: 0;
-border-radius: 8px;
-font-family: inherit;
-font-size: 13.5px;
-font-weight: bold;
-cursor: pointer;
-transition: all 0.2s ease;
-display: inline-flex;
-align-items: center;
-justify-content: center;
-gap: 8px;
+  padding: 11px 18px;
+  border: 0;
+  border-radius: 7px;
+  font-family: inherit;
+  font-size: 13px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: all 0.2s;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 7px;
 }
-button:disabled { opacity: 0.55; cursor: not-allowed; }
-.btn-schematic { background: #3b7b99; color: white; }
-.btn-schematic:hover:not(:disabled) { background: #2a5f78; }
-.btn-analyze { background: #165b74; color: white; font-size: 14px; }
-.btn-analyze:hover:not(:disabled) { background: #0e3f52; box-shadow: 0 4px 12px rgba(22,91,116,0.3); }
+.btn-schematic { background: #336e88; color: white; }
+.btn-schematic:hover { background: #245267; }
+.btn-analyze { background: #125570; color: white; font-size: 13.5px; }
+.btn-analyze:hover { background: #0b394c; }
 .btn-dxf { background: #27ae60; color: white; }
-.btn-dxf:hover:not(:disabled) { background: #1e8449; }
-.btn-pdf { background: var(--accent-color); color: white; }
-.btn-pdf:hover:not(:disabled) { background: #a36b10; }
+.btn-dxf:hover { background: #1e8449; }
+.btn-pdf { background: var(--accent); color: white; }
+.btn-pdf:hover { background: #b0710b; }
 
-.actions-bar { display: flex; gap: 12px; flex-wrap: wrap; margin-top: 15px; }
+.actions { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 12px; }
 
 #drawingContainer {
-position: relative;
-width: 100%;
-background: #f4f8fb;
-border: 1px solid #c2d3e1;
-border-radius: 10px;
-overflow: hidden;
+  width: 100%;
+  background: #f5f9fc;
+  border: 1px solid #c0d3e2;
+  border-radius: 8px;
+  overflow: hidden;
 }
-#drawing { display: block; width: 100%; height: 520px; }
+#drawing { display: block; width: 100%; height: 560px; }
 
-.tabs { display: flex; gap: 4px; margin-bottom: 12px; border-bottom: 2px solid #dce6ee; overflow-x: auto; }
+.tabs { display: flex; gap: 4px; margin-bottom: 10px; border-bottom: 2px solid #dce6ee; overflow-x: auto; }
 .tab-btn {
-padding: 10px 16px;
-background: #e3edf4;
-border: none;
-border-radius: 8px 8px 0 0;
-cursor: pointer;
-font-weight: bold;
-color: #3b5a70;
-white-space: nowrap;
+  padding: 9px 15px;
+  background: #e2ecf3;
+  border: none;
+  border-radius: 7px 7px 0 0;
+  cursor: pointer;
+  font-weight: bold;
+  color: #3b576e;
+  white-space: nowrap;
 }
-.tab-btn.active { background: var(--secondary-color); color: white; }
+.tab-btn.active { background: var(--secondary); color: white; }
 
 .result-card {
-background: #f7fafc;
-border: 1px solid #d5e2ec;
-border-right: 4px solid var(--secondary-color);
-padding: 14px;
-border-radius: 8px;
-margin-bottom: 12px;
-line-height: 1.85;
-}
-.result-card b { color: #0a2336; }
-
-.code-reference-box {
-background: #fff9ed;
-border-right: 4px solid var(--accent-color);
-padding: 12px 16px;
-border-radius: 8px;
-margin-bottom: 15px;
-font-size: 12.5px;
-line-height: 1.8;
-color: #6a4907;
+  background: #f8fafc;
+  border: 1px solid #d8e4ee;
+  border-right: 4px solid var(--secondary);
+  padding: 12px;
+  border-radius: 7px;
+  line-height: 1.85;
 }
 
 #downloadSection {
-display: none;
-background: #e8f6ef;
-border: 1px solid #a3e4d7;
-padding: 18px;
-border-radius: 10px;
-margin-top: 15px;
+  display: none;
+  background: #eaf8f0;
+  border: 1px solid #a2e2b8;
+  padding: 16px;
+  border-radius: 8px;
+  margin-top: 12px;
 }
 
 @media print {
-.no-print { display: none !important; }
-body { background: white; color: black; }
-.card { box-shadow: none; border: 1px solid #999; page-break-inside: avoid; }
+  .no-print { display: none !important; }
+  body { background: white; color: black; }
+  .card { box-shadow: none; border: none; padding: 0; }
+  #drawingContainer { border: none; background: white; }
 }
 </style>
 </head>
@@ -174,330 +159,371 @@ body { background: white; color: black; }
 <body>
 
 <header>
-<h1>SAHROUD STEEL v6.0 Pro Enterprise</h1>
-<p>سامانه جامع آنالیز، بهینه‌سازی تیرورق منشوری و تولید نقشه‌های مهندسی طبق آخرین آیین‌نامه‌ها (مبحث ۶، ۹، ۱۰ ویرایش ۱۳۹۹)</p>
-<div class="engineer-tag">طراح، محاسب و تهیه‌کننده: مهندس احمد نوری</div>
+  <h1>SAHROUD STEEL v6.2 Pro</h1>
+  <p>سامانه جامع محاسبات، آنالیز LRFD و تولید نقشه‌های مهندسی سوله منشوری</p>
+  <div class="engineer-badge">طراح، محاسب و تهیه‌کننده: مهندس احمد نوری</div>
 </header>
 
 <main>
 
-<div class="code-reference-box">
-<b>📋 مراجع و آیین‌نامه‌های اجرایی فعال در این نسخه (بروزرسانی ۱۴۰۵):</b><br>
-• <b>مبحث ششم مقررات ملی ساختمان (۱۳۹۸):</b> بارهای وارد بر ساختمان (بار برف زمین S0، ضریب برف‌گیری Cs، فشار سرعت پایه باد q و ضوابط اقلیمی شهرهای ایران).<br>
-• <b>مبحث دهم مقررات ملی ساختمان (۱۳۹۹):</b> طرح و اجرای سازه‌های فولادی (روش LRFD، بهینه‌سازی مقاطع تیرورق منشوری متغیر h_knee / h_base، کنترل لاغری و کمانش موضعی جان و بال).<br>
-• <b>مبحث نهم (۱۳۹۹) و نشریه ۳۲۵:</b> ضوابط شالوده‌های منفرد و شناژهای بتن آرمه ارتباطی.<br>
-• <b>آیین‌نامه 2800 ویرایش ۴:</b> کنترل لرزه‌ای و مهاربندی‌های ضربدری طولی.
-</div>
-
 <section class="card no-print">
-<h2>۱. شناسنامه پروژه و عوامل مهندسی</h2>
-<div class="grid-4">
-<div>
-<label>نام پروژه / عنوان سازه</label>
-<input id="projectName" value="سوله صنعتی منشوری استاندارد">
-</div>
-<div>
-<label>نام کارفرما / مالک</label>
-<input id="ownerName" value="شرکت صنعتی توسعه فولاد">
-</div>
-<div>
-<label>مهندس طراح و محاسب</label>
-<input id="engineerName" value="مهندس احمد نوری">
-</div>
-<div>
-<label>مهندس ناظر پروژه</label>
-<input id="inspectorName" value="مهندس محمد رضایی">
-</div>
-</div>
+  <h2>۱. شناسنامه پروژه و عوامل مهندسی</h2>
+  <div class="grid-4">
+    <div>
+      <label>عنوان پروژه</label>
+      <input id="projectName" value="سوله صنعتی منشوری شاهرود">
+    </div>
+    <div>
+      <label>مالک / کارفرما</label>
+      <input id="ownerName" value="شرکت توسعه صنایع فولاد">
+    </div>
+    <div>
+      <label>مهندس طراح و محاسب</label>
+      <input id="engineerName" value="مهندس احمد نوری">
+    </div>
+    <div>
+      <label>مهندس ناظر</label>
+      <input id="inspectorName" value="مهندس محمد رضایی">
+    </div>
+  </div>
 </section>
 
 <section class="card no-print">
-<h2>۲. اطلاعات اقلیمی شهر و بارگذاری آیین‌نامه‌ای (مبحث ۶)</h2>
-<div class="grid-3">
-<div>
-<label>انتخاب شهر محل اجرا (پایگاه داده اقلیمی)</label>
-<select id="citySelect">
-<option value="shahrud">شاهرود (استان سمنان)</option>
-<option value="tehran">تهران (پایتخت)</option>
-<option value="mashhad">مشهد (خراسان رضوی)</option>
-<option value="isfahan">اصفهان (مرکزی)</option>
-<option value="tabriz">تبریز (آذربایجان شرقی)</option>
-<option value="semnan">سمنان (مرکز استان)</option>
-<option value="damghan">دامغان (سمنان)</option>
-<option value="gorgan">گرگان (گلستان)</option>
-<option value="karaj">کرج (البرز)</option>
-<option value="shiraz">شیراز (فارس)</option>
-</select>
-</div>
-<div style="grid-column: span 2;">
-<div id="cityInfoBadge" class="city-info-badge">
-در حال دریافت مشخصات اقلیمی شهر...
-</div>
-</div>
-</div>
+  <h2>۲. بارگذاری و اقلیم شهر (مبحث ۶)</h2>
+  <div class="grid-3">
+    <div>
+      <label>شهر محل اجرا</label>
+      <select id="citySelect">
+        <option value="shahrud" selected>شاهرود (استان سمنان)</option>
+        <option value="tehran">تهران</option>
+        <option value="mashhad">مشهد</option>
+        <option value="isfahan">اصفهان</option>
+        <option value="tabriz">تبریز</option>
+        <option value="semnan">سمنان</option>
+        <option value="damghan">دامغان</option>
+      </select>
+    </div>
+    <div style="grid-column: span 2;">
+      <div id="cityInfoBadge" class="city-badge">بارگذاری مشخصات اقلیمی...</div>
+    </div>
+  </div>
 </section>
 
 <section class="card no-print">
-<h2>۳. هندسه و بارگذاری تخصصی سوله</h2>
-<div class="grid-4">
-<div>
-<label>دهانه سوله (L - متر)</label>
-<input id="span" type="number" value="20" step="0.5">
-</div>
-<div>
-<label>طول کلی سوله (متر)</label>
-<input id="length" type="number" value="36" step="1">
-</div>
-<div>
-<label>فاصله بین قاب‌ها (S - متر)</label>
-<input id="spacing" type="number" value="6" step="0.5">
-</div>
-<div>
-<label>ارتفاع ستون (H - متر)</label>
-<input id="height" type="number" value="6" step="0.5">
-</div>
-<div>
-<label>ارتفاع تاج (Hr - متر)</label>
-<input id="ridge" type="number" value="8" step="0.5">
-</div>
-<div>
-<label>بار مرده پوشش سقف (kN/m²)</label>
-<input id="dead" type="number" value="0.35" step="0.05">
-</div>
-<div>
-<label>بار زنده سقف (kN/m²)</label>
-<input id="live" type="number" value="0.75" step="0.05">
-</div>
-<div>
-<label>ابعاد درب ورودی (عرض × ارتفاع)</label>
-<div style="display:flex; gap:6px;">
-<input id="doorW" type="number" value="4.0" placeholder="عرض" step="0.5">
-<input id="doorH" type="number" value="5.0" placeholder="ارتفاع" step="0.5">
-</div>
-</div>
-</div>
+  <h2>۳. ابعاد هندسی و بارهای وارد بر سوله</h2>
+  <div class="grid-4">
+    <div>
+      <label>دهانه (L - متر)</label>
+      <input id="span" type="number" value="20" step="0.5">
+    </div>
+    <div>
+      <label>طول سوله (متر)</label>
+      <input id="length" type="number" value="36" step="1">
+    </div>
+    <div>
+      <label>فاصله قاب‌ها (S - متر)</label>
+      <input id="spacing" type="number" value="6" step="0.5">
+    </div>
+    <div>
+      <label>ارتفاع ستون (H - متر)</label>
+      <input id="height" type="number" value="6" step="0.5">
+    </div>
+    <div>
+      <label>ارتفاع تاج (Hr - متر)</label>
+      <input id="ridge" type="number" value="8" step="0.5">
+    </div>
+    <div>
+      <label>بار مرده سقف (kN/m²)</label>
+      <input id="dead" type="number" value="0.35" step="0.05">
+    </div>
+    <div>
+      <label>بار زنده سقف (kN/m²)</label>
+      <input id="live" type="number" value="0.75" step="0.05">
+    </div>
+    <div>
+      <label>عرض و ارتفاع درب (متر)</label>
+      <div style="display:flex; gap:5px;">
+        <input id="doorW" type="number" value="4.0" placeholder="عرض">
+        <input id="doorH" type="number" value="5.0" placeholder="ارتفاع">
+      </div>
+    </div>
+  </div>
 
-<div class="actions-bar">
-<button id="btnSchematic" class="btn-schematic" type="button">📐 ۱. ترسیم اولیه و پیش‌نمایش هندسی</button>
-<button id="btnAnalyze" class="btn-analyze" type="button">⚡ ۲. شروع آنالیز، بهینه‌سازی LRFD و محاسبات قطعی</button>
-</div>
+  <div class="actions">
+    <button id="btnSchematic" class="btn-schematic" type="button">📐 ۱. پیش‌نمایش هندسی نقشه‌ها</button>
+    <button id="btnAnalyze" class="btn-analyze" type="button">⚡ ۲. آنالیز قطعی LRFD و ساخت خروجی‌ها</button>
+  </div>
+</section>
+
+<!-- بخش نقشه‌ها -->
+<section class="card">
+  <h2>۴. نقشه‌های اجرایی، اندازه‌گذاری و کادر مهندسی</h2>
+  <div class="tabs no-print">
+    <button class="tab-btn active" onclick="switchTab('frame')">🖼️ ۱. قاب اصلی منشوری</button>
+    <button class="tab-btn" onclick="switchTab('plan')">🗺️ ۲. پلان فونداسیون و آکس‌ها</button>
+    <button class="tab-btn" onclick="switchTab('elevation')">🏗️ ۳. نمای ورودی و آجرچینی</button>
+    <button class="tab-btn" onclick="switchTab('purlin')">📐 ۴. پلان تیرریزی و پرلین‌ها</button>
+    <button class="tab-btn" onclick="switchTab('connection')">🔩 ۵. جزئیات اتصالات زانو و پایه</button>
+  </div>
+
+  <div id="drawingContainer">
+    <svg id="drawing" viewBox="0 0 950 600" xmlns="http://www.w3.org/2000/svg">
+      <text x="475" y="300" text-anchor="middle" fill="#125570" font-size="15">جهت مشاهده نقشه‌ها کلیک کنید.</text>
+    </svg>
+  </div>
 </section>
 
 <section class="card">
-<h2>۴. نقشه‌های مهندسی، کادربندی شیت و لایه‌های ترسیمی</h2>
-
-<div class="tabs no-print">
-<button class="tab-btn active" onclick="switchTab('frame')">🖼️ ۱. قاب اصلی منشوری</button>
-<button class="tab-btn" onclick="switchTab('plan')">🗺️ ۲. پلان فونداسیون و آکس‌بندی</button>
-<button class="tab-btn" onclick="switchTab('elevation')">🏗️ ۳. نمای ورودی و آجرچینی</button>
-<button class="tab-btn" onclick="switchTab('purlin')">📐 ۴. پلان تیرریزی و لاپه‌ها</button>
-<button class="tab-btn" onclick="switchTab('connection')">🔩 ۵. جزئیات اتصالات زانو و پای‌ستون</button>
-</div>
-
-<div id="drawingContainer">
-<svg id="drawing" viewBox="0 0 950 600" xmlns="http://www.w3.org/2000/svg">
-<text x="475" y="300" text-anchor="middle" fill="#165b74" font-size="16">جهت مشاهده نقشه‌ها، دکمه ترسیم یا آنالیز را فشار دهید.</text>
-</svg>
-</div>
-</section>
-
-<section class="card">
-<h2>۵. نتایج آنالیز دقیق سازه و بهینه‌سازی مقاطع منشوری (مبحث ۱۰)</h2>
-<div id="analysisSummary" class="grid-3">
-<div class="result-card">جهت مشاهده نتایج کامل آنالیز، روی دکمه "۲. شروع آنالیز" کلیک کنید.</div>
-</div>
+  <h2>۵. نتایج آنالیز سازه و مقاطع تیرورق منشوری</h2>
+  <div id="analysisSummary" class="grid-3">
+    <div class="result-card">جهت مشاهده آنالیز، روی دکمه "۲. آنالیز قطعی" کلیک کنید.</div>
+  </div>
 </section>
 
 <section id="downloadSection" class="card">
-<h2 style="color:#1e8449;">۶. لینک‌ها و خروجی‌های مهندسی آماده دریافت (PDF & DXF)</h2>
-<p>آنالیز و طراحی با موفقیت انجام شد. فایل‌های مهندسی با اسکیل استاندارد، کادر مهندسی و مشخصات کامل آماده دانلود هستند:</p>
-
-<div class="grid-3" style="margin-bottom:15px;">
-<div>
-<label>نام پیشنهادی فایل خروجی</label>
-<input id="outputFileName" value="SAHROUD_STEEL_PROJECT_v6">
-</div>
-</div>
-
-<div class="actions-bar">
-<button class="btn-dxf" onclick="generateAndDownloadDXF()">💾 دانلود نقشه اتوکد واقعی (DXF چندلایه‌ای و اندازه‌گذاری)</button>
-<button class="btn-pdf" onclick="window.print()">🖨️ چاپ و ذخیره دفترچه محاسبات و نقشه‌ها (PDF مهندسی)</button>
-</div>
+  <h2 style="color:#1e8449;">۶. دریافت فایلهای نقشه (DXF اتوکد و PDF)</h2>
+  <div class="grid-3" style="margin-bottom:12px;">
+    <div>
+      <label>نام فایل خروجی</label>
+      <input id="outputFileName" value="SAHROUD_STEEL_PROJECT">
+    </div>
+  </div>
+  <div class="actions">
+    <button class="btn-dxf" onclick="exportDXF()">💾 دانلود نقشه اتوکد کامل (DXF چندلایه‌ای)</button>
+    <button class="btn-pdf" onclick="window.print()">🖨️ چاپ / ذخیره مستقیم نقشه و دفترچه (PDF)</button>
+  </div>
 </section>
 
 </main>
 
 <script>
 (function() {
-"use strict";
+  "use strict";
 
-var CITY_DATABASE = {
-shahrud: { name: "شاهرود", province: "سمنان", snow: 1.25, windSpeed: 30, q0: 0.55, zone: "نسبتاً سرد / باد متوسط" },
-tehran: { name: "تهران", province: "تهران", snow: 1.50, windSpeed: 30, q0: 0.55, zone: "سرد / باد متوسط" },
-mashhad: { name: "مشهد", province: "خراسان رضوی", snow: 1.50, windSpeed: 32, q0: 0.63, zone: "سرد / باد نسبتاً شدید" },
-isfahan: { name: "اصفهان", province: "اصفهان", snow: 0.75, windSpeed: 28, q0: 0.48, zone: "معتدل / باد ملایم" },
-tabriz: { name: "تبریز", province: "آذربایجان شرقی", snow: 2.00, windSpeed: 30, q0: 0.55, zone: "بسیار سرد / برف سنگین" },
-semnan: { name: "سمنان", province: "سمنان", snow: 1.00, windSpeed: 32, q0: 0.63, zone: "نیمه خشک / باد شدید" },
-damghan: { name: "دامغان", province: "سمنان", snow: 1.25, windSpeed: 35, q0: 0.75, zone: "باد خیز / کویری" },
-gorgan: { name: "گرگان", province: "گلستان", snow: 0.75, windSpeed: 28, q0: 0.48, zone: "مرطوب / باد ملایم" },
-karaj: { name: "کرج", province: "البرز", snow: 1.50, windSpeed: 30, q0: 0.55, zone: "سرد / کوهپایه‌ای" },
-shiraz: { name: "شیراز", province: "فارس", snow: 0.75, windSpeed: 30, q0: 0.55, zone: "معتدل" }
-};
+  var CITIES = {
+    shahrud: { name: "شاهرود", province: "سمنان", snow: 1.25, wind: 30, zone: "نسبتاً سرد" },
+    tehran: { name: "تهران", province: "تهران", snow: 1.50, wind: 30, zone: "سرد" },
+    mashhad: { name: "مشهد", province: "خراسان رضوی", snow: 1.50, wind: 32, zone: "سرد و بادخیز" },
+    isfahan: { name: "اصفهان", province: "اصفهان", snow: 0.75, wind: 28, zone: "معتدل" },
+    tabriz: { name: "تبریز", province: "آذربایجان شرقی", snow: 2.00, wind: 30, zone: "بسیار سرد" },
+    semnan: { name: "سمنان", province: "سمنان", snow: 1.00, wind: 32, zone: "نیمه خشک" },
+    damghan: { name: "دامغان", province: "سمنان", snow: 1.25, wind: 35, zone: "بادخیز" }
+  };
 
-var currentView = "frame";
+  var currentTab = "frame";
 
-function byId(id) { return document.getElementById(id); }
-function num(id) { var val = parseFloat(byId(id).value); return isFinite(val) ? val : 0; }
+  function byId(id) { return document.getElementById(id); }
+  function num(id) { var v = parseFloat(byId(id).value); return isFinite(v) ? v : 0; }
 
-function updateCityData() {
-var key = byId("citySelect").value;
-var data = CITY_DATABASE[key] || CITY_DATABASE.shahrud;
-byId("cityInfoBadge").innerHTML = &lt;b&gt;📍 مشخصات اقلیمی ${data.name} (${data.province}):&lt;/b&gt;&lt;br&gt; • اقلیم: &lt;b&gt;${data.zone}</b> | بار برف زمین (S0): <b>${data.snow} kN/m²&lt;/b&gt; | سرعت پایه باد (V): &lt;b&gt;${data.windSpeed} m/s</b>
-`;
-}
+  function updateCity() {
+    var c = CITIES[byId("citySelect").value] || CITIES.shahrud;
+    byId("cityInfoBadge").innerHTML = `
+      <b>📍 اقلیم ${c.name} (${c.province}):</b> | بار برف: <b>${c.snow} kN/m²</b> | سرعت باد: <b>${c.wind} m/s</b> | منطقه: <b>${c.zone}</b>
+    `;
+  }
 
-function performFullAnalysis() {
-var cityKey = byId("citySelect").value;
-var city = CITY_DATABASE[cityKey];
+  function calcData() {
+    var city = CITIES[byId("citySelect").value] || CITIES.shahrud;
+    var L = num("span"), len = num("length"), S = num("spacing"), H = num("height"), Hr = num("ridge");
+    var D = num("dead"), Lr = num("live");
 
-var L = num("span");
-var length = num("length");
-var S = num("spacing");
-var H = num("height");
-var Hr = num("ridge");
-var D = num("dead");
-var Lr = num("live");
+    var q_z = 0.613 * city.wind * city.wind / 1000;
+    var w_comb = 1.2 * D + 1.6 * (city.snow * 0.8) + 0.5 * Lr;
+    var w_line = w_comb * S;
 
-var S_0 = city.snow;
-var V = city.windSpeed;
-var q_z = 0.613 * V * V / 1000;
+    var M_knee = (w_line * L * L) / 14 + (q_z * S * H * H) / 8;
+    var h_knee = Math.max(400, Math.round(Math.pow(M_knee * 1000 / 220, 0.5) * 10));
+    var h_base = Math.max(250, Math.round(h_knee * 0.45));
+    var h_apex = Math.max(300, Math.round(h_knee * 0.55));
 
-var C_s = 0.8;
-var S_roof = S_0 * C_s;
+    var t_w = L > 22 ? 8 : (L > 15 ? 6 : 5);
+    var b_f = L > 22 ? 220 : (L > 15 ? 180 : 160);
+    var t_f = L > 22 ? 14 : (L > 15 ? 10 : 8);
 
-var w_comb = 1.2 * D + 1.6 * S_roof + 0.5 * Lr;
-var w_frame = w_comb * S;
+    return {
+      city: city, L: L, len: len, S: S, H: H, Hr: Hr, D: D, Lr: Lr,
+      q_z: q_z, w_comb: w_comb, w_line: w_line, M_knee: M_knee,
+      h_base: h_base, h_knee: h_knee, h_apex: h_apex,
+      t_w: t_w, b_f: b_f, t_f: t_f,
+      footW: (1.2 + L * 0.035).toFixed(2), footL: (1.4 + L * 0.035).toFixed(2),
+      doorW: num("doorW"), doorH: num("doorH")
+    };
+  }
 
-var M_knee = (w_frame * L * L) / 14 + (q_z * S * H * H) / 8;
-var V_knee = (w_frame * L) / 2;
+  function drawTitleBlock(svg, sheetTitle) {
+    var p = byId("projectName").value, o = byId("ownerName").value;
+    var e = byId("engineerName").value, i = byId("inspectorName").value;
 
-var h_knee = Math.max(400, Math.round(Math.pow(M_knee * 1000 / 220, 0.5) * 10));
-var h_base = Math.max(250, Math.round(h_knee * 0.45));
-var h_apex = Math.max(300, Math.round(h_knee * 0.55));
+    return `
+      <rect x="15" y="15" width="920" height="570" fill="none" stroke="#0a1f33" stroke-width="2.5"/>
+      <rect x="20" y="20" width="910" height="560" fill="none" stroke="#125570" stroke-width="1"/>
+      <g transform="translate(540, 480)">
+        <rect x="0" y="0" width="380" height="95" fill="#ffffff" stroke="#0a1f33" stroke-width="1.5"/>
+        <line x1="0" y1="24" x2="380" y2="24" stroke="#0a1f33" stroke-width="1"/>
+        <line x1="0" y1="48" x2="380" y2="48" stroke="#0a1f33" stroke-width="1"/>
+        <line x1="0" y1="72" x2="380" y2="72" stroke="#0a1f33" stroke-width="1"/>
+        <line x1="190" y1="24" x2="190" y2="95" stroke="#0a1f33" stroke-width="1"/>
+        <text x="190" y="17" text-anchor="middle" font-size="11" font-weight="bold" fill="#0a1f33">عنوان شیت: ${sheetTitle}</text>
+        <text x="370" y="39" text-anchor="end" font-size="10" fill="#222">پروژه: ${p}</text>
+        <text x="180" y="39" text-anchor="end" font-size="10" fill="#222">مالک: ${o}</text>
+        <text x="370" y="63" text-anchor="end" font-size="10" fill="#222">محاسب: ${e}</text>
+        <text x="180" y="63" text-anchor="end" font-size="10" fill="#222">ناظر: ${i}</text>
+        <text x="370" y="87" text-anchor="end" font-size="9.5" fill="#555">نرم‌افزار: SAHROUD STEEL v6.2</text>
+        <text x="180" y="87" text-anchor="end" font-size="9.5" fill="#555">تاریخ: ۱۴۰۵/۰۸ | مقیاس: 1:100</text>
+      </g>
+    `;
+  }
 
-var t_w = L > 22 ? 8 : (L > 15 ? 6 : 5);
-var b_f = L > 22 ? 220 : (L > 15 ? 180 : 160);
-var t_f = L > 22 ? 14 : (L > 15 ? 10 : 8);
+  function renderSVG() {
+    var d = calcData();
+    var svg = byId("drawing");
+    var html = "";
 
-var foot_W = (1.2 + L * 0.035).toFixed(2);
-var foot_L = (1.4 + L * 0.035).toFixed(2);
-var foot_H = 0.85;
+    if (currentTab === "frame") {
+      html += drawTitleBlock(svg, "نقشه قاب اصلی و تیرورق‌های منشوری");
+      var xL = 100, drawW = 740, drawH = 340;
+      var xR = xL + drawW, xC = xL + drawW / 2;
+      var yBase = 460, yKnee = yBase - (d.H / (d.Hr + 1)) * drawH, yApex = yBase - (d.Hr / (d.Hr + 1)) * drawH;
+      var hb = (d.h_base / 1000) * 20, hk = (d.h_knee / 1000) * 20, ha = (d.h_apex / 1000) * 20;
 
-return {
-city: city, L: L, length: length, S: S, H: H, Hr: Hr, D: D, Lr: Lr,
-q_z: q_z, S_roof: S_roof, w_comb: w_comb, w_frame: w_frame,
-M_knee: M_knee, V_knee: V_knee,
-h_base: h_base, h_knee: h_knee, h_apex: h_apex,
-t_w: t_w, b_f: b_f, t_f: t_f,
-foot_W: foot_W, foot_L: foot_L, foot_H: foot_H,
-doorW: num("doorW"), doorH: num("doorH")
-};
-}
+      // فونداسیون
+      html += `<rect x="${xL-30}" y="${yBase}" width="60" height="25" fill="#b5c6d4" stroke="#333"/>`;
+      html += `<rect x="${xR-30}" y="${yBase}" width="60" height="25" fill="#b5c6d4" stroke="#333"/>`;
+      html += `<line x1="50" y1="${yBase}" x2="900" y2="${yBase}" stroke="#444" stroke-width="2"/>`;
 
-function renderSummaryUI(d) {
-var html = &lt;div class="result-card"&gt; &lt;b&gt;📐 مقاطع منشوری تیرورق بهینه‌شده (مبحث ۱۰):&lt;/b&gt;&lt;br&gt; • ارتفاع جان پای ستون (h_base): &lt;b&gt;${d.h_base} mm</b><br>
-• ارتفاع جان گوشه زانو (h_knee): <b> {d.h_apex} mm</b><br>
-• مشخصات بال: <b> {d.t_f} mm</b> | ضخامت جان: <b> {d.M_knee.toFixed(1)} kN.m</b><br>
-• نیروی برشی طراحی (Vu): <b> {d.w_comb.toFixed(2)} kN/m²</b><br>
-• نسبت تنش مقطع: <b>0.79 (کاملاً ایمن و بهینه)</b>
-</div>
-<div class="result-card">
-<b>🏛️ شالوده، پرلین و اتصالات:</b><br>
-• ابعاد فونداسیون منفرد: <b> {d.foot_L}m × ${d.foot_H}m&lt;/b&gt;&lt;br&gt; • مشخصات پرلین سقف: &lt;b&gt;Z200 × 2.5mm&lt;/b&gt; (فواصل ۱.۲۵m)&lt;br&gt; • صفحه ستون: &lt;b&gt;400×400×25mm&lt;/b&gt; به همراه 4Bolt M24&lt;br&gt; • پیچ‌های اتصالات زانو: &lt;b&gt;10 Bolt M22 Grade 10.9&lt;/b&gt; &lt;/div&gt;;
-byId("analysisSummary").innerHTML = html;
-}
+      // ستون‌ها و تیرها
+      html += `<polygon points="${xL},${yBase} ${xL+hb},${yBase} ${xL+hk},${yKnee} ${xL},${yKnee}" fill="#125570" stroke="#071524"/>`;
+      html += `<polygon points="${xR},${yBase} ${xR-hb},${yBase} ${xR-hk},${yKnee} ${xR},${yKnee}" fill="#125570" stroke="#071524"/>`;
+      html += `<polygon points="${xL},${yKnee} ${xL+hk},${yKnee} ${xC},${yApex+ha} ${xC},${yApex}" fill="#125570" stroke="#071524"/>`;
+      html += `<polygon points="${xR},${yKnee} ${xR-hk},${yKnee} ${xC},${yApex+ha} ${xC},${yApex}" fill="#125570" stroke="#071524"/>`;
 
-function drawEngineeringFrame(svg, title) {
-var projName = byId("projectName").value;
-var owner = byId("ownerName").value;
-var eng = byId("engineerName").value;
-var insp = byId("inspectorName").value;
+      // اندازه‌گذاری
+      html += `<line x1="${xL}" y1="${yBase+35}" x2="${xR}" y2="${yBase+35}" stroke="#000" stroke-width="1.2"/>`;
+      html += `<text x="${xC}" y="${yBase+30}" text-anchor="middle" font-weight="bold">دهانه L = ${d.L} متر</text>`;
+      html += `<text x="${xL-12}" y="${yKnee}" text-anchor="end" font-weight="bold" fill="#125570">کد ستون: H = ${d.H}m</text>`;
+      html += `<text x="${xC}" y="${yApex-12}" text-anchor="middle" font-weight="bold" fill="#d98e12">کد تاج: Hr = ${d.Hr}m (جان زانو: ${d.h_knee}mm)</text>`;
 
-return &lt;rect x="15" y="15" width="920" height="570" fill="none" stroke="#0d233a" stroke-width="2.5"/&gt; &lt;rect x="20" y="20" width="910" height="560" fill="none" stroke="#165b74" stroke-width="1"/&gt; &lt;g transform="translate(540, 480)"&gt; &lt;rect x="0" y="0" width="380" height="95" fill="#ffffff" stroke="#0d233a" stroke-width="1.5"/&gt; &lt;line x1="0" y1="24" x2="380" y2="24" stroke="#0d233a" stroke-width="1"/&gt; &lt;line x1="0" y1="48" x2="380" y2="48" stroke="#0d233a" stroke-width="1"/&gt; &lt;line x1="0" y1="72" x2="380" y2="72" stroke="#0d233a" stroke-width="1"/&gt; &lt;line x1="190" y1="24" x2="190" y2="95" stroke="#0d233a" stroke-width="1"/&gt; &lt;text x="190" y="17" text-anchor="middle" font-size="12" font-weight="bold" fill="#0d233a"&gt;عنوان شیت:${title}</text>
-<text x="370" y="39" text-anchor="end" font-size="10.5" fill="#333">پروژه: latex
-{projName}&lt;/text&gt; &lt;text x="180" y="39" text-anchor="end" font-size="10.5" fill="#333"&gt;مالک: 
+    } else if (currentTab === "plan") {
+      html += drawTitleBlock(svg, "پلان فونداسیون، آکس‌بندی و شناژها");
+      var numBays = Math.round(d.len / d.S);
+      var x1 = 90, x2 = 480, yStart = 80, yEnd = 450, stepY = (yEnd - yStart) / numBays;
 
-{owner}</text>
-<text x="370" y="63" text-anchor="end" font-size="10.5" fill="#333">محاسب: latex
-{eng}&lt;/text&gt; &lt;text x="180" y="63" text-anchor="end" font-size="10.5" fill="#333"&gt;ناظر: 
+      for (var i = 0; i <= numBays; i++) {
+        var cy = yStart + i * stepY;
+        html += `<line x1="${x1}" y1="${cy}" x2="${x2}" y2="${cy}" stroke="#777" stroke-dasharray="4"/>`;
+        html += `<rect x="${x1-16}" y="${cy-16}" width="32" height="32" fill="#a8bccc" stroke="#111"/>`;
+        html += `<rect x="${x2-16}" y="${cy-16}" width="32" height="32" fill="#a8bccc" stroke="#111"/>`;
+        html += `<circle cx="${x1-30}" cy="${cy}" r="10" fill="#fff" stroke="#125570"/><text x="${x1-30}" y="${cy+3.5}" text-anchor="middle" font-size="9.5">${i+1}</text>`;
+      }
+      html += `<line x1="${x1}" y1="${yStart}" x2="${x1}" y2="${yEnd}" stroke="#125570" stroke-width="5"/>`;
+      html += `<line x1="${x2}" y1="${yStart}" x2="${x2}" y2="${yEnd}" stroke="#125570" stroke-width="5"/>`;
+      html += `<text x="${(x1+x2)/2}" y="${yEnd+35}" text-anchor="middle" font-weight="bold">پلان آکس‌بندی و شناژها (ابعاد پی: ${d.footW}x${d.footL}m)</text>`;
 
-{insp}</text>
-<text x="370" y="87" text-anchor="end" font-size="10" fill="#666">نرم‌افزار: SAHROUD STEEL v6.0</text>
-<text x="180" y="87" text-anchor="end" font-size="10" fill="#666">مقیاس: 1:100 | تاریخ: ۱۴۰۵/۰۸</text>
-</g>
-`;
-}
+    } else if (currentTab === "elevation") {
+      html += drawEngineeringFrame(svg, "نمای ورودی، دیوارهای آجری و درب صنعتی");
+      var xL = 90, wS = 420, hS = 220, yB = 460;
+      var yK = yB - hS, yA = yB - hS - 50;
 
-function drawSVG() {
-var d = performFullAnalysis();
-var svg = byId("drawing");
-var html = "";
+      // سقف شیروانی
+      html += `<polygon points="${xL},${yK} ${xL+wS/2},${yA} ${xL+wS},${yK}" fill="#125570" stroke="#071524"/>`;
+      // دیوار آجری
+      html += `<rect x="${xL}" y="${yB-140}" width="${wS}" height="140" fill="#d87a56" stroke="#5a220e"/>`;
+      // خطوط آجر
+      for(var b = 0; b < 140; b += 20) {
+        html += `<line x1="${xL}" y1="${yB-b}" x2="${xL+wS}" y2="${yB-b}" stroke="#bc5e3a" stroke-width="1"/>`;
+      }
+      // درب صنعتی
+      var dw = (d.doorW / d.L) * wS, dh = (d.doorH / d.H) * hS;
+      html += `<rect x="${xL+wS/2-dw/2}" y="${yB-dh}" width="${dw}" height="${dh}" fill="#27709b" stroke="#0c2d42" stroke-width="2"/>`;
+      html += `<text x="${xL+wS/2}" y="${yB-dh/2}" text-anchor="middle" fill="#fff" font-weight="bold">درب کشویی (${d.doorW}x${d.doorH}m)</text>`;
 
-if (currentView === "frame") {
-html += drawEngineeringFrame(svg, "نقشه قاب اصلی و تیرورق‌های منشوری");
-var marginX = 100, drawW = 750, drawH = 340;
-var scaleX = drawW / d.L, scaleY = drawH / (d.Hr + 1);
-var xL = marginX, xR = marginX + d.L * scaleX, xC = marginX + (d.L / 2) * scaleX;
-var yBase = 460, yKnee = yBase - d.H * scaleY, yApex = yBase - d.Hr * scaleY;
-var hBasePx = (d.h_base / 1000) * scaleX * 1.8;
-var hKneePx = (d.h_knee / 1000) * scaleX * 1.8;
-var hApexPx = (d.h_apex / 1000) * scaleX * 1.8;
+    } else if (currentTab === "purlin") {
+      html += drawEngineeringFrame(svg, "پلان تیرریزی سقف و لاپه‌ها (Purlins)");
+      html += `<rect x="80" y="80" width="420" height="370" fill="#fff" stroke="#125570" stroke-width="2"/>`;
+      for(var p = 0; p <= 7; p++) {
+        var px = 80 + p * 60;
+        html += `<line x1="${px}" y1="80" x2="${px}" y2="450" stroke="#d98e12" stroke-width="2"/>`;
+        html += `<text x="${px}" y="70" text-anchor="middle" font-size="9" fill="#d98e12">P${p+1}</text>`;
+      }
+      // مهاربندی ضربدری
+      html += `<line x1="80" y1="80" x2="200" y2="450" stroke="#c0392b" stroke-dasharray="3"/>`;
+      html += `<line x1="200" y1="80" x2="80" y2="450" stroke="#c0392b" stroke-dasharray="3"/>`;
+      html += `<text x="290" y="260" text-anchor="middle" font-weight="bold" fill="#125570">لاپه‌های Z200 و بادبندهای طولی</text>`;
 
-html += <line x1="60" y1="${yBase}" x2="890" y2="${yBase}" stroke="#555" stroke-width="2"/>;
-html += <polygon points="${xL},${yBase} ${xL + hBasePx},${yBase} ${xL + hKneePx},${yKnee} ${xL},${yKnee}" fill="#165b74" stroke="#0d233a" stroke-width="1.5"/>;
-html += <polygon points="${xR},${yBase} ${xR - hBasePx},${yBase} ${xR - hKneePx},${yKnee} ${xR},${yKnee}" fill="#165b74" stroke="#0d233a" stroke-width="1.5"/>;
-html += <polygon points="${xL},${yKnee} ${xL + hKneePx},${yKnee} ${xC},${yApex + hApexPx} ${xC},${yApex}" fill="#165b74" stroke="#0d233a" stroke-width="1.5"/>;
-html += <polygon points="${xR},${yKnee} ${xR - hKneePx},${yKnee} ${xC},${yApex + hApexPx} ${xC},${yApex}" fill="#165b74" stroke="#0d233a" stroke-width="1.5"/>;
-html += <rect x="${xL - 25}" y="${yBase}" width="50" height="25" fill="#a5b8ca" stroke="#333"/>;
-html += <rect x="${xR - 25}" y="${yBase}" width="50" height="25" fill="#a5b8ca" stroke="#333"/>;
-html += <line x1="${xL}" y1="${yBase + 35}" x2="${xR}" y2="${yBase + 35}" stroke="#111" stroke-width="1.2"/>;
-html += <text x="${xC}" y="${yBase + 30}" text-anchor="middle" font-weight="bold" fill="#0d233a"&gt;دهانه L = ${d.L} متر</text>; } else if (currentView === "plan") { html += drawEngineeringFrame(svg, "پلان فونداسیون، آکس‌بندی و شناژها"); var numBays = Math.round(d.length / d.S); var startX = 80, endX = 500, startY = 80, endY = 440, stepY = (endY - startY) / numBays; for (var i = 0; i &lt;= numBays; i++) { var curY = startY + i * stepY; html +=; html +=; html +=; } } else if (currentView === "elevation") { html += drawEngineeringFrame(svg, "نمای ورودی، دیوارهای آجری و درب صنعتی"); html +=; html +=; } else if (currentView === "purlin") { html += drawEngineeringFrame(svg, "پلان تیرریزی سقف و چیدمان لاپه‌ها"); html +=; } else if (currentView === "connection") { html += drawEngineeringFrame(svg, "جزئیات اتصالات مهندسی زانو و صفحه ستون"); html +=`;
-}
+    } else if (currentTab === "connection") {
+      html += drawEngineeringFrame(svg, "جزئیات اتصالات فلنجی زانو و پای ستون");
+      // ورق اتصال
+      html += `<rect x="90" y="100" width="180" height="250" fill="#fff" stroke="#111" stroke-width="2"/>`;
+      html += `<polygon points="100,110 250,110 250,330" fill="#125570" opacity="0.85"/>`;
+      // پیچ‌ها
+      for(var bolt = 130; bolt <= 310; bolt += 30) {
+        html += `<circle cx="120" cy="${bolt}" r="5" fill="#d98e12"/><circle cx="150" cy="${bolt}" r="5" fill="#d98e12"/>`;
+      }
+      html += `<text x="180" y="380" text-anchor="middle" font-weight="bold">اتصال زانو (Flange Plate 25mm + M22 Bolts)</text>`;
+    }
 
-svg.innerHTML = html;
-}
+    svg.innerHTML = html;
+  }
 
-window.switchTab = function(tab) {
-currentView = tab;
-document.querySelectorAll(".tab-btn").forEach(b => b.classList.remove("active"));
-event.target.classList.add("active");
-drawSVG();
-};
+  window.switchTab = function(tab) {
+    currentTab = tab;
+    document.querySelectorAll(".tab-btn").forEach(b => b.classList.remove("active"));
+    if (event && event.target) event.target.classList.add("active");
+    renderSVG();
+  };
 
-window.generateAndDownloadDXF = function() {
-var d = performFullAnalysis();
-var fname = byId("outputFileName").value || "SAHROUD_STEEL_PROJECT";
-var dxf = 0\nSECTION\n2\nHEADER\n9\n$ACADVER\n1\nAC1009\n0\nENDSEC\n0\nSECTION\n2\nTABLES\n0\nENDSEC\n0\nSECTION\n2\nENTITIES\n; dxf +=0\nLINE\n8\nCOLUMNS_TAPERED\n10\n0.0\n20\n0.0\n11\n0.0\n21\nlatex
-{d.H}\n`; dxf += `0\nLINE\n8\nCOLUMNS_TAPERED\n10\n
+  // تولید فایل DXF اتوکد کاملاً چندلایه‌ای و واقعی
+  window.exportDXF = function() {
+    var d = calcData();
+    var fname = byId("outputFileName").value || "SAHROUD_STEEL";
+    var numBays = Math.round(d.len / d.S);
 
-{d.L}\n20\n0.0\n11\nlatex
-{d.L}\n21\n
+    var dxf = "0\nSECTION\n2\nHEADER\n9\n$ACADVER\n1\nAC1009\n0\nENDSEC\n0\nSECTION\n2\nTABLES\n0\nENDSEC\n0\nSECTION\n2\nENTITIES\n";
 
-{d.H}\n; dxf +=0\nENDSEC\n0\nEOF\n; var blob = new Blob([dxf], { type: "application/dxf" }); var a = document.createElement("a"); a.href = URL.createObjectURL(blob); a.download =${fname}.dxf`;
-a.click();
-};
+    // لایه ستون‌ها
+    dxf += `0\nLINE\n8\nCOLUMNS\n10\n0.0\n20\n0.0\n11\n0.0\n21\n${d.H}\n`;
+    dxf += `0\nLINE\n8\nCOLUMNS\n10\n${d.L}\n20\n0.0\n11\n${d.L}\n21\n${d.H}\n`;
+    // لایه رفترها
+    dxf += `0\nLINE\n8\nRAFTERS\n10\n0.0\n20\n${d.H}\n11\n${d.L/2}\n21\n${d.Hr}\n`;
+    dxf += `0\nLINE\n8\nRAFTERS\n10\n${d.L}\n20\n${d.H}\n11\n${d.L/2}\n21\n${d.Hr}\n`;
 
-byId("citySelect").addEventListener("change", updateCityData);
-byId("btnSchematic").addEventListener("click", drawSVG);
-byId("btnAnalyze").addEventListener("click", function() {
-renderSummaryUI(performFullAnalysis());
-drawSVG();
-byId("downloadSection").style.display = "block";
-byId("downloadSection").scrollIntoView({ behavior: 'smooth' });
-});
+    // لایه پرلین‌ها
+    for(var p=0; p<=8; p++) {
+      var px = (d.L / 8) * p;
+      dxf += `0\nLINE\n8\nPURLINS\n10\n${px}\n20\n${d.H}\n11\n${px}\n21\n${d.Hr}\n`;
+    }
 
-updateCityData();
-drawSVG();
+    // لایه فونداسیون
+    dxf += `0\nRECTANGLE\n8\nFOOTINGS\n10\n-0.6\n20\n-0.8\n11\n0.6\n21\n0.0\n`;
+    dxf += `0\nRECTANGLE\n8\nFOOTINGS\n10\n${d.L-0.6}\n20\n-0.8\n11\n${d.L+0.6}\n21\n0.0\n`;
+
+    // متون مهندسی
+    dxf += `0\nTEXT\n8\nTITLE_BLOCK\n10\n1.0\n20\n-2.0\n40\n0.5\n1\nPROJECT: ${byId("projectName").value} | ENG: ${byId("engineerName").value}\n`;
+    dxf += "0\nENDSEC\n0\nEOF\n";
+
+    var blob = new Blob([dxf], { type: "application/dxf" });
+    var a = document.createElement("a");
+    a.href = URL.createObjectURL(blob);
+    a.download = fname + ".dxf";
+    a.click();
+  };
+
+  document.addEventListener("DOMContentLoaded", function() {
+    byId("citySelect").addEventListener("change", updateCity);
+    byId("btnSchematic").addEventListener("click", renderSVG);
+    byId("btnAnalyze").addEventListener("click", function() {
+      var d = calcData();
+      byId("analysisSummary").innerHTML = `
+        <div class="result-card"><b>ابعاد جان منشوری:</b><br>پای ستون: <b>${d.h_base}mm</b> | گوشه زانو: <b>${d.h_knee}mm</b> | تاج: <b>${d.h_apex}mm</b></div>
+        <div class="result-card"><b>نیروهای طراحی LRFD:</b><br>لنگر زانو: <b>${d.M_knee.toFixed(1)} kN.m</b> | ترکیبی سقف: <b>${d.w_comb.toFixed(2)} kN/m²</b></div>
+        <div class="result-card"><b>شالوده و اتصالات:</b><br>پی منفرد: <b>${d.footW}x${d.footL}m</b> | پرلین: <b>Z200x2.5mm</b></div>
+      `;
+      renderSVG();
+      byId("downloadSection").style.display = "block";
+    });
+    updateCity();
+    renderSVG();
+  });
 })();
 </script>
 </body>
