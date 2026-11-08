@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>SAHROUD STEEL v6.6 Pro - سامانه گزارش و خروجی مهندسی سوله</title>
+<title>SAHROUD STEEL v7.0 Pro - سامانه محاسبات و تولید نقشه‌های اجرایی سوله</title>
 <style>
 :root {
   --primary: #0a1f33;
@@ -100,6 +100,8 @@ button {
 .btn-schematic:hover { background: #245267; }
 .btn-analyze { background: #125570; color: white; font-size: 13.5px; }
 .btn-analyze:hover { background: #0b394c; }
+.btn-dxf { background: #27ae60; color: white; }
+.btn-dxf:hover { background: #1e8449; }
 .btn-pdf { background: var(--accent); color: white; }
 .btn-pdf:hover { background: #b0710b; }
 
@@ -157,8 +159,8 @@ button {
 <body>
 
 <header class="no-print">
-  <h1>SAHROUD STEEL v6.6 Pro</h1>
-  <p>سامانه جامع محاسبات، آنالیز LRFD و خروجی گزارش PDF مهندسی</p>
+  <h1>SAHROUD STEEL v7.0 Pro</h1>
+  <p>سامانه محاسبات، آنالیز LRFD و صدور نقشه‌های اجرایی سوله منشوری</p>
   <div class="engineer-badge">طراح، محاسب و ناظر پروژه: مهندس احمد نوری</div>
 </header>
 
@@ -180,7 +182,7 @@ button {
       <input id="engineerName" value="مهندس احمد نوری">
     </div>
     <div>
-      <label>مهندس ناظر</label>
+      <label>مهندس ناظر (قابل تغییر)</label>
       <input id="inspectorName" value="مهندس احمد نوری">
     </div>
   </div>
@@ -249,17 +251,17 @@ button {
 
   <div class="actions">
     <button id="btnSchematic" class="btn-schematic" type="button">📐 ۱. پیش‌نمایش هندسی نقشه‌ها</button>
-    <button id="btnAnalyze" class="btn-analyze" type="button">⚡ ۲. آنالیز قطعی LRFD و تایید شیت‌ها</button>
+    <button id="btnAnalyze" class="btn-analyze" type="button">⚡ ۲. آنالیز قطعی LRFD و محاسبه مقاطع</button>
   </div>
 </section>
 
 <!-- بخش نقشه‌ها -->
 <section class="card">
-  <h2>۴. شیت‌های نقشه و کادر مهندسی قابل چاپ به صورت PDF</h2>
+  <h2>۴. شیت‌های نقشه مهندسی، مقاطع منشوری و اندازه‌گذاری</h2>
   <div class="tabs no-print">
-    <button class="tab-btn active" onclick="switchTab('frame')">🖼️ ۱. قاب اصلی منشوری</button>
+    <button class="tab-btn active" onclick="switchTab('frame')">🖼️ ۱. قاب اصلی و مقاطع تیرورق</button>
     <button class="tab-btn" onclick="switchTab('plan')">🗺️ ۲. پلان فونداسیون و آکس‌ها</button>
-    <button class="tab-btn" onclick="switchTab('elevation')">🏗️ ۳. نمای ورودی و آجرچینی</button>
+    <button class="tab-btn" onclick="switchTab('elevation')">🏗️ ۳. نمای ورودی و دیوارهای آجری</button>
     <button class="tab-btn" onclick="switchTab('purlin')">📐 ۴. پلان تیرریزی و پرلین‌ها</button>
     <button class="tab-btn" onclick="switchTab('connection')">🔩 ۵. جزئیات اتصالات زانو و پایه</button>
   </div>
@@ -272,17 +274,23 @@ button {
 </section>
 
 <section class="card">
-  <h2>۵. نتایج آنالیز سازه و مقاطع تیرورق منشوری</h2>
+  <h2>۵. نتایج آنالیز سازه و مشخصات تکمیلی تیرورق‌های منشوری</h2>
   <div id="analysisSummary" class="grid-3">
     <div class="result-card">جهت مشاهده آنالیز، روی دکمه "۲. آنالیز قطعی" کلیک کنید.</div>
   </div>
 </section>
 
 <section id="downloadSection" class="card">
-  <h2 style="color:#1e8449;">۶. دریافت شیت‌های نقشه و دفترچه محاسبات (PDF استاندارد)</h2>
-  <p>با فشردن دکمه زیر، پنجره پرینت مرورگر باز شده و می‌توانید کل شیت مهندسی را به صورت فایل **PDF** با کیفیت عالی ذخیره نمایید:</p>
+  <h2 style="color:#1e8449;">۶. دریافت خروجی‌های مهندسی (DXF اتوکد و PDF)</h2>
+  <div class="grid-3" style="margin-bottom:12px;">
+    <div>
+      <label>نام فایل خروجی</label>
+      <input id="outputFileName" value="SAHROUD_STEEL_PROJECT">
+    </div>
+  </div>
   <div class="actions">
-    <button class="btn-pdf" onclick="window.print()">🖨️ ذخیره و چاپ مستقیم شیت‌های نقشه و دفترچه (PDF مهندسی)</button>
+    <button class="btn-dxf" onclick="exportDXF()">💾 دانلود نقشه‌ها به صورت DXF (اتوکد چندلایه‌ای)</button>
+    <button class="btn-pdf" onclick="window.print()">🖨️ دانلود / چاپ مستقیم نقشه‌ها به صورت PDF</button>
   </div>
 </section>
 
@@ -369,7 +377,7 @@ button {
         <text x="170" y="41" text-anchor="end" font-size="9.5" fill="#222">مالک: ${o}</text>
         <text x="355" y="66" text-anchor="end" font-size="9.5" fill="#222">محاسب: ${e}</text>
         <text x="170" y="66" text-anchor="end" font-size="9.5" fill="#222">ناظر: ${i}</text>
-        <text x="355" y="91" text-anchor="end" font-size="9" fill="#555">نرم‌افزار: SAHROUD STEEL v6.6</text>
+        <text x="355" y="91" text-anchor="end" font-size="9" fill="#555">نرم‌افزار: SAHROUD STEEL v7.0</text>
         <text x="170" y="91" text-anchor="end" font-size="9" fill="#555">تاریخ: ۱۴۰۵/۰۸ | مقیاس: 1:100</text>
       </g>
     `;
@@ -392,15 +400,17 @@ button {
       html += `<rect x="${xR-25}" y="${yBase}" width="50" height="22" fill="#b5c6d4" stroke="#333"/>`;
       html += `<line x1="45" y1="${yBase}" x2="890" y2="${yBase}" stroke="#444" stroke-width="2"/>`;
 
+      // ستون‌ها و تیرهای منشوری
       html += `<polygon points="${xL},${yBase} ${xL+hb},${yBase} ${xL+hk},${yKnee} ${xL},${yKnee}" fill="#125570" stroke="#071524"/>`;
       html += `<polygon points="${xR},${yBase} ${xR-hb},${yBase} ${xR-hk},${yKnee} ${xR},${yKnee}" fill="#125570" stroke="#071524"/>`;
       html += `<polygon points="${xL},${yKnee} ${xL+hk},${yKnee} ${xC},${yApex+ha} ${xC},${yApex}" fill="#125570" stroke="#071524"/>`;
       html += `<polygon points="${xR},${yKnee} ${xR-hk},${yKnee} ${xC},${yApex+ha} ${xC},${yApex}" fill="#125570" stroke="#071524"/>`;
 
+      // درج مشخصات کامل مقاطع جان و بال روی نقشه
       html += `<line x1="${xL}" y1="${yBase+35}" x2="${xR}" y2="${yBase+35}" stroke="#000" stroke-width="1.2"/>`;
       html += `<text x="${xC}" y="${yBase+30}" text-anchor="middle" font-weight="bold">دهانه L = ${d.L} متر</text>`;
-      html += `<text x="${xL-10}" y="${yKnee}" text-anchor="end" font-weight="bold" fill="#125570">H = ${d.H}m</text>`;
-      html += `<text x="${xC}" y="${yApex-10}" text-anchor="middle" font-weight="bold" fill="#d98e12">Hr = ${d.Hr}m (جان: ${d.h_knee}mm)</text>`;
+      html += `<text x="${xL-10}" y="${yKnee}" text-anchor="end" font-weight="bold" fill="#125570">H = ${d.H}m (ستون: h_base=${d.h_base}mm, h_knee=${d.h_knee}mm)</text>`;
+      html += `<text x="${xC}" y="${yApex-10}" text-anchor="middle" font-weight="bold" fill="#d98e12">Hr = ${d.Hr}m (رفتر: h_knee=${d.h_knee}mm, h_apex=${d.h_apex}mm | بال: ${d.b_f}x${d.t_f}mm | جان: t_w=${d.t_w}mm)</text>`;
 
     } else if (currentTab === "plan") {
       html += drawTitleBlock(svg, "پلان کامل فونداسیون، شناژها و اندازه‌گذاری آکس‌ها");
@@ -448,7 +458,7 @@ button {
       }
       html += `<line x1="70" y1="70" x2="195" y2="440" stroke="#c0392b" stroke-dasharray="3"/>`;
       html += `<line x1="195" y1="70" x2="70" y2="440" stroke="#c0392b" stroke-dasharray="3"/>`;
-      html += `<text x="290" y="255" text-anchor="middle" font-weight="bold" fill="#125570">لاپه‌های Z200 و مهاربندی‌های ضربدری</text>`;
+      html += `<text x="290" y="255" text-anchor="middle" font-weight="bold" fill="#125570">پرلین‌های Z200×2.5mm در فواصل ۱.۲۵ متری و مهاربندی‌ها</text>`;
 
     } else if (currentTab === "connection") {
       html += drawTitleBlock(svg, "جزئیات اتصالات فلنجی زانو و پای ستون");
@@ -457,7 +467,7 @@ button {
       for(var bolt = 120; bolt <= 320; bolt += 28) {
         html += `<circle cx="110" cy="${bolt}" r="4.5" fill="#d98e12"/><circle cx="140" cy="${bolt}" r="4.5" fill="#d98e12"/>`;
       }
-      html += `<text x="180" y="385" text-anchor="middle" font-weight="bold">اتصال زانو (Flange Plate 25mm + M22 Bolts)</text>`;
+      html += `<text x="180" y="385" text-anchor="middle" font-weight="bold">اتصال فلنجی زانو (Flange 25mm + 10xM22 Bolts)</text>`;
     }
 
     svg.innerHTML = html;
@@ -468,6 +478,27 @@ button {
     document.querySelectorAll(".tab-btn").forEach(b => b.classList.remove("active"));
     if (event && event.target) event.target.classList.add("active");
     renderSVG();
+  };
+
+  // دانلود نقشه به صورت DXF چندلایه‌ای واقعی
+  window.exportDXF = function() {
+    var d = calcData();
+    var outEl = byId("outputFileName");
+    var fname = outEl ? outEl.value : "SAHROUD_STEEL";
+
+    var dxf = "0\nSECTION\n2\nHEADER\n9\n$ACADVER\n1\nAC1009\n0\nENDSEC\n0\nSECTION\n2\nTABLES\n0\nENDSEC\n0\nSECTION\n2\nENTITIES\n";
+    dxf += `0\nLINE\n8\nCOLUMNS\n10\n0.0\n20\n0.0\n11\n0.0\n21\n${d.H}\n`;
+    dxf += `0\nLINE\n8\nCOLUMNS\n10\n${d.L}\n20\n0.0\n11\n${d.L}\n21\n${d.H}\n`;
+    dxf += `0\nLINE\n8\nRAFTERS\n10\n0.0\n20\n${d.H}\n11\n${d.L/2}\n21\n${d.Hr}\n`;
+    dxf += `0\nLINE\n8\nRAFTERS\n10\n${d.L}\n20\n${d.H}\n11\n${d.L/2}\n21\n${d.Hr}\n`;
+    dxf += `0\nTEXT\n8\nINFO\n10\n1.0\n20\n-2.0\n40\n0.5\n1\nCOLUMN: h_base=${d.h_base}mm, h_knee=${d.h_knee}mm | RAFTER: h_apex=${d.h_apex}mm | FLANGE: ${d.b_f}x${d.t_f}mm, WEB: t_w=${d.t_w}mm\n`;
+    dxf += "0\nENDSEC\n0\nEOF\n";
+
+    var blob = new Blob([dxf], { type: "application/dxf" });
+    var a = document.createElement("a");
+    a.href = URL.createObjectURL(blob);
+    a.download = fname + ".dxf";
+    a.click();
   };
 
   window.addEventListener("DOMContentLoaded", function() {
@@ -482,9 +513,9 @@ button {
         var sumEl = byId("analysisSummary");
         if (sumEl) {
           sumEl.innerHTML = `
-            <div class="result-card"><b>ابعاد جان منشوری:</b><br>پای ستون: <b>${d.h_base}mm</b> | گوشه زانو: <b>${d.h_knee}mm</b> | تاج: <b>${d.h_apex}mm</b></div>
+            <div class="result-card"><b>ابعاد جان و بال منشوری:</b><br>پای ستون: <b>${d.h_base}mm</b> | گوشه زانو: <b>${d.h_knee}mm</b> | تاج: <b>${d.h_apex}mm</b><br>بال: <b>${d.b_f}×${d.t_f}mm</b> | ضخامت جان ($t_w$): <b>${d.t_w}mm</b></div>
             <div class="result-card"><b>نیروهای طراحی LRFD:</b><br>لنگر زانو: <b>${d.M_knee.toFixed(1)} kN.m</b> | ترکیبی سقف: <b>${d.w_comb.toFixed(2)} kN/m²</b></div>
-            <div class="result-card"><b>شالوده و اتصالات:</b><br>پی منفرد: <b>${d.footW}x${d.footL}m</b> | پرلین: <b>Z200x2.5mm</b></div>
+            <div class="result-card"><b>شالوده و لاپه‌ها:</b><br>پی منفرد: <b>${d.footW}x${d.footL}m</b> | پرلین سقف: <b>Z200×2.5mm</b></div>
           `;
         }
         renderSVG();
