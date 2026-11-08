@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>SAHROUD STEEL v6.2 Pro - سامانه محاسبات و ترسیم نقشه‌های سوله منشوری</title>
+<title>SAHROUD STEEL v6.3 Pro - سامانه جامع مهندسی سوله منشوری</title>
 <style>
 :root {
   --primary: #0a1f33;
@@ -159,7 +159,7 @@ button {
 <body>
 
 <header>
-  <h1>SAHROUD STEEL v6.2 Pro</h1>
+  <h1>SAHROUD STEEL v6.3 Pro</h1>
   <p>سامانه جامع محاسبات، آنالیز LRFD و تولید نقشه‌های مهندسی سوله منشوری</p>
   <div class="engineer-badge">طراح، محاسب و تهیه‌کننده: مهندس احمد نوری</div>
 </header>
@@ -204,7 +204,7 @@ button {
       </select>
     </div>
     <div style="grid-column: span 2;">
-      <div id="cityInfoBadge" class="city-badge">بارگذاری مشخصات اقلیمی...</div>
+      <div id="cityInfoBadge" class="city-badge">در حال بارگذاری...</div>
     </div>
   </div>
 </section>
@@ -285,7 +285,7 @@ button {
   <div class="grid-3" style="margin-bottom:12px;">
     <div>
       <label>نام فایل خروجی</label>
-      <input id="outputFileName" value="SAHROUD_STEEL_PROJECT">
+      <input id="outputFileName" value="SAHROUD_STEEL">
     </div>
   </div>
   <div class="actions">
@@ -313,17 +313,23 @@ button {
   var currentTab = "frame";
 
   function byId(id) { return document.getElementById(id); }
-  function num(id) { var v = parseFloat(byId(id).value); return isFinite(v) ? v : 0; }
+  function num(id) { var el = byId(id); var v = el ? parseFloat(el.value) : 0; return isFinite(v) ? v : 0; }
 
   function updateCity() {
-    var c = CITIES[byId("citySelect").value] || CITIES.shahrud;
-    byId("cityInfoBadge").innerHTML = `
-      <b>📍 اقلیم ${c.name} (${c.province}):</b> | بار برف: <b>${c.snow} kN/m²</b> | سرعت باد: <b>${c.wind} m/s</b> | منطقه: <b>${c.zone}</b>
-    `;
+    var sel = byId("citySelect");
+    if (!sel) return;
+    var c = CITIES[sel.value] || CITIES.shahrud;
+    var badge = byId("cityInfoBadge");
+    if (badge) {
+      badge.innerHTML = `
+        <b>📍 اقلیم ${c.name} (${c.province}):</b> | بار برف: <b>${c.snow} kN/m²</b> | سرعت باد: <b>${c.wind} m/s</b> | منطقه: <b>${c.zone}</b>
+      `;
+    }
   }
 
   function calcData() {
-    var city = CITIES[byId("citySelect").value] || CITIES.shahrud;
+    var sel = byId("citySelect");
+    var city = (sel && CITIES[sel.value]) ? CITIES[sel.value] : CITIES.shahrud;
     var L = num("span"), len = num("length"), S = num("spacing"), H = num("height"), Hr = num("ridge");
     var D = num("dead"), Lr = num("live");
 
@@ -351,8 +357,11 @@ button {
   }
 
   function drawTitleBlock(svg, sheetTitle) {
-    var p = byId("projectName").value, o = byId("ownerName").value;
-    var e = byId("engineerName").value, i = byId("inspectorName").value;
+    var pEl = byId("projectName"), oEl = byId("ownerName"), eEl = byId("engineerName"), iEl = byId("inspectorName");
+    var p = pEl ? pEl.value : "سوله شاهرود";
+    var o = oEl ? oEl.value : "کارفرما";
+    var e = eEl ? eEl.value : "مهندس احمد نوری";
+    var i = iEl ? iEl.value : "ناظر";
 
     return `
       <rect x="15" y="15" width="920" height="570" fill="none" stroke="#0a1f33" stroke-width="2.5"/>
@@ -368,7 +377,7 @@ button {
         <text x="180" y="39" text-anchor="end" font-size="10" fill="#222">مالک: ${o}</text>
         <text x="370" y="63" text-anchor="end" font-size="10" fill="#222">محاسب: ${e}</text>
         <text x="180" y="63" text-anchor="end" font-size="10" fill="#222">ناظر: ${i}</text>
-        <text x="370" y="87" text-anchor="end" font-size="9.5" fill="#555">نرم‌افزار: SAHROUD STEEL v6.2</text>
+        <text x="370" y="87" text-anchor="end" font-size="9.5" fill="#555">نرم‌افزار: SAHROUD STEEL v6.3</text>
         <text x="180" y="87" text-anchor="end" font-size="9.5" fill="#555">تاریخ: ۱۴۰۵/۰۸ | مقیاس: 1:100</text>
       </g>
     `;
@@ -377,6 +386,7 @@ button {
   function renderSVG() {
     var d = calcData();
     var svg = byId("drawing");
+    if (!svg) return;
     var html = "";
 
     if (currentTab === "frame") {
@@ -386,18 +396,15 @@ button {
       var yBase = 460, yKnee = yBase - (d.H / (d.Hr + 1)) * drawH, yApex = yBase - (d.Hr / (d.Hr + 1)) * drawH;
       var hb = (d.h_base / 1000) * 20, hk = (d.h_knee / 1000) * 20, ha = (d.h_apex / 1000) * 20;
 
-      // فونداسیون
       html += `<rect x="${xL-30}" y="${yBase}" width="60" height="25" fill="#b5c6d4" stroke="#333"/>`;
       html += `<rect x="${xR-30}" y="${yBase}" width="60" height="25" fill="#b5c6d4" stroke="#333"/>`;
       html += `<line x1="50" y1="${yBase}" x2="900" y2="${yBase}" stroke="#444" stroke-width="2"/>`;
 
-      // ستون‌ها و تیرها
       html += `<polygon points="${xL},${yBase} ${xL+hb},${yBase} ${xL+hk},${yKnee} ${xL},${yKnee}" fill="#125570" stroke="#071524"/>`;
       html += `<polygon points="${xR},${yBase} ${xR-hb},${yBase} ${xR-hk},${yKnee} ${xR},${yKnee}" fill="#125570" stroke="#071524"/>`;
       html += `<polygon points="${xL},${yKnee} ${xL+hk},${yKnee} ${xC},${yApex+ha} ${xC},${yApex}" fill="#125570" stroke="#071524"/>`;
       html += `<polygon points="${xR},${yKnee} ${xR-hk},${yKnee} ${xC},${yApex+ha} ${xC},${yApex}" fill="#125570" stroke="#071524"/>`;
 
-      // اندازه‌گذاری
       html += `<line x1="${xL}" y1="${yBase+35}" x2="${xR}" y2="${yBase+35}" stroke="#000" stroke-width="1.2"/>`;
       html += `<text x="${xC}" y="${yBase+30}" text-anchor="middle" font-weight="bold">دهانه L = ${d.L} متر</text>`;
       html += `<text x="${xL-12}" y="${yKnee}" text-anchor="end" font-weight="bold" fill="#125570">کد ستون: H = ${d.H}m</text>`;
@@ -424,15 +431,11 @@ button {
       var xL = 90, wS = 420, hS = 220, yB = 460;
       var yK = yB - hS, yA = yB - hS - 50;
 
-      // سقف شیروانی
       html += `<polygon points="${xL},${yK} ${xL+wS/2},${yA} ${xL+wS},${yK}" fill="#125570" stroke="#071524"/>`;
-      // دیوار آجری
       html += `<rect x="${xL}" y="${yB-140}" width="${wS}" height="140" fill="#d87a56" stroke="#5a220e"/>`;
-      // خطوط آجر
       for(var b = 0; b < 140; b += 20) {
         html += `<line x1="${xL}" y1="${yB-b}" x2="${xL+wS}" y2="${yB-b}" stroke="#bc5e3a" stroke-width="1"/>`;
       }
-      // درب صنعتی
       var dw = (d.doorW / d.L) * wS, dh = (d.doorH / d.H) * hS;
       html += `<rect x="${xL+wS/2-dw/2}" y="${yB-dh}" width="${dw}" height="${dh}" fill="#27709b" stroke="#0c2d42" stroke-width="2"/>`;
       html += `<text x="${xL+wS/2}" y="${yB-dh/2}" text-anchor="middle" fill="#fff" font-weight="bold">درب کشویی (${d.doorW}x${d.doorH}m)</text>`;
@@ -445,17 +448,14 @@ button {
         html += `<line x1="${px}" y1="80" x2="${px}" y2="450" stroke="#d98e12" stroke-width="2"/>`;
         html += `<text x="${px}" y="70" text-anchor="middle" font-size="9" fill="#d98e12">P${p+1}</text>`;
       }
-      // مهاربندی ضربدری
       html += `<line x1="80" y1="80" x2="200" y2="450" stroke="#c0392b" stroke-dasharray="3"/>`;
       html += `<line x1="200" y1="80" x2="80" y2="450" stroke="#c0392b" stroke-dasharray="3"/>`;
       html += `<text x="290" y="260" text-anchor="middle" font-weight="bold" fill="#125570">لاپه‌های Z200 و بادبندهای طولی</text>`;
 
     } else if (currentTab === "connection") {
       html += drawEngineeringFrame(svg, "جزئیات اتصالات فلنجی زانو و پای ستون");
-      // ورق اتصال
       html += `<rect x="90" y="100" width="180" height="250" fill="#fff" stroke="#111" stroke-width="2"/>`;
       html += `<polygon points="100,110 250,110 250,330" fill="#125570" opacity="0.85"/>`;
-      // پیچ‌ها
       for(var bolt = 130; bolt <= 310; bolt += 30) {
         html += `<circle cx="120" cy="${bolt}" r="5" fill="#d98e12"/><circle cx="150" cy="${bolt}" r="5" fill="#d98e12"/>`;
       }
@@ -472,30 +472,59 @@ button {
     renderSVG();
   };
 
-  // تولید فایل DXF اتوکد کاملاً چندلایه‌ای و واقعی
   window.exportDXF = function() {
     var d = calcData();
-    var fname = byId("outputFileName").value || "SAHROUD_STEEL";
-    var numBays = Math.round(d.len / d.S);
+    var outEl = byId("outputFileName");
+    var fname = outEl ? outEl.value : "SAHROUD_STEEL";
 
     var dxf = "0\nSECTION\n2\nHEADER\n9\n$ACADVER\n1\nAC1009\n0\nENDSEC\n0\nSECTION\n2\nTABLES\n0\nENDSEC\n0\nSECTION\n2\nENTITIES\n";
-
-    // لایه ستون‌ها
     dxf += `0\nLINE\n8\nCOLUMNS\n10\n0.0\n20\n0.0\n11\n0.0\n21\n${d.H}\n`;
     dxf += `0\nLINE\n8\nCOLUMNS\n10\n${d.L}\n20\n0.0\n11\n${d.L}\n21\n${d.H}\n`;
-    // لایه رفترها
     dxf += `0\nLINE\n8\nRAFTERS\n10\n0.0\n20\n${d.H}\n11\n${d.L/2}\n21\n${d.Hr}\n`;
     dxf += `0\nLINE\n8\nRAFTERS\n10\n${d.L}\n20\n${d.H}\n11\n${d.L/2}\n21\n${d.Hr}\n`;
-
-    // لایه پرلین‌ها
-    for(var p=0; p<=8; p++) {
-      var px = (d.L / 8) * p;
-      dxf += `0\nLINE\n8\nPURLINS\n10\n${px}\n20\n${d.H}\n11\n${px}\n21\n${d.Hr}\n`;
-    }
-
-    // لایه فونداسیون
     dxf += `0\nRECTANGLE\n8\nFOOTINGS\n10\n-0.6\n20\n-0.8\n11\n0.6\n21\n0.0\n`;
     dxf += `0\nRECTANGLE\n8\nFOOTINGS\n10\n${d.L-0.6}\n20\n-0.8\n11\n${d.L+0.6}\n21\n0.0\n`;
+    dxf += "0\nENDSEC\n0\nEOF\n";
 
-    // متون مهندسی
-    dxf += `0\nTEXT\n8\nTITLE_BLOCK\n10\n1.0\n20\n-2.0\n40\n0.5\n1\nPROJECT: ${byId("projectName").value} | ENG: ${byId("engineerName").value
+    var blob = new Blob([dxf], { type: "application/dxf" });
+    var a = document.createElement("a");
+    a.href = URL.createObjectURL(blob);
+    a.download = fname + ".dxf";
+    a.click();
+  };
+
+  window.addEventListener("DOMContentLoaded", function() {
+    var citySel = byId("citySelect");
+    if (citySel) {
+      citySel.addEventListener("change", updateCity);
+    }
+    var btnSch = byId("btnSchematic");
+    if (btnSch) {
+      btnSch.addEventListener("click", renderSVG);
+    }
+    var btnAnz = byId("btnAnalyze");
+    if (btnAnz) {
+      btnAnz.addEventListener("click", function() {
+        var d = calcData();
+        var sumEl = byId("analysisSummary");
+        if (sumEl) {
+          sumEl.innerHTML = `
+            <div class="result-card"><b>ابعاد جان منشوری:</b><br>پای ستون: <b>${d.h_base}mm</b> | گوشه زانو: <b>${d.h_knee}mm</b> | تاج: <b>${d.h_apex}mm</b></div>
+            <div class="result-card"><b>نیروهای طراحی LRFD:</b><br>لنگر زانو: <b>${d.M_knee.toFixed(1)} kN.m</b> | ترکیبی سقف: <b>${d.w_comb.toFixed(2)} kN/m²</b></div>
+            <div class="result-card"><b>شالوده و اتصالات:</b><br>پی منفرد: <b>${d.footW}x${d.footL}m</b> | پرلین: <b>Z200x2.5mm</b></div>
+          `;
+        }
+        renderSVG();
+        var dlSec = byId("downloadSection");
+        if (dlSec) {
+          dlSec.style.display = "block";
+        }
+      });
+    }
+    updateCity();
+    renderSVG();
+  });
+})();
+</script>
+</body>
+</html>
