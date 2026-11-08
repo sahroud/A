@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>SAHROUD STEEL v6.3 Pro - سامانه جامع مهندسی سوله منشوری</title>
+<title>SAHROUD STEEL v6.4 Pro - سامانه محاسبات و تولید نقشه‌های سوله منشوری</title>
 <style>
 :root {
   --primary: #0a1f33;
@@ -114,7 +114,7 @@ button {
   border-radius: 8px;
   overflow: hidden;
 }
-#drawing { display: block; width: 100%; height: 560px; }
+#drawing { display: block; width: 100%; height: 580px; }
 
 .tabs { display: flex; gap: 4px; margin-bottom: 10px; border-bottom: 2px solid #dce6ee; overflow-x: auto; }
 .tab-btn {
@@ -159,7 +159,7 @@ button {
 <body>
 
 <header>
-  <h1>SAHROUD STEEL v6.3 Pro</h1>
+  <h1>SAHROUD STEEL v6.4 Pro</h1>
   <p>سامانه جامع محاسبات، آنالیز LRFD و تولید نقشه‌های مهندسی سوله منشوری</p>
   <div class="engineer-badge">طراح، محاسب و تهیه‌کننده: مهندس احمد نوری</div>
 </header>
@@ -182,7 +182,7 @@ button {
       <input id="engineerName" value="مهندس احمد نوری">
     </div>
     <div>
-      <label>مهندس ناظر</label>
+      <label>مهندس ناظر (قابل تغییر)</label>
       <input id="inspectorName" value="مهندس محمد رضایی">
     </div>
   </div>
@@ -356,29 +356,30 @@ button {
     };
   }
 
+  // ترسیم دقیق جدول مهندسی نسبت به مبدأ کادر (X=930, Y=570)
   function drawTitleBlock(svg, sheetTitle) {
     var pEl = byId("projectName"), oEl = byId("ownerName"), eEl = byId("engineerName"), iEl = byId("inspectorName");
     var p = pEl ? pEl.value : "سوله شاهرود";
     var o = oEl ? oEl.value : "کارفرما";
     var e = eEl ? eEl.value : "مهندس احمد نوری";
-    var i = iEl ? iEl.value : "ناظر";
+    var i = iEl ? iEl.value : "مهندس احمد نوری ";
 
     return `
-      <rect x="15" y="15" width="920" height="570" fill="none" stroke="#0a1f33" stroke-width="2.5"/>
-      <rect x="20" y="20" width="910" height="560" fill="none" stroke="#125570" stroke-width="1"/>
-      <g transform="translate(540, 480)">
-        <rect x="0" y="0" width="380" height="95" fill="#ffffff" stroke="#0a1f33" stroke-width="1.5"/>
-        <line x1="0" y1="24" x2="380" y2="24" stroke="#0a1f33" stroke-width="1"/>
-        <line x1="0" y1="48" x2="380" y2="48" stroke="#0a1f33" stroke-width="1"/>
-        <line x1="0" y1="72" x2="380" y2="72" stroke="#0a1f33" stroke-width="1"/>
-        <line x1="190" y1="24" x2="190" y2="95" stroke="#0a1f33" stroke-width="1"/>
-        <text x="190" y="17" text-anchor="middle" font-size="11" font-weight="bold" fill="#0a1f33">عنوان شیت: ${sheetTitle}</text>
-        <text x="370" y="39" text-anchor="end" font-size="10" fill="#222">پروژه: ${p}</text>
-        <text x="180" y="39" text-anchor="end" font-size="10" fill="#222">مالک: ${o}</text>
-        <text x="370" y="63" text-anchor="end" font-size="10" fill="#222">محاسب: ${e}</text>
-        <text x="180" y="63" text-anchor="end" font-size="10" fill="#222">ناظر: ${i}</text>
-        <text x="370" y="87" text-anchor="end" font-size="9.5" fill="#555">نرم‌افزار: SAHROUD STEEL v6.3</text>
-        <text x="180" y="87" text-anchor="end" font-size="9.5" fill="#555">تاریخ: ۱۴۰۵/۰۸ | مقیاس: 1:100</text>
+      <rect x="20" y="20" width="910" height="550" fill="none" stroke="#0a1f33" stroke-width="2.5"/>
+      <rect x="25" y="25" width="900" height="540" fill="none" stroke="#125570" stroke-width="1"/>
+      <g transform="translate(560, 465)">
+        <rect x="0" y="0" width="365" height="100" fill="#ffffff" stroke="#0a1f33" stroke-width="1.5"/>
+        <line x1="0" y1="25" x2="365" y2="25" stroke="#0a1f33" stroke-width="1"/>
+        <line x1="0" y1="50" x2="365" y2="50" stroke="#0a1f33" stroke-width="1"/>
+        <line x1="0" y1="75" x2="365" y2="75" stroke="#0a1f33" stroke-width="1"/>
+        <line x1="180" y1="25" x2="180" y2="100" stroke="#0a1f33" stroke-width="1"/>
+        <text x="182" y="17" text-anchor="middle" font-size="11" font-weight="bold" fill="#0a1f33">عنوان شیت: ${sheetTitle}</text>
+        <text x="355" y="41" text-anchor="end" font-size="9.5" fill="#222">پروژه: ${p}</text>
+        <text x="170" y="41" text-anchor="end" font-size="9.5" fill="#222">مالک: ${o}</text>
+        <text x="355" y="66" text-anchor="end" font-size="9.5" fill="#222">محاسب: ${e}</text>
+        <text x="170" y="66" text-anchor="end" font-size="9.5" fill="#222">ناظر: ${i}</text>
+        <text x="355" y="91" text-anchor="end" font-size="9" fill="#555">نرم‌افزار: SAHROUD STEEL v6.4</text>
+        <text x="170" y="91" text-anchor="end" font-size="9" fill="#555">تاریخ: ۱۴۰۵/۰۸ | مقیاس: 1:100</text>
       </g>
     `;
   }
@@ -391,14 +392,14 @@ button {
 
     if (currentTab === "frame") {
       html += drawTitleBlock(svg, "نقشه قاب اصلی و تیرورق‌های منشوری");
-      var xL = 100, drawW = 740, drawH = 340;
+      var xL = 85, drawW = 750, drawH = 340;
       var xR = xL + drawW, xC = xL + drawW / 2;
-      var yBase = 460, yKnee = yBase - (d.H / (d.Hr + 1)) * drawH, yApex = yBase - (d.Hr / (d.Hr + 1)) * drawH;
-      var hb = (d.h_base / 1000) * 20, hk = (d.h_knee / 1000) * 20, ha = (d.h_apex / 1000) * 20;
+      var yBase = 450, yKnee = yBase - (d.H / (d.Hr + 1)) * drawH, yApex = yBase - (d.Hr / (d.Hr + 1)) * drawH;
+      var hb = (d.h_base / 1000) * 18, hk = (d.h_knee / 1000) * 18, ha = (d.h_apex / 1000) * 18;
 
-      html += `<rect x="${xL-30}" y="${yBase}" width="60" height="25" fill="#b5c6d4" stroke="#333"/>`;
-      html += `<rect x="${xR-30}" y="${yBase}" width="60" height="25" fill="#b5c6d4" stroke="#333"/>`;
-      html += `<line x1="50" y1="${yBase}" x2="900" y2="${yBase}" stroke="#444" stroke-width="2"/>`;
+      html += `<rect x="${xL-25}" y="${yBase}" width="50" height="22" fill="#b5c6d4" stroke="#333"/>`;
+      html += `<rect x="${xR-25}" y="${yBase}" width="50" height="22" fill="#b5c6d4" stroke="#333"/>`;
+      html += `<line x1="45" y1="${yBase}" x2="890" y2="${yBase}" stroke="#444" stroke-width="2"/>`;
 
       html += `<polygon points="${xL},${yBase} ${xL+hb},${yBase} ${xL+hk},${yKnee} ${xL},${yKnee}" fill="#125570" stroke="#071524"/>`;
       html += `<polygon points="${xR},${yBase} ${xR-hb},${yBase} ${xR-hk},${yKnee} ${xR},${yKnee}" fill="#125570" stroke="#071524"/>`;
@@ -407,59 +408,77 @@ button {
 
       html += `<line x1="${xL}" y1="${yBase+35}" x2="${xR}" y2="${yBase+35}" stroke="#000" stroke-width="1.2"/>`;
       html += `<text x="${xC}" y="${yBase+30}" text-anchor="middle" font-weight="bold">دهانه L = ${d.L} متر</text>`;
-      html += `<text x="${xL-12}" y="${yKnee}" text-anchor="end" font-weight="bold" fill="#125570">کد ستون: H = ${d.H}m</text>`;
-      html += `<text x="${xC}" y="${yApex-12}" text-anchor="middle" font-weight="bold" fill="#d98e12">کد تاج: Hr = ${d.Hr}m (جان زانو: ${d.h_knee}mm)</text>`;
+      html += `<text x="${xL-10}" y="${yKnee}" text-anchor="end" font-weight="bold" fill="#125570">H = ${d.H}m</text>`;
+      html += `<text x="${xC}" y="${yApex-10}" text-anchor="middle" font-weight="bold" fill="#d98e12">Hr = ${d.Hr}m (جان: ${d.h_knee}mm)</text>`;
 
     } else if (currentTab === "plan") {
-      html += drawTitleBlock(svg, "پلان فونداسیون، آکس‌بندی و شناژها");
+      html += drawTitleBlock(svg, "پلان کامل فونداسیون، شناژها و اندازه‌گذاری آکس‌ها");
       var numBays = Math.round(d.len / d.S);
-      var x1 = 90, x2 = 480, yStart = 80, yEnd = 450, stepY = (yEnd - yStart) / numBays;
+      var x1 = 80, x2 = 500, yStart = 70, yEnd = 430, stepY = (yEnd - yStart) / numBays;
+
+      // شناژهای طولی و عرضی ۴ ضلع
+      html += `<rect x="${x1-15}" y="${yStart-15}" width="${x2-x1+30}" height="${yEnd-yStart+30}" fill="none" stroke="#125570" stroke-width="4"/>`;
 
       for (var i = 0; i <= numBays; i++) {
         var cy = yStart + i * stepY;
-        html += `<line x1="${x1}" y1="${cy}" x2="${x2}" y2="${cy}" stroke="#777" stroke-dasharray="4"/>`;
-        html += `<rect x="${x1-16}" y="${cy-16}" width="32" height="32" fill="#a8bccc" stroke="#111"/>`;
-        html += `<rect x="${x2-16}" y="${cy-16}" width="32" height="32" fill="#a8bccc" stroke="#111"/>`;
-        html += `<circle cx="${x1-30}" cy="${cy}" r="10" fill="#fff" stroke="#125570"/><text x="${x1-30}" y="${cy+3.5}" text-anchor="middle" font-size="9.5">${i+1}</text>`;
+        // شناژ عرضی
+        html += `<line x1="${x1}" y1="${cy}" x2="${x2}" y2="${cy}" stroke="#125570" stroke-width="2.5"/>`;
+        // پی منفرد
+        html += `<rect x="${x1-18}" y="${cy-18}" width="36" height="36" fill="#a8bccc" stroke="#111"/>`;
+        html += `<rect x="${x2-18}" y="${cy-18}" width="36" height="36" fill="#a8bccc" stroke="#111"/>`;
+        // آکس عددی
+        html += `<circle cx="${x1-32}" cy="${cy}" r="10" fill="#fff" stroke="#125570"/><text x="${x1-32}" y="${cy+3.5}" text-anchor="middle" font-size="9">${i+1}</text>`;
+        // اندازه‌گذاری بین دهانه‌ها
+        if (i < numBays) {
+          html += `<text x="${x1-48}" y="${cy + stepY/2}" text-anchor="middle" font-size="8.5" fill="#555">${d.S}m</text>`;
+        }
       }
-      html += `<line x1="${x1}" y1="${yStart}" x2="${x1}" y2="${yEnd}" stroke="#125570" stroke-width="5"/>`;
-      html += `<line x1="${x2}" y1="${yStart}" x2="${x2}" y2="${yEnd}" stroke="#125570" stroke-width="5"/>`;
-      html += `<text x="${(x1+x2)/2}" y="${yEnd+35}" text-anchor="middle" font-weight="bold">پلان آکس‌بندی و شناژها (ابعاد پی: ${d.footW}x${d.footL}m)</text>`;
+      // آکس‌های حرفه‌ای A و B
+      html += `<circle cx="${x1}" y="${yStart-28}" r="10" fill="#fff" stroke="#125570"/><text x="${x1}" y="${yStart-24.5}" text-anchor="middle" font-size="9">A</text>`;
+      html += `<circle cx="${x2}" y="${yStart-28}" r="10" fill="#fff" stroke="#125570"/><text x="${x2}" y="${yStart-24.5}" text-anchor="middle" font-size="9">B</text>`;
+
+      html += `<text x="${(x1+x2)/2}" y="${yEnd+35}" text-anchor="middle" font-weight="bold">پلان شناژها و فونداسیون (پی: ${d.footW}x${d.footL}m | طول کل: ${d.len}m)</text>`;
 
     } else if (currentTab === "elevation") {
-      html += drawEngineeringFrame(svg, "نمای ورودی، دیوارهای آجری و درب صنعتی");
-      var xL = 90, wS = 420, hS = 220, yB = 460;
+      html += drawTitleBlock(svg, "نمای ورودی، دیوارهای آجری و درب صنعتی");
+      var xL = 80, wS = 440, hS = 210, yB = 450;
       var yK = yB - hS, yA = yB - hS - 50;
 
-      html += `<polygon points="${xL},${yK} ${xL+wS/2},${yA} ${xL+wS},${yK}" fill="#125570" stroke="#071524"/>`;
-      html += `<rect x="${xL}" y="${yB-140}" width="${wS}" height="140" fill="#d87a56" stroke="#5a220e"/>`;
-      for(var b = 0; b < 140; b += 20) {
+      // قاب اصلی ورودی
+      html += `<polygon points="${xL},${yK} ${xL+wS/2},${yA} ${xL+wS},${yK} ${xL+wS},${yB} ${xL},${yB}" fill="#e3edf5" stroke="#071524" stroke-width="2"/>`;
+      // دیوار آجری ۳ متری
+      html += `<rect x="${xL}" y="${yB-130}" width="${wS}" height="130" fill="#d87a56" stroke="#5a220e"/>`;
+      for(var b = 0; b < 130; b += 18) {
         html += `<line x1="${xL}" y1="${yB-b}" x2="${xL+wS}" y2="${yB-b}" stroke="#bc5e3a" stroke-width="1"/>`;
       }
+      // درب صنعتی کشویی
       var dw = (d.doorW / d.L) * wS, dh = (d.doorH / d.H) * hS;
       html += `<rect x="${xL+wS/2-dw/2}" y="${yB-dh}" width="${dw}" height="${dh}" fill="#27709b" stroke="#0c2d42" stroke-width="2"/>`;
-      html += `<text x="${xL+wS/2}" y="${yB-dh/2}" text-anchor="middle" fill="#fff" font-weight="bold">درب کشویی (${d.doorW}x${d.doorH}m)</text>`;
+      html += `<line x1="${xL+wS/2}" y1="${yB-dh}" x2="${xL+wS/2}" y2="${yB}" stroke="#fff" stroke-dasharray="3"/>`;
+      html += `<text x="${xL+wS/2}" y="${yB-dh/2}" text-anchor="middle" fill="#fff" font-weight="bold">درب صنعتی (${d.doorW}x${d.doorH}m)</text>`;
 
     } else if (currentTab === "purlin") {
-      html += drawEngineeringFrame(svg, "پلان تیرریزی سقف و لاپه‌ها (Purlins)");
-      html += `<rect x="80" y="80" width="420" height="370" fill="#fff" stroke="#125570" stroke-width="2"/>`;
+      html += drawTitleBlock(svg, "پلان تیرریزی سقف و لاپه‌ها (Purlins)");
+      html += `<rect x="70" y="70" width="440" height="370" fill="#fff" stroke="#125570" stroke-width="2"/>`;
       for(var p = 0; p <= 7; p++) {
-        var px = 80 + p * 60;
-        html += `<line x1="${px}" y1="80" x2="${px}" y2="450" stroke="#d98e12" stroke-width="2"/>`;
-        html += `<text x="${px}" y="70" text-anchor="middle" font-size="9" fill="#d98e12">P${p+1}</text>`;
+        var px = 70 + p * 62.5;
+        html += `<line x1="${px}" y1="70" x2="${px}" y2="440" stroke="#d98e12" stroke-width="2"/>`;
+        html += `<text x="${px}" y="60" text-anchor="middle" font-size="9" fill="#d98e12">P${p+1}</text>`;
       }
-      html += `<line x1="80" y1="80" x2="200" y2="450" stroke="#c0392b" stroke-dasharray="3"/>`;
-      html += `<line x1="200" y1="80" x2="80" y2="450" stroke="#c0392b" stroke-dasharray="3"/>`;
-      html += `<text x="290" y="260" text-anchor="middle" font-weight="bold" fill="#125570">لاپه‌های Z200 و بادبندهای طولی</text>`;
+      // بادبندهای ضربدری طولی
+      html += `<line x1="70" y1="70" x2="195" y2="440" stroke="#c0392b" stroke-dasharray="3"/>`;
+      html += `<line x1="195" y1="70" x2="70" y2="440" stroke="#c0392b" stroke-dasharray="3"/>`;
+      html += `<text x="290" y="255" text-anchor="middle" font-weight="bold" fill="#125570">لاپه‌های Z200 و مهاربندی‌های ضربدری</text>`;
 
     } else if (currentTab === "connection") {
-      html += drawEngineeringFrame(svg, "جزئیات اتصالات فلنجی زانو و پای ستون");
-      html += `<rect x="90" y="100" width="180" height="250" fill="#fff" stroke="#111" stroke-width="2"/>`;
-      html += `<polygon points="100,110 250,110 250,330" fill="#125570" opacity="0.85"/>`;
-      for(var bolt = 130; bolt <= 310; bolt += 30) {
-        html += `<circle cx="120" cy="${bolt}" r="5" fill="#d98e12"/><circle cx="150" cy="${bolt}" r="5" fill="#d98e12"/>`;
+      html += drawTitleBlock(svg, "جزئیات اتصالات فلنجی زانو و پای ستون");
+      // صفحه ستون و اتصالات
+      html += `<rect x="80" y="90" width="200" height="270" fill="#fff" stroke="#111" stroke-width="2"/>`;
+      html += `<polygon points="90,100 260,100 260,340" fill="#125570" opacity="0.85"/>`;
+      for(var bolt = 120; bolt <= 320; bolt += 28) {
+        html += `<circle cx="110" cy="${bolt}" r="4.5" fill="#d98e12"/><circle cx="140" cy="${bolt}" r="4.5" fill="#d98e12"/>`;
       }
-      html += `<text x="180" y="380" text-anchor="middle" font-weight="bold">اتصال زانو (Flange Plate 25mm + M22 Bolts)</text>`;
+      html += `<text x="180" y="385" text-anchor="middle" font-weight="bold">اتصال زانو (Flange Plate 25mm + M22 Bolts)</text>`;
     }
 
     svg.innerHTML = html;
@@ -472,19 +491,25 @@ button {
     renderSVG();
   };
 
+  // خروجی اتوکد استاندارد بدون خطای باز شدن (AutoCAD Compliant DXF)
   window.exportDXF = function() {
     var d = calcData();
     var outEl = byId("outputFileName");
     var fname = outEl ? outEl.value : "SAHROUD_STEEL";
 
-    var dxf = "0\nSECTION\n2\nHEADER\n9\n$ACADVER\n1\nAC1009\n0\nENDSEC\n0\nSECTION\n2\nTABLES\n0\nENDSEC\n0\nSECTION\n2\nENTITIES\n";
-    dxf += `0\nLINE\n8\nCOLUMNS\n10\n0.0\n20\n0.0\n11\n0.0\n21\n${d.H}\n`;
-    dxf += `0\nLINE\n8\nCOLUMNS\n10\n${d.L}\n20\n0.0\n11\n${d.L}\n21\n${d.H}\n`;
-    dxf += `0\nLINE\n8\nRAFTERS\n10\n0.0\n20\n${d.H}\n11\n${d.L/2}\n21\n${d.Hr}\n`;
-    dxf += `0\nLINE\n8\nRAFTERS\n10\n${d.L}\n20\n${d.H}\n11\n${d.L/2}\n21\n${d.Hr}\n`;
-    dxf += `0\nRECTANGLE\n8\nFOOTINGS\n10\n-0.6\n20\n-0.8\n11\n0.6\n21\n0.0\n`;
-    dxf += `0\nRECTANGLE\n8\nFOOTINGS\n10\n${d.L-0.6}\n20\n-0.8\n11\n${d.L+0.6}\n21\n0.0\n`;
-    dxf += "0\nENDSEC\n0\nEOF\n";
+    var dxf = "  0\nSECTION\n  2\nHEADER\n  9\n$ACADVER\n  1\nAC1009\n  0\nENDSEC\n  0\nSECTION\n  2\nTABLES\n  0\nENDSEC\n  0\nSECTION\n  2\nBLOCKS\n  0\nENDSEC\n  0\nSECTION\n  2\nENTITIES\n";
+    
+    // ستون‌ها
+    dxf += `  0\nLINE\n  8\nCOLUMNS\n 10\n0.0\n 20\n0.0\n 11\n0.0\n 21\n${d.H}\n`;
+    dxf += `  0\nLINE\n  8\nCOLUMNS\n 10\n${d.L}\n 20\n0.0\n 11\n${d.L}\n 21\n${d.H}\n`;
+    // رفترها
+    dxf += `  0\nLINE\n  8\nRAFTERS\n 10\n0.0\n 20\n${d.H}\n 11\n${d.L/2}\n 21\n${d.Hr}\n`;
+    dxf += `  0\nLINE\n  8\nRAFTERS\n 10\n${d.L}\n 20\n${d.H}\n 11\n${d.L/2}\n 21\n${d.Hr}\n`;
+    // شالوده‌ها
+    dxf += `  0\nLINE\n  8\nFOOTINGS\n 10\n-0.6\n 20\n-0.8\n 11\n0.6\n 21\n-0.8\n`;
+    dxf += `  0\nLINE\n  8\nFOOTINGS\n 10\n${d.L-0.6}\n 20\n-0.8\n 11\n${d.L+0.6}\n 21\n-0.8\n`;
+
+    dxf += "  0\nENDSEC\n  0\nEOF\n";
 
     var blob = new Blob([dxf], { type: "application/dxf" });
     var a = document.createElement("a");
@@ -495,13 +520,9 @@ button {
 
   window.addEventListener("DOMContentLoaded", function() {
     var citySel = byId("citySelect");
-    if (citySel) {
-      citySel.addEventListener("change", updateCity);
-    }
+    if (citySel) citySel.addEventListener("change", updateCity);
     var btnSch = byId("btnSchematic");
-    if (btnSch) {
-      btnSch.addEventListener("click", renderSVG);
-    }
+    if (btnSch) btnSch.addEventListener("click", renderSVG);
     var btnAnz = byId("btnAnalyze");
     if (btnAnz) {
       btnAnz.addEventListener("click", function() {
@@ -516,9 +537,7 @@ button {
         }
         renderSVG();
         var dlSec = byId("downloadSection");
-        if (dlSec) {
-          dlSec.style.display = "block";
-        }
+        if (dlSec) dlSec.style.display = "block";
       });
     }
     updateCity();
