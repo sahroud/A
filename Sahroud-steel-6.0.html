@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>SAHROUD STEEL v6.5 Pro - سامانه جامع مهندسی سوله منشوری</title>
+<title>SAHROUD STEEL v6.6 Pro - سامانه گزارش و خروجی مهندسی سوله</title>
 <style>
 :root {
   --primary: #0a1f33;
@@ -148,7 +148,7 @@ button {
 @media print {
   .no-print { display: none !important; }
   body { background: white; color: black; }
-  .card { box-shadow: none; border: none; padding: 0; }
+  .card { box-shadow: none; border: none; padding: 0; margin: 0; }
   #drawingContainer { border: none; background: white; }
 }
 </style>
@@ -156,9 +156,9 @@ button {
 
 <body>
 
-<header>
-  <h1>SAHROUD STEEL v6.5 Pro</h1>
-  <p>سامانه جامع محاسبات، آنالیز LRFD و تولید شیت‌های نقشه‌های مهندسی سوله</p>
+<header class="no-print">
+  <h1>SAHROUD STEEL v6.6 Pro</h1>
+  <p>سامانه جامع محاسبات، آنالیز LRFD و خروجی گزارش PDF مهندسی</p>
   <div class="engineer-badge">طراح، محاسب و ناظر پروژه: مهندس احمد نوری</div>
 </header>
 
@@ -180,7 +180,7 @@ button {
       <input id="engineerName" value="مهندس احمد نوری">
     </div>
     <div>
-      <label>مهندس ناظر (قابل تغییر)</label>
+      <label>مهندس ناظر</label>
       <input id="inspectorName" value="مهندس احمد نوری">
     </div>
   </div>
@@ -255,7 +255,7 @@ button {
 
 <!-- بخش نقشه‌ها -->
 <section class="card">
-  <h2>۴. نقشه‌های اجرایی، اندازه‌گذاری و کادر مهندسی</h2>
+  <h2>۴. شیت‌های نقشه و کادر مهندسی قابل چاپ به صورت PDF</h2>
   <div class="tabs no-print">
     <button class="tab-btn active" onclick="switchTab('frame')">🖼️ ۱. قاب اصلی منشوری</button>
     <button class="tab-btn" onclick="switchTab('plan')">🗺️ ۲. پلان فونداسیون و آکس‌ها</button>
@@ -280,7 +280,7 @@ button {
 
 <section id="downloadSection" class="card">
   <h2 style="color:#1e8449;">۶. دریافت شیت‌های نقشه و دفترچه محاسبات (PDF استاندارد)</h2>
-  <p>جهت کیفیت حداکثری و جلوگیری از خطاهای فایل‌های واسطه، خروجی مهندسی به صورت PDF حرفه‌ای با کادربندی شیت ارائه می‌شود:</p>
+  <p>با فشردن دکمه زیر، پنجره پرینت مرورگر باز شده و می‌توانید کل شیت مهندسی را به صورت فایل **PDF** با کیفیت عالی ذخیره نمایید:</p>
   <div class="actions">
     <button class="btn-pdf" onclick="window.print()">🖨️ ذخیره و چاپ مستقیم شیت‌های نقشه و دفترچه (PDF مهندسی)</button>
   </div>
@@ -369,7 +369,7 @@ button {
         <text x="170" y="41" text-anchor="end" font-size="9.5" fill="#222">مالک: ${o}</text>
         <text x="355" y="66" text-anchor="end" font-size="9.5" fill="#222">محاسب: ${e}</text>
         <text x="170" y="66" text-anchor="end" font-size="9.5" fill="#222">ناظر: ${i}</text>
-        <text x="355" y="91" text-anchor="end" font-size="9" fill="#555">نرم‌افزار: SAHROUD STEEL v6.5</text>
+        <text x="355" y="91" text-anchor="end" font-size="9" fill="#555">نرم‌افزار: SAHROUD STEEL v6.6</text>
         <text x="170" y="91" text-anchor="end" font-size="9" fill="#555">تاریخ: ۱۴۰۵/۰۸ | مقیاس: 1:100</text>
       </g>
     `;
