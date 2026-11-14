@@ -21,6 +21,15 @@ body{background-color:#eee6d5;background-image:radial-gradient(circle at 50% 0%,
 .qword{display:inline-block;border-radius:7px;padding:0 2px;transition:background .15s,color .15s}.qword.active{background:#f1d58d;color:#633e0c;box-shadow:0 0 0 2px #e4c16b66}
 .verseTools{display:flex;justify-content:space-between;align-items:center;gap:8px;margin-top:7px}.verseTools button{font-size:11px;padding:8px 12px}
 .translation{color:#655a45;font-size:14px;line-height:2.1;margin-top:7px}.foot{color:#8b754a;margin-top:25px}
+/* Readability improvements for Quran and Nahj controls */
+#quran .quranSelectTitle,#nahj .quranIntro{font-size:17px!important;font-weight:800!important;line-height:1.9}
+#quran .quranLabel{font-size:16px!important;line-height:1.8;color:#60491f}
+#quran select,#nahj select,#nahj .field{font-size:18px!important;font-weight:700;min-height:54px;padding:13px 14px!important;line-height:1.8}
+#quran .actions .btn,#nahj .actions .btn{font-size:15px!important;min-height:48px;padding:12px 15px!important}
+#quran .status,#nahj .status{font-size:14px!important;line-height:2}
+#nahj .sourceNote{font-size:14px;line-height:2}
+#nahj .nahjOpenLink{display:block;text-align:center;background:#173d2c;color:#fff4dc;border-radius:14px;padding:15px 12px;margin:12px 0;font-size:16px;font-weight:bold;text-decoration:none}
+@media(max-width:420px){#quran .quranSelectGrid{grid-template-columns:1fr}#quran select,#nahj select{font-size:17px!important}}
 </style></head><body><main class="app"><header class="head"><div class="brand">SAHROUD TASBIH<small>ذکر، تلاوت و نیایش روزانه</small></div><div class="seal">﷽</div></header>
 <section id="home" class="page active">
 <div class="hero spiritual"><div class="ornament">۞</div><div class="bism">بِسْمِ اللَّهِ الرَّحْمَٰنِ الرَّحِيمِ</div><h2>به نام آرامش‌بخش دل‌ها</h2><p>همراهی برای ذکر، تلاوت و نیایش روزانه</p><div class="verseQuote">أَلَا بِذِكْرِ اللَّهِ تَطْمَئِنُّ الْقُلُوبُ</div><small>آگاه باشید که با یاد خدا دل‌ها آرام می‌گیرد · رعد، ۲۸</small></div>
@@ -39,7 +48,7 @@ body{background-color:#eee6d5;background-image:radial-gradient(circle at 50% 0%,
 <section id="quran" class="page"><button class="btn light back" onclick="page('home')">↩ بازگشت به برنامه</button><h2 class="title">قرآن کریم</h2><div class="panel quranPanel">
 <div class="quranHero"><div class="quranSeal">۞</div><div class="quranBism">بِسْمِ اللَّهِ الرَّحْمَٰنِ الرَّحِيمِ</div><h2>مصحف شریف</h2><p>تلاوت، تدبر و همراهی با کلام وحی</p><div class="quranIntro">متن قرآن کریم · ترجمه آیت‌الله مکارم شیرازی</div></div>
 <div class="status">برای استفاده آفلاین، هنگام اتصال اینترنت «دریافت کامل قرآن» را بزنید. صوت تلاوت استاد شهریار پرهیزگار هنگام اتصال به اینترنت پخش می‌شود.</div>
-<div class="quranSelectTitle">انتخاب شیوه مطالعه</div><div class="quranSelectGrid"><div><label class="quranLabel" for="surah">انتخاب سوره</label><select id="surah"></select></div><div><label class="quranLabel" for="juzSelect">انتخاب جزء</label><select id="juzSelect"></select></div></div><div class="actions"><button class="btn" onclick="loadSurah()">نمایش سوره</button><button class="btn gold" onclick="loadJuz()">نمایش جزء</button><button class="btn light" onclick="saveQuranStudy(true)">🔖 ذخیره محل مطالعه</button><button class="btn gold" onclick="downloadAll()">دریافت متن برای آفلاین</button></div>
+<div class="quranSelectTitle">انتخاب شیوه مطالعه</div><div class="quranSelectGrid"><div><label class="quranLabel" for="surah">انتخاب سوره</label><select id="surah"></select></div><div><label class="quranLabel" for="juzSelect">انتخاب جزء</label><select id="juzSelect" onchange="syncSurahToJuz()"></select></div></div><div class="actions"><button class="btn" onclick="loadSurah()">نمایش سوره</button><button class="btn gold" onclick="loadJuz()">نمایش جزء</button><button class="btn light" onclick="saveQuranStudy(true)">🔖 ذخیره محل مطالعه</button><button class="btn gold" onclick="downloadAll()">دریافت متن برای آفلاین</button></div>
 <div class="audioBar"><div class="audioBarTitle">🎧 تلاوت استاد شهریار پرهیزگار</div><button class="btn light" onclick="page('home')">↩ بازگشت به برنامه</button><button class="btn" onclick="playSurah()">▶ پخش سوره</button><button class="btn gold" id="playJuzBtn" onclick="playJuz()" disabled>▶ پخش جزء انتخابی</button><button class="btn light" onclick="stopAudio()">■ توقف</button><span id="audioStatus" class="status">تلاوت استاد پرهیزگار</span><div class="speedRow"><span class="muted">سرعت:</span><button class="btn light speedBtn" data-rate="1" onclick="setSpeed(1)">۱×</button><button class="btn light speedBtn" data-rate="1.5" onclick="setSpeed(1.5)">۱٫۵×</button><button class="btn light speedBtn" data-rate="2" onclick="setSpeed(2)">۲×</button></div></div><audio id="qAudio" preload="none"></audio>
 <div class="progress" style="margin-top:12px"><i id="dlbar"></i></div><div id="qstatus" class="status">سوره‌ای را انتخاب کنید.</div><div id="qcontent"></div><div class="sourceNote">صوت: آرشیو تلاوت آیه‌به‌آیه EveryAyah · قاری: استاد شهریار پرهیزگار</div></div></section>
 <section id="nahj" class="page"><button class="btn light back" onclick="page('home')">↩ بازگشت به برنامه</button><h2 class="title">نهج‌البلاغه</h2><div class="panel quranPanel">
@@ -74,13 +83,15 @@ async function getSurahData(ch){let cached=await dbGet(ch);if(cached)return cach
 function initSurahs(){names.forEach((n,i)=>{let o=document.createElement('option');o.value=i+1;o.textContent=fa(i+1)+' - '+n;$('surah').appendChild(o)});for(let i=1;i<=30;i++){let o=document.createElement('option');o.value=i;o.textContent='جزء '+fa(i);$('juzSelect').appendChild(o)}}function esc(s){return String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
 let currentSurah=1,currentAyah=1,playingSurah=false,currentSpeed=1,quranRestorePending=false,currentJuz=1,currentJuzAyahs=[],currentStudyMode='surah',audioQueue=[],audioQueueIndex=0;
 function saveQuranStudy(showMsg=false){let box=$('qcontent'),v=box.querySelector('.current-reading');if(!v){let verses=[...box.querySelectorAll('.verse')];v=verses.find(x=>x.getBoundingClientRect().bottom>90)||verses[0]}let item={mode:currentStudyMode,juz:currentJuz,surah:v?Number(v.id.split('-')[1]):(currentSurah||Number($('surah').value)||1),ayah:v?Number(v.id.split('-').pop()):(currentAyah||1),scrollY:window.scrollY||0,savedAt:Date.now()};localStorage.setItem('sahroud_study_quran',JSON.stringify(item));if(showMsg)$('qstatus').textContent='محل مطالعه قرآن ذخیره شد؛ دفعه بعد از همین‌جا ادامه می‌دهید.'}
-async function restoreQuranStudy(){if(currentPage!=='quran')return;let p=readSaved('sahroud_study_quran');if(!p){currentStudyMode='surah';let ch=Number($('surah').value)||1;await showSurah(ch);return}if(p.mode==='juz'){let j=Math.max(1,Math.min(30,Number(p.juz)||1));$('juzSelect').value=j;if(currentStudyMode!=='juz'||!currentJuzAyahs.length||currentJuz!==j)await loadJuz(j,false)}else{currentStudyMode='surah';let ch=Math.max(1,Math.min(114,Number(p.surah)||1));$('surah').value=ch;await showSurah(ch)}let v=$('verse-'+p.surah+'-'+p.ayah);if(v){v.scrollIntoView({block:'start'});v.classList.add('current-reading')}else if(p.scrollY)window.scrollTo(0,p.scrollY)}
+async function restoreQuranStudy(){if(currentPage!=='quran')return;let p=readSaved('sahroud_study_quran');if(!p){currentStudyMode='surah';let ch=Number($('surah').value)||1;await showSurah(ch);return}if(p.mode==='juz'){let j=Math.max(1,Math.min(30,Number(p.juz)||1));$('juzSelect').value=j;if(currentStudyMode!=='juz'||!currentJuzAyahs.length||currentJuz!==j)await loadJuz(j,false);if(currentJuzAyahs.length)$('surah').value=currentJuzAyahs[0].surah}else{currentStudyMode='surah';let ch=Math.max(1,Math.min(114,Number(p.surah)||1));$('surah').value=ch;await showSurah(ch)}let v=$('verse-'+p.surah+'-'+p.ayah);if(v){v.scrollIntoView({block:'start'});v.classList.add('current-reading')}else if(p.scrollY)window.scrollTo(0,p.scrollY)}
 window.addEventListener('scroll',()=>{if(currentPage==='quran'&&Date.now()>ignoreStudyScrollUntil){clearTimeout(window.__qsave);window.__qsave=setTimeout(()=>saveQuranStudy(false),400)}},{passive:true});
 window.addEventListener('pagehide',()=>{if(currentPage==='quran')saveQuranStudy(false);if(currentPage==='nahj')saveNahjStudy(false)});function setSpeed(rate){currentSpeed=rate;let a=$('qAudio');a.defaultPlaybackRate=rate;a.playbackRate=rate;document.querySelectorAll('.speedBtn').forEach(b=>{let active=Number(b.dataset.rate)===rate;b.style.background=active?'#d9c18b':'#eee4cf';b.style.color=active?'#3c2b0e':'#594a2c';b.style.fontWeight=active?'bold':'normal';b.setAttribute('aria-pressed',active?'true':'false')});$('audioStatus').textContent='سرعت پخش: '+rate+' برابر';}
 async function showSurah(ch){stopAudio();currentStudyMode='surah';currentSurah=ch;$('surah').value=ch;currentJuzAyahs=[];$('playJuzBtn').disabled=true;$('qstatus').textContent='در حال آماده‌سازی سوره…';$('qcontent').innerHTML='';try{let d=await getSurahData(ch);currentSurah=ch;$('qcontent').innerHTML=d.ar.map((a,i)=>'<div class="verse" id="verse-'+ch+'-'+(i+1)+'"><small>آیه '+fa(i+1)+'</small><div class="arabic" id="arabic-'+ch+'-'+(i+1)+'">'+a.trim().split(/\\s+/).map((w,j)=>'<span class="qword" data-word="'+j+'">'+esc(w)+'</span>').join(' ')+'</div><div class="verseTools"><span class="muted">آیه '+fa(i+1)+'</span><button class="btn light" onclick="playAyah('+ch+','+(i+1)+')">▶ پخش آیه</button></div><div class="translation">'+esc(d.fa[i])+'</div></div>').join('');$('qstatus').textContent='سوره '+names[ch-1]+' · ترجمه آیت‌الله مکارم شیرازی'+(navigator.onLine?'':' · از حافظه آفلاین')}catch(e){$('qstatus').textContent='دریافت قرآن ناموفق بود. اینترنت یا پشتیبانی منبع را بررسی کنید. '+e.message}}
 function loadSurah(){currentSurah=Number($('surah').value);currentAyah=1;currentStudyMode='surah';showSurah(currentSurah).then(()=>saveQuranStudy(false))}
 async function getJuzData(j){let base='https://api.alquran.cloud/v1/juz/'+j+'/';let rs=await Promise.all([fetch(base+'quran-uthmani'),fetch(base+'fa.makarem')]);if(rs.some(r=>!r.ok))throw Error('خطا در دریافت اطلاعات جزء');let js=await Promise.all(rs.map(r=>r.json()));let ar=js[0].data.ayahs,fa=js[1].data.ayahs;if(!ar||!fa||ar.length!==fa.length)throw Error('اطلاعات جزء ناقص است');return ar.map((x,i)=>({surah:x.surah.number,ayah:x.numberInSurah,ar:x.text,fa:fa[i].text}))}
-async function loadJuz(j=Number($('juzSelect').value),save=true){stopAudio();currentStudyMode='juz';currentJuz=j;$('juzSelect').value=j;$('qcontent').innerHTML='';$('playJuzBtn').disabled=true;$('qstatus').textContent='در حال دریافت جزء '+fa(j)+'…';try{currentJuzAyahs=await getJuzData(j);$('qcontent').innerHTML=currentJuzAyahs.map(x=>'<div class="verse" id="verse-'+x.surah+'-'+x.ayah+'"><small>سوره '+names[x.surah-1]+' · آیه '+fa(x.ayah)+'</small><div class="arabic" id="arabic-'+x.surah+'-'+x.ayah+'">'+esc(x.ar)+'</div><div class="verseTools"><span class="muted">آیه '+fa(x.ayah)+'</span><button class="btn light" onclick="playAyah('+x.surah+','+x.ayah+')">▶ پخش آیه</button></div><div class="translation">'+esc(x.fa)+'</div></div>').join('');$('playJuzBtn').disabled=false;$('qstatus').textContent='جزء '+fa(j)+' آماده مطالعه و پخش است؛ '+fa(currentJuzAyahs.length)+' آیه.';if(save)saveQuranStudy(false)}catch(e){$('qstatus').textContent='دریافت جزء ناموفق بود: '+e.message}}
+const juzFirstSurah=[1,2,2,3,4,4,5,6,7,8,9,11,12,15,17,18,21,23,25,27,29,33,36,39,41,46,51,58,67,78];
+function syncSurahToJuz(){let j=Math.max(1,Math.min(30,Number($('juzSelect').value)||1));$('surah').value=juzFirstSurah[j-1]}
+async function loadJuz(j=Number($('juzSelect').value),save=true){stopAudio();currentStudyMode='juz';currentJuz=Math.max(1,Math.min(30,Number(j)||1));j=currentJuz;$('juzSelect').value=j;$('qcontent').innerHTML='';$('playJuzBtn').disabled=true;$('qstatus').textContent='در حال دریافت جزء '+fa(j)+'…';try{currentJuzAyahs=await getJuzData(j);if(!currentJuzAyahs.length)throw Error('متنی برای این جزء دریافت نشد');let firstSurah=currentJuzAyahs[0].surah;$('surah').value=firstSurah;currentSurah=firstSurah;currentAyah=currentJuzAyahs[0].ayah;$('qcontent').innerHTML=currentJuzAyahs.map(x=>'<div class="verse" id="verse-'+x.surah+'-'+x.ayah+'"><small>سوره '+names[x.surah-1]+' · آیه '+fa(x.ayah)+'</small><div class="arabic" id="arabic-'+x.surah+'-'+x.ayah+'">'+esc(x.ar)+'</div><div class="verseTools"><span class="muted">آیه '+fa(x.ayah)+'</span><button class="btn light" onclick="playAyah('+x.surah+','+x.ayah+')">▶ پخش آیه</button></div><div class="translation">'+esc(x.fa)+'</div></div>').join('');$('playJuzBtn').disabled=false;$('qstatus').textContent='جزء '+fa(j)+' آماده مطالعه و پخش است؛ آغاز از سوره '+names[firstSurah-1]+' · '+fa(currentJuzAyahs.length)+' آیه.';if(save)saveQuranStudy(false)}catch(e){currentJuzAyahs=[];$('qstatus').textContent='دریافت جزء ناموفق بود: '+e.message+' · اتصال اینترنت را بررسی کنید.'}}
 
 
 function audioUrl(ch,ay){return 'https://everyayah.com/data/Parhizgar_48kbps/'+String(ch).padStart(3,'0')+String(ay).padStart(3,'0')+'.mp3'}
@@ -96,13 +107,72 @@ $('qAudio').addEventListener('play',()=>{if(currentPage!=='quran')$('miniAudio')
 $('qAudio').addEventListener('pause',()=>{if($('qAudio').ended)$('miniAudio').style.display='none'});async function downloadAll(){let bar=$('dlbar'),status=$('qstatus');for(let ch=1;ch<=114;ch++){try{await getSurahData(ch);bar.style.width=(ch/114*100)+'%';status.textContent='ذخیره آفلاین سوره '+names[ch-1]+' ('+fa(ch)+'/۱۱۴)';await new Promise(r=>setTimeout(r,250))}catch(e){status.textContent='دانلود در سوره '+names[ch-1]+' متوقف شد: '+e.message;return}}status.textContent='قرآن کامل و ترجمه مکارم در حافظه آفلاین ذخیره شد.'}
 
 const nahjCounts={khutba:239,nameh:79,hekmat:480};
-function updateNahjRange(){let t=$('nahjType').value,n=nahjCounts[t];$('nahjNumber').innerHTML='';for(let i=1;i<=n;i++){let o=document.createElement('option');o.value=i;o.textContent=fa(i)+(t==='khutba'?' - خطبه':t==='nameh'?' - نامه':' - حکمت');$('nahjNumber').appendChild(o)}}
+function updateNahjRange(){let t=$('nahjType').value,n=nahjCounts[t];$('nahjNumber').innerHTML='';for(let i=1;i<=n;i++){let o=document.createElement('option');o.value=i;o.textContent=fa(i)+(t==='khutba'?' - خطبه':t==='nameh'?' - نامه':' - حکمت');$('nahjNumber').appendChild(o)}$('nahjNumber').value='1'}
 function nahjUrl(t,n){let path=t==='khutba'?'khutba':t==='nameh'?'nameh':'hikmat';let index=t==='hekmat'?Math.ceil(n/20):n;return 'https://persianquran.com/hadis/nahj/'+path+'/'+index+'/'}
 function openNahjSource(){let t=$('nahjType').value,n=Number($('nahjNumber').value)||1;window.open(nahjUrl(t,n),'_blank','noopener')}
 function saveNahjStudy(showMsg=false){let item={type:$('nahjType').value,number:Number($('nahjNumber').value)||1,scrollY:window.scrollY||0,savedAt:Date.now()};localStorage.setItem('sahroud_study_nahj',JSON.stringify(item));if(showMsg)$('nahjStatus').textContent='محل مطالعه نهج‌البلاغه ذخیره شد.'}
 function restoreNahjStudy(){let p=readSaved('sahroud_study_nahj');if(!p)return;$('nahjType').value=p.type||'khutba';updateNahjRange();$('nahjNumber').value=p.number||1;if(currentPage==='nahj'&&!$('nahjContent').children.length)loadNahj(false)}
 window.addEventListener('scroll',()=>{if(currentPage==='nahj'&&Date.now()>ignoreStudyScrollUntil){clearTimeout(window.__nsave);window.__nsave=setTimeout(()=>saveNahjStudy(false),400)}},{passive:true});
-async function loadNahj(save=true){let t=$('nahjType').value,n=Number($('nahjNumber').value),url=nahjUrl(t,n),box=$('nahjContent');$('nahjStatus').textContent=t==='hekmat'?'در حال دریافت حکمت '+fa(n)+' (مجموعه '+fa(Math.floor((n-1)/20)*20+1)+' تا '+fa(Math.min(480,Math.ceil(n/20)*20))+')…':'در حال دریافت متن و ترجمه…';box.innerHTML='';if(save)saveNahjStudy(false);try{let r=await fetch(url,{mode:'cors'});if(!r.ok)throw Error('HTTP '+r.status);let html=await r.text(),doc=new DOMParser().parseFromString(html,'text/html');let heading=doc.querySelector('h1')?.textContent||('نهج‌البلاغه · '+(t==='khutba'?'خطبه':t==='nameh'?'نامه':'حکمت')+' '+fa(n));let rows=[...doc.querySelectorAll('table tr')],parts=[];for(let tr of rows){let cells=[...tr.querySelectorAll('td,th')].map(x=>x.textContent.trim()).filter(Boolean);if(cells.length>=2)parts.push({ar:cells[0],fa:cells.slice(1).join(' ')});}if(!parts.length){let main=doc.querySelector('main,article,.entry-content,.post-content')||doc.body;let txt=main.innerText||'';let lines=txt.split('\n').map(x=>x.trim()).filter(Boolean);for(let i=0;i<lines.length-1;i++)if(/[\u0600-\u06FF]/.test(lines[i])&&/[\u0600-\u06FF]/.test(lines[i+1]))parts.push({ar:lines[i],fa:lines[i+1]})}if(!parts.length)throw Error('ساختار متن قابل شناسایی نبود');box.innerHTML='<h3 class="title">'+esc(heading)+'</h3>'+parts.map((p,i)=>'<div class="verse"><div class="arabic">'+esc(p.ar)+'</div><div class="translation">'+esc(p.fa)+'</div></div>').join('')+'<p class="sourceNote">منبع: <a href="'+url+'" target="_blank" rel="noopener">مشاهده متن اصلی و ترجمه در وب‌سایت منبع</a></p>';$('nahjStatus').textContent='متن دریافت شد · '+fa(parts.length)+' فراز';saveNahjStudy(false);let saved=readSaved('sahroud_study_nahj');if(saved&&currentPage==='nahj'&&saved.scrollY)window.scrollTo(0,saved.scrollY)}catch(e){$('nahjStatus').innerHTML='دریافت مستقیم متن در این مرورگر محدود شد؛ نسخه اصلی را در قاب مطالعه یا پنجره جداگانه باز کنید.';box.innerHTML='<div class="status">اگر متن داخل قاب نمایش داده نشد، از دکمه بازکردن متن اصلی استفاده کنید.</div><iframe title="متن نهج البلاغه و ترجمه فارسی" src="'+url+'" loading="eager" referrerpolicy="strict-origin-when-cross-origin" style="width:100%;height:72vh;border:1px solid #d8c79f;border-radius:14px;background:#fff"></iframe><div class="actions"><button class="btn gold" onclick="openNahjSource()">بازکردن متن در مرورگر</button></div><p class="sourceNote"><a href="'+url+'" target="_blank" rel="noopener">بازکردن مستقیم متن و ترجمه</a></p>';}}
+function hasArabicText(value){for(let ch of String(value)){let n=ch.charCodeAt(0);if(n>=1536&&n<=1791)return true}return false}
+function parseNahjResponse(raw,isMarkdown){
+ let parts=[],heading='نهج‌البلاغه';
+ if(isMarkdown||String(raw).trim().charAt(0)!=='<'){
+  let lines=String(raw).split('\n');
+  for(let line of lines){
+   let clean=line.trim();
+   if(clean.startsWith('#')){heading=clean.replace(/^#+\\s*/,'');continue}
+   if(!clean.includes('|')||!hasArabicText(clean))continue;
+   let cells=clean.split('|').map(x=>x.trim()).filter(Boolean);
+   if(cells.length>=2&&hasArabicText(cells[0])&&hasArabicText(cells[1])&&!cells[0].startsWith('---'))parts.push({ar:cells[0],fa:cells[1]});
+  }
+ }else{
+  let doc=new DOMParser().parseFromString(raw,'text/html');
+  heading=doc.querySelector('h1')?.textContent?.trim()||heading;
+  for(let tr of doc.querySelectorAll('table tr')){
+   let cells=[...tr.querySelectorAll('td,th')].map(x=>x.textContent.trim()).filter(Boolean);
+   if(cells.length>=2&&hasArabicText(cells[0])&&hasArabicText(cells[1]))parts.push({ar:cells[0],fa:cells.slice(1).join(' ')});
+  }
+  if(!parts.length){
+   let main=doc.querySelector('main,article,.entry-content,.post-content')||doc.body;
+   let lines=(main.innerText||'').split('\n').map(x=>x.trim()).filter(Boolean);
+   for(let i=0;i<lines.length-1;i++)if(hasArabicText(lines[i])&&hasArabicText(lines[i+1]))parts.push({ar:lines[i],fa:lines[i+1]});
+  }
+ }
+ return {heading,parts};
+}
+async function fetchNahjPage(url){
+ let errors=[];
+ let targets=[
+  {url:'https://api.allorigins.win/raw?url='+encodeURIComponent(url),md:false},
+  {url:url,md:false},
+  {url:'https://r.jina.ai/http://'+url.replace('https://','').replace('http://',''),md:true}
+ ];
+ for(let target of targets){
+  try{
+   let response=await fetch(target.url,{mode:'cors',cache:'no-store'});
+   if(!response.ok)throw Error('HTTP '+response.status);
+   let body=await response.text(),parsed=parseNahjResponse(body,target.md);
+   if(parsed.parts.length)return parsed;
+   throw Error('متن قابل استخراج نبود');
+  }catch(err){errors.push(err.message||String(err))}
+ }
+ throw Error(errors.join(' | '));
+}
+async function loadNahj(save=true){
+ let t=$('nahjType').value,n=Number($('nahjNumber').value)||1,url=nahjUrl(t,n),box=$('nahjContent');
+ $('nahjStatus').textContent=t==='hekmat'?'در حال دریافت حکمت '+fa(n)+'…':'در حال دریافت متن و ترجمه…';
+ box.innerHTML='<div class="status">لطفاً چند لحظه صبر کنید…</div>';
+ if(save)saveNahjStudy(false);
+ try{
+  let result=await fetchNahjPage(url);
+  box.innerHTML='<h3 class="title">'+esc(result.heading||('نهج‌البلاغه · '+(t==='khutba'?'خطبه':t==='nameh'?'نامه':'حکمت')+' '+fa(n)))+'</h3>'+result.parts.map(p=>'<div class="verse"><div class="arabic">'+esc(p.ar)+'</div><div class="translation">'+esc(p.fa)+'</div></div>').join('')+'<p class="sourceNote">منبع: <a href="'+url+'" target="_blank" rel="noopener">مشاهده متن اصلی و ترجمه</a></p>';
+  $('nahjStatus').textContent='متن و ترجمه دریافت شد · '+fa(result.parts.length)+' فراز';
+  saveNahjStudy(false);
+ }catch(e){
+  $('nahjStatus').textContent='دریافت خودکار متن از منبع ممکن نشد. برای بازکردن مستقیم، پیوند زیر را لمس کنید.';
+  box.innerHTML='<a class="nahjOpenLink" href="'+url+'" target="_blank" rel="noopener">📖 بازکردن '+(t==='khutba'?'خطبه':t==='nameh'?'نامه':'حکمت')+' '+fa(n)+' در مرورگر</a><div class="status">نمایش داخل برنامه به دسترسی وب‌سایت منبع و سرویس واسط وابسته است؛ پیوند بالا مستقیماً به صفحه متن می‌رود.</div>';
+ }
+}
 updateNahjRange();
 
 initSurahs();buildBeads();changeDhikr();setSpeed(1);if('serviceWorker'in navigator&&location.protocol.startsWith('http'))navigator.serviceWorker.register('./sw.js').catch(()=>{});
