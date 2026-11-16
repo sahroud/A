@@ -43,7 +43,7 @@ body{font-size:17px}.brand{font-size:20px}.brand small{font-size:13px}.btn{font-
 #quran .arabic{font-size:var(--quran-arabic-size,33px)}#nahj .arabic,#nahj .translation{font-size:var(--nahj-font-size,21px);line-height:2.15}
 .quranControls{display:grid;grid-template-columns:1fr 1fr;gap:9px;margin:12px 0}.quranControls select{font-size:18px!important;min-height:54px}.quranStart{display:flex;flex-direction:column;align-items:center;gap:9px;padding:10px}.quranModeIntro{font-size:16px;color:#6e572e;text-align:center}.quranContinue{width:100%;max-width:390px;font-size:16px!important;min-height:52px!important}.readerTop{display:flex;justify-content:space-between;align-items:center;gap:8px;margin:8px 0}.readerTop .btn{font-size:13px!important;padding:10px 12px!important}.audioBar{display:flex!important}.audioBar button:disabled{opacity:.42;filter:grayscale(1)}.surahItem.lastRead{background:transparent;color:inherit;border-color:#e6dcc7;box-shadow:none}.surahItem.lastRead span,.surahItem.lastRead small{color:inherit}.surahItem small{display:none!important}.verse.current-reading{outline:2px solid #c49a4a;outline-offset:1px}.settingsPanel h3{margin:0 0 12px;color:#214b35;font-size:17px}.settingRow{display:flex;justify-content:space-between;align-items:center;gap:10px;padding:10px 0}.settingRow span{display:flex;flex-direction:column;gap:4px}.settingRow small,.settingsHint{font-size:13px;line-height:1.9;color:#7c7059}.settingRow input{width:24px;height:24px;accent-color:#2e6545}.settingField{display:block;margin:10px 0;font-size:14px;color:#6b5428}.settingField select{margin-top:6px}.nahjControls{display:grid;grid-template-columns:1fr 1fr;gap:8px}.nahjControls select{font-size:17px!important;min-height:54px}.nahjControls select:first-child{grid-column:1/-1}
 @media(max-width:560px){.prayerHead{font-size:15px;align-items:flex-start;flex-direction:column}.prayerTimes{gap:4px}.prayerTimes>div{padding:8px 2px}.prayerTimes small{font-size:10px}.prayerTimes b{font-size:16px}.homeVerseBg{height:150px}.homeVerseBg small{font-size:15px}.quranControls{grid-template-columns:1fr 1fr;gap:6px}.quranControls select{font-size:15px!important;min-height:50px}.nahjControls{grid-template-columns:1fr 1fr}}
-</style></head><body><main class="app"><header class="head"><div class="brand">SAHROUD TASBIH<small>ذکر، تلاوت و نیایش روزانه</small></div><div class="seal">﷽</div></header>
+#nahjContent{max-height:68vh;overflow-y:auto;overflow-x:hidden;overscroll-behavior:contain;-webkit-overflow-scrolling:touch;padding:4px 5px 18px;scrollbar-width:thin}#nahjContent .verse{overflow-wrap:anywhere}#nahjContent .arabic,#nahjContent .translation{white-space:normal}#nahjContent .verse{margin:10px 0 14px}\n</style></head><body><main class="app"><header class="head"><div class="brand">SAHROUD TASBIH<small>ذکر، تلاوت و نیایش روزانه</small></div><div class="seal">﷽</div></header>
 <section id="home" class="page active">
 <div class="homeVerseBg" aria-hidden="true"><div>أَلَا بِذِكْرِ اللَّهِ تَطْمَئِنُّ الْقُلُوبُ</div><small>آگاه باشید که با یاد خدا دل‌ها آرام می‌گیرد</small></div><section class="panel prayerPanel" id="prayerPanel"><div class="prayerHead"><span>🕌 اوقات شرعی محل شما</span><small id="prayerPlace">در انتظار تعیین موقعیت</small></div><div class="prayerTimes"><div><small>اذان صبح</small><b id="pFajr">—:—</b></div><div><small>طلوع آفتاب</small><b id="pSunrise">—:—</b></div><div><small>اذان ظهر</small><b id="pDhuhr">—:—</b></div><div><small>اذان مغرب</small><b id="pMaghrib">—:—</b></div></div><audio id="adhanAudio" preload="auto" src="https://dl.namaz.ir/s/c/other/azan/rahim_moazenzadeh.mp3"></audio></section>
 <div class="homeLabel">درگاه نیایش</div><div class="grid homeGrid">
@@ -269,18 +269,33 @@ function saveNahjStudy(showMsg=false){let item={type:$('nahjType').value,number:
 function restoreNahjStudy(){let p=readSaved('sahroud_study_nahj');if(!p)return;$('nahjType').value=p.type||'khutba';updateNahjRange();$('nahjNumber').value=p.number||1;if(currentPage==='nahj'&&!$('nahjContent').children.length)loadNahj(false)}
 window.addEventListener('scroll',()=>{if(currentPage==='nahj'&&Date.now()>ignoreStudyScrollUntil){clearTimeout(window.__nsave);window.__nsave=setTimeout(()=>saveNahjStudy(false),500)}},{passive:true});
 function nahjNumberValue(v){return Number(String(v).replace(/[۰-۹]/g,d=>'۰۱۲۳۴۵۶۷۸۹'.indexOf(d)).replace(/[٠-٩]/g,d=>'٠١٢٣٤٥٦٧٨٩'.indexOf(d)))}
-function parseNahjResponse(raw){
- let source=String(raw),parts=[],heading='نهج‌البلاغه',doc=new DOMParser().parseFromString(source,'text/html'),title=doc.querySelector('h1,h2');
- if(title&&title.textContent.trim())heading=title.textContent.trim();
- const add=(a,b)=>{a=String(a).replace(/<[^>]*>/g,' ').replace(/&nbsp;|&#160;/g,' ').replace(/\s+/g,' ').trim();b=String(b).replace(/<[^>]*>/g,' ').replace(/&nbsp;|&#160;/g,' ').replace(/\s+/g,' ').trim();if(hasArabicText(a)&&hasArabicText(b)&&!/متن عربی|ترجمه استاد|ترجمه فارسی/.test(a+b))parts.push({ar:a,fa:b,number:null})};
- for(let tr of doc.querySelectorAll('table tr')){let cells=[...tr.querySelectorAll('td,th')].map(x=>x.textContent.trim()).filter(Boolean);if(cells.length>=2)add(cells[0],cells.slice(1).join(' '))}
- if(!parts.length)for(let line of source.split(/\r?\n/)){let s=line.trim();if(!s.includes('|')||/^[-:\s|]+$/.test(s)||/متن عربی|ترجمه استاد|ترجمه فارسی/.test(s))continue;let cells=s.split('|').map(x=>x.trim()).filter(Boolean);if(cells.length>=2)add(cells[0],cells.slice(1).join(' '))}
+function parseNahjResponse(raw,type='khutba',requestedNumber=1){
+ const source=String(raw),parts=[],headingMatch=source.match(/^#{1,6}\\s*(.+)$/m),heading=headingMatch?headingMatch[1].trim():'نهج‌البلاغه';
+ const clean=v=>String(v||'').replace(/<[^>]*>/g,' ').replace(/\\[Button:[^\\]]*\\]/g,' ').replace(/&nbsp;|&#160;/g,' ').replace(/\\s+/g,' ').trim();
+ const addRow=(target,a,b)=>{a=clean(a);b=clean(b);if(hasArabicText(a)&&hasArabicText(b)&&!/متن عربی|ترجمه استاد|ترجمه فارسی/.test(a+b)){target.ar.push(a);target.fa.push(b)}};
+ const makePart=(n,rows)=>{if(rows.ar.length)parts.push({number:n,ar:rows.ar.join(' '),fa:rows.fa.join(' ')})};
+ if(type==='hekmat'){
+  const lines=source.split(/\\r?\\n/),starts=[];
+  for(let i=0;i<lines.length;i++){let m=lines[i].match(/^#{1,6}\\s*حکمت\\s*([0-9۰-۹٠-٩]+)/);if(m){let num=Number(m[1].replace(/[۰-۹]/g,d=>'۰۱۲۳۴۵۶۷۸۹'.indexOf(d)).replace(/[٠-٩]/g,d=>'٠١٢٣٤٥٦٧٨٩'.indexOf(d)));starts.push({line:i,num})}}
+  if(starts.length){
+   for(let k=0;k<starts.length;k++){let rows={ar:[],fa:[]},from=starts[k].line+1,to=k+1<starts.length?starts[k+1].line:lines.length;
+    for(let i=from;i<to;i++){let line=lines[i].trim();if(!line.includes('|')||/^[-:\\s|]+$/.test(line)||/متن عربی|ترجمه استاد|ترجمه فارسی/.test(line))continue;let cells=line.split('|').map(x=>x.trim()).filter(Boolean);if(cells.length>=2)addRow(rows,cells[0],cells[1])}
+    makePart(starts[k].num,rows);
+   }
+  }
+ }
+ if(!parts.length){
+  const doc=new DOMParser().parseFromString(source,'text/html'),rows={ar:[],fa:[]};
+  for(const tr of doc.querySelectorAll('table tr')){const cells=[...tr.querySelectorAll('td,th')].map(x=>x.textContent.trim()).filter(Boolean);if(cells.length>=2)addRow(rows,cells[0],cells.slice(1).join(' '))}
+  if(!rows.ar.length){for(const line of source.split(/\\r?\\n/)){const z=line.trim();if(!z.includes('|')||/^[-:\\s|]+$/.test(z)||/متن عربی|ترجمه استاد|ترجمه فارسی/.test(z))continue;const c=z.split('|').map(x=>x.trim()).filter(Boolean);if(c.length>=2)addRow(rows,c[0],c[1])}}
+  makePart(type==='hekmat'?requestedNumber:null,rows);
+ }
  return {heading,parts};
 }
 async function fetchNahjPage(url,onProgress){
  if(nahjMemoryCache[url])return nahjMemoryCache[url];
  let clean=url.replace(/^https?:\/\//,''),targets=['https://r.jina.ai/http://'+clean,'https://api.allorigins.win/raw?url='+encodeURIComponent(url),'https://corsproxy.io/?url='+encodeURIComponent(url)],errors=[];
- for(let i=0;i<targets.length;i++){let controller=new AbortController(),timer=setTimeout(()=>controller.abort(),9000);try{if(onProgress)onProgress(i===0?'در حال دریافت از منبع اصلی…':'در حال تلاش برای اتصال جایگزین '+fa(i)+'…');let r=await fetch(targets[i],{cache:'no-store',signal:controller.signal});if(!r.ok)throw Error('HTTP '+r.status);let body=await r.text();if(body.length<100)throw Error('پاسخ خالی');let parsed=parseNahjResponse(body);if(parsed.parts.length){nahjMemoryCache[url]=parsed;return parsed}throw Error('قالب متن قابل شناسایی نیست')}catch(e){errors.push(e.name==='AbortError'?'مهلت اتصال تمام شد':e.message||String(e))}finally{clearTimeout(timer)}}
+ for(let i=0;i<targets.length;i++){let controller=new AbortController(),timer=setTimeout(()=>controller.abort(),9000);try{if(onProgress)onProgress(i===0?'در حال دریافت از منبع اصلی…':'در حال تلاش برای اتصال جایگزین '+fa(i)+'…');let r=await fetch(targets[i],{cache:'no-store',signal:controller.signal});if(!r.ok)throw Error('HTTP '+r.status);let body=await r.text();if(body.length<100)throw Error('پاسخ خالی');let parsed=parseNahjResponse(body,url.includes('/hikmat/')?'hekmat':url.includes('/nameh/')?'nameh':'khutba',Number(new URL(url).pathname.split('/').filter(Boolean).pop())||1);if(parsed.parts.length){nahjMemoryCache[url]=parsed;return parsed}throw Error('قالب متن قابل شناسایی نیست')}catch(e){errors.push(e.name==='AbortError'?'مهلت اتصال تمام شد':e.message||String(e))}finally{clearTimeout(timer)}}
  throw Error(errors.join('؛ '));
 }
 let nahjRequestId=0;
@@ -288,8 +303,8 @@ async function loadNahj(save=true){
  let request=++nahjRequestId,type=$('nahjType').value,num=Number($('nahjNumber').value)||1,url=nahjUrl(type,num),box=$('nahjContent');
  $('nahjStatus').textContent='در حال دریافت '+(type==='khutba'?'خطبه':type==='nameh'?'نامه':'حکمت')+' '+fa(num)+'…';box.innerHTML='<div class="status">در حال دریافت متن انتخاب‌شده…</div>';if(save)saveNahjStudy(false);
  try{let result=await fetchNahjPage(url,msg=>{if(request===nahjRequestId)$('nahjStatus').textContent=msg});if(request!==nahjRequestId||type!==$('nahjType').value||num!==Number($('nahjNumber').value))return;let parts=result.parts;
- if(type==='hekmat'&&parts.length>1){let exact=parts.filter(p=>p.number===num);if(exact.length)parts=exact.slice(0,1);else parts=[parts[(num-1)%parts.length]]}
- if(!parts.length)throw Error('پاسخ منبع فاقد متن قابل استخراج بود');
+ if(type==='hekmat')parts=parts.filter(p=>p.number===num);
+ if(!parts.length)throw Error('متن کامل این شماره در پاسخ منبع پیدا نشد؛ شماره‌های مجاور جایگزین نمی‌شوند.');
  box.innerHTML='<h3 class="title">'+esc((type==='khutba'?'خطبه ':type==='nameh'?'نامه ':'حکمت ')+fa(num))+'</h3>'+parts.map(p=>'<div class="verse"><div class="arabic">'+esc(p.ar)+'</div><div class="translation">'+esc(p.fa)+'</div></div>').join('');
  $('nahjStatus').textContent='متن و ترجمه شماره '+fa(num)+' بارگذاری شد.';saveNahjStudy(false)
  }catch(e){if(request!==nahjRequestId)return;box.innerHTML='<div class="status">دریافت متن انجام نشد: '+esc(e.message||'اتصال برقرار نشد')+'</div>';$('nahjStatus').textContent='بارگذاری ناموفق؛ دوباره شماره را انتخاب کنید یا اتصال اینترنت را بررسی کنید.'}
