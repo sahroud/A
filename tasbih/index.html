@@ -195,7 +195,7 @@ function checkAdhanTime(){
 }
 function startAdhanScheduler(){if(!$('adhanEnabled').checked||prayerLat===null)return;if(prayerCheck)clearInterval(prayerCheck);checkAdhanTime();prayerCheck=setInterval(checkAdhanTime,5000)}
 function toggleAdhan(){let on=$('adhanEnabled').checked;localStorage.setItem('sahroud_adhan_enabled',on?'true':'false');if(on){$('adhanStatus').textContent='پخش خودکار اذان فعال شد.';if(prayerLat===null)locateForPrayer();else startAdhanScheduler()}else{if(prayerCheck)clearInterval(prayerCheck);prayerCheck=null;$('adhanStatus').textContent='پخش خودکار اذان غیرفعال شد.'}}
-function initSettings(){
+function setTasbihSound(on){clickSoundOn=!!on;localStorage.setItem('sahroud_tasbih_sound',clickSoundOn?'true':'false');if(clickSoundOn)woodClick()}\nfunction initSettings(){let sound=localStorage.getItem('sahroud_tasbih_sound');clickSoundOn=sound!=='false';$('tasbihSoundSetting').checked=clickSoundOn;
  let enabled=localStorage.getItem('sahroud_adhan_enabled');$('adhanEnabled').checked=enabled!=='false';
  let q=localStorage.getItem('sahroud_quran_font')||'33',n=localStorage.getItem('sahroud_nahj_font')||'21',r=localStorage.getItem('sahroud_quran_speed')||'1';
  $('quranFontSize').value=q;$('nahjFontSize').value=n;$('quranSpeedSetting').value=r;applyQuranFontSize();applyNahjFontSize();applyQuranSpeed();
