@@ -319,5 +319,11 @@ async function loadNahj(save=true){
 }
 updateNahjRange();
 
-initSurahs();buildBeads();changeDhikr();setSpeed(1);renderSurahSidebar();if('serviceWorker'in navigator&&location.protocol.startsWith('http'))navigator.serviceWorker.register('./sw.js').catch(()=>{});
+initSurahs();buildBeads();changeDhikr();setSpeed(1);renderSurahSidebar();if('serviceWorker'in navigator&&location.protocol.startsWith('http')){
+ navigator.serviceWorker.register('./sw.js',{updateViaCache:'none'}).then(reg=>{
+  const update=()=>reg.update().catch(()=>{});update();
+  document.addEventListener('visibilitychange',()=>{if(!document.hidden)update()});
+  window.addEventListener('focus',update);
+ }).catch(()=>{});
+}
 </script></body></html>
