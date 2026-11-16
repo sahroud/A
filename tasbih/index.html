@@ -210,15 +210,8 @@ window.addEventListener('load',()=>{
  try{let p=JSON.parse(localStorage.getItem('sahroud_prayer_location')||'null');if(p&&Number.isFinite(p.lat)&&Number.isFinite(p.lon)){if(p.timezone)prayerTimezone=p.timezone;updatePrayerTimes(p.lat,p.lon)}else locateForPrayer()}catch(e){locateForPrayer()}
 });
 
-const nahjCounts={khutba:239,nameh:79,hekmat:480};
-function updateNahjRange(){let t=$('nahjType').value,n=nahjCounts[t];$('nahjNumber').innerHTML='';for(let i=1;i<=n;i++){let o=document.createElement('option');o.value=i;o.textContent=fa(i)+(t==='khutba'?' - خطبه':t==='nameh'?' - نامه':' - حکمت');$('nahjNumber').appendChild(o)}$('nahjNumber').value='1'}
-function nahjUrl(t,n){let path=t==='khutba'?'khutba':t==='nameh'?'nameh':'hikmat';let index=t==='hekmat'?Math.ceil(n/20):n;return 'https://persianquran.com/hadis/nahj/'+path+'/'+index+'/'}
-function openNahjSource(){let t=$('nahjType').value,n=Number($('nahjNumber').value)||1;window.open(nahjUrl(t,n),'_blank','noopener')}
-function saveNahjStudy(showMsg=false){let item={type:$('nahjType').value,number:Number($('nahjNumber').value)||1,scrollY:window.scrollY||0,savedAt:Date.now()};localStorage.setItem('sahroud_study_nahj',JSON.stringify(item));if(showMsg)$('nahjStatus').textContent='محل مطالعه نهج‌البلاغه ذخیره شد.'}
-function restoreNahjStudy(){let p=readSaved('sahroud_study_nahj');if(!p)return;$('nahjType').value=p.type||'khutba';updateNahjRange();$('nahjNumber').value=p.number||1;if(currentPage==='nahj'&&!$('nahjContent').children.length)loadNahj(false)}
-window.addEventListener('scroll',()=>{if(currentPage==='nahj'&&Date.now()>ignoreStudyScrollUntil){clearTimeout(window.__nsave);window.__nsave=setTimeout(()=>saveNahjStudy(false),400)}},{passive:true});
-function hasArabicText(value){return /[\u0600-\u06FF]/.test(String(value))}
 const nahjCounts={khutba:239,nameh:79,hekmat:480},nahjMemoryCache={};
+function hasArabicText(value){return /[\u0600-\u06FF]/.test(String(value))}
 function updateNahjRange(){let t=$('nahjType').value,n=nahjCounts[t];$('nahjNumber').innerHTML='';for(let i=1;i<=n;i++){let o=document.createElement('option');o.value=i;o.textContent=fa(i)+(t==='khutba'?' · خطبه':t==='nameh'?' · نامه':' · حکمت');$('nahjNumber').appendChild(o)}$('nahjNumber').value='1'}
 function nahjUrl(t,n){let path=t==='khutba'?'khutba':t==='nameh'?'nameh':'hikmat',index=t==='hekmat'?Math.ceil(n/20):n;return 'https://persianquran.com/hadis/nahj/'+path+'/'+index+'/'}
 function saveNahjStudy(showMsg=false){let item={type:$('nahjType').value,number:Number($('nahjNumber').value)||1,savedAt:Date.now()};localStorage.setItem('sahroud_study_nahj',JSON.stringify(item));if(showMsg)$('nahjStatus').textContent='محل مطالعه ذخیره شد.'}
@@ -227,8 +220,10 @@ window.addEventListener('scroll',()=>{if(currentPage==='nahj'&&Date.now()>ignore
 function parseNahjResponse(raw){
  let parts=[],heading='نهج‌البلاغه',doc=new DOMParser().parseFromString(String(raw),'text/html');
  let title=doc.querySelector('h1,h2');if(title&&title.textContent.trim())heading=title.textContent.trim();
- let rows=[...doc.querySelectorAll('table tr')];
- for(let tr of rows){let cells=[...tr.querySelectorAll('td,th')].map(x=>x.textContent.replace(/\s+/g,' ').trim()).filter(Boolean);if(cells.length>=2&&!/متن عربی|ترجمه استاد|ترجمه فارسی/.test(cells[0])&&hasArabicText(cells[0])&&hasArabicText(cells[1]))parts.push({ar:cells[0],fa:cells.slice(1).join(' '),number:null})}
+ for(let tr of doc.querySelectorAll('table tr')){
+  let cells=[...tr.querySelectorAll('td,th')].map(x=>x.textContent.replace(/\s+/g,' ').trim()).filter(Boolean);
+  if(cells.length>=2&&!/متن عربی|ترجمه استاد|ترجمه فارسی/.test(cells[0])&&hasArabicText(cells[0])&&hasArabicText(cells[1]))parts.push({ar:cells[0],fa:cells.slice(1).join(' '),number:null});
+ }
  if(!parts.length){
   let currentNo=null;
   for(let line of String(raw).split('\n')){
@@ -253,15 +248,11 @@ async function loadNahj(save=true){
  $('nahjStatus').textContent='در حال دریافت متن…';box.innerHTML='<div class="status">لطفاً چند لحظه صبر کنید.</div>';if(save)saveNahjStudy(false);
  try{
   let result=await fetchNahjPage(url),parts=result.parts;
-  if(type==='hekmat'){
-   let exact=parts.filter(p=>p.number===num);
-   if(exact.length)parts=exact.slice(0,1);
-   else if(parts.length>1){let offset=(num-1)%20;parts=parts[offset]?[parts[offset]]:[]}
-  }
+  if(type==='hekmat'){let exact=parts.filter(p=>p.number===num);if(exact.length)parts=exact.slice(0,1);else if(parts.length>1){let offset=(num-1)%20;parts=parts[offset]?[parts[offset]]:[]}}
   if(!parts.length)throw Error('متن این بخش پیدا نشد');
   box.innerHTML='<h3 class="title">'+esc((type==='khutba'?'خطبه ':type==='nameh'?'نامه ':'حکمت ')+fa(num))+'</h3>'+parts.map(p=>'<div class="verse"><div class="arabic">'+esc(p.ar)+'</div><div class="translation">'+esc(p.fa)+'</div></div>').join('');
   $('nahjStatus').textContent='متن و ترجمه آماده مطالعه است.';saveNahjStudy(false);
- }catch(e){box.innerHTML='';$('nahjStatus').textContent='متن نهج‌البلاغه بارگذاری نشد. اتصال اینترنت را بررسی کنید و دوباره شماره را انتخاب کنید.'}
+ }catch(e){box.innerHTML='';$('nahjStatus').textContent='متن بارگذاری نشد. اتصال اینترنت را بررسی کنید و دوباره شماره را انتخاب کنید.'}
 }
 updateNahjRange();
 
