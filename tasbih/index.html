@@ -160,30 +160,55 @@ $('qAudio').addEventListener('play',()=>{if(currentPage!=='quran')$('miniAudio')
 $('qAudio').addEventListener('pause',()=>{if($('qAudio').ended)$('miniAudio').style.display='none'});async function downloadAll(){let bar=$('dlbar'),status=$('qstatus');for(let ch=1;ch<=114;ch++){try{await getSurahData(ch);bar.style.width=(ch/114*100)+'%';status.textContent='ذخیره آفلاین سوره '+names[ch-1]+' ('+fa(ch)+'/۱۱۴)';await new Promise(r=>setTimeout(r,250))}catch(e){status.textContent='دانلود در سوره '+names[ch-1]+' متوقف شد: '+e.message;return}}status.textContent='قرآن کامل و ترجمه مکارم در حافظه آفلاین ذخیره شد.'}
 
 
-let prayerLat=null,prayerLon=null,prayerCheck=null,adhanUrl=null,lastPlayed='',prayerTimezone=Intl.DateTimeFormat().resolvedOptions().timeZone||'UTC';
+const ADHAN_AUDIO_URL='https://dl.namaz.ir/s/c/other/azan/rahim_moazenzadeh.mp3';
+let prayerLat=null,prayerLon=null,prayerCheck=null,prayerRefresh=null,lastPlayed=localStorage.getItem('sahroud_last_adhan')||'',prayerTimezone=Intl.DateTimeFormat().resolvedOptions().timeZone||'UTC',loadedPrayerDate='';
 function prayerToday(){let p=new Intl.DateTimeFormat('en-GB',{timeZone:prayerTimezone,day:'2-digit',month:'2-digit',year:'numeric'}).formatToParts(new Date()),v={};p.forEach(x=>v[x.type]=x.value);return v.day+'-'+v.month+'-'+v.year}
 function prayerClock(){return new Intl.DateTimeFormat('en-GB',{timeZone:prayerTimezone,hour:'2-digit',minute:'2-digit',hourCycle:'h23'}).format(new Date())}
 function prayerDayKey(){return new Intl.DateTimeFormat('en-CA',{timeZone:prayerTimezone,year:'numeric',month:'2-digit',day:'2-digit'}).format(new Date())}
 function prayerTime(v){return String(v||'—:—').split(' ')[0]}
 async function updatePrayerTimes(lat,lon){
- prayerLat=lat;prayerLon=lon;$('prayerPlace').textContent='در حال شناسایی شهر…';
+ prayerLat=lat;prayerLon=lon;$('prayerPlace').textContent='در حال شناسایی محل…';
  try{
-  let g=await fetch('https://nominatim.openstreetmap.org/reverse?format=jsonv2&lat='+lat+'&lon='+lon+'&zoom=10&accept-language=fa');
-  if(g.ok){let x=await g.json(),a=x.address||{};$('prayerPlace').textContent=a.village||a.town||a.city||a.county||a.state||'موقعیت فعلی'}else $('prayerPlace').textContent='موقعیت فعلی';
+  try{let g=await fetch('https://nominatim.openstreetmap.org/reverse?format=jsonv2&lat='+lat+'&lon='+lon+'&zoom=10&accept-language=fa');if(g.ok){let x=await g.json(),a=x.address||{};$('prayerPlace').textContent=a.village||a.town||a.city||a.county||a.state||'موقعیت فعلی'}else $('prayerPlace').textContent='موقعیت فعلی'}catch(e){$('prayerPlace').textContent='موقعیت فعلی'}
   let u='https://api.aladhan.com/v1/timings/'+prayerToday()+'?latitude='+lat+'&longitude='+lon+'&method=0&latitudeAdjustmentMethod=3';
   let r=await fetch(u);if(!r.ok)throw Error('HTTP '+r.status);let j=await r.json();if(j.code!==200||!j.data||!j.data.timings)throw Error('پاسخ نامعتبر');
   let tz=j.data.meta&&j.data.meta.timezone;if(tz&&tz!==prayerTimezone){let oldDate=prayerToday();prayerTimezone=tz;if(prayerToday()!==oldDate){u='https://api.aladhan.com/v1/timings/'+prayerToday()+'?latitude='+lat+'&longitude='+lon+'&method=0&latitudeAdjustmentMethod=3';r=await fetch(u);if(!r.ok)throw Error('HTTP '+r.status);j=await r.json();if(j.code!==200||!j.data||!j.data.timings)throw Error('پاسخ تاریخ محلی نامعتبر است')}}
   let t=j.data.timings;$('pFajr').textContent=prayerTime(t.Fajr);$('pSunrise').textContent=prayerTime(t.Sunrise);$('pDhuhr').textContent=prayerTime(t.Dhuhr);$('pMaghrib').textContent=prayerTime(t.Maghrib);
-  $('adhanStatus').textContent='اوقات شرعی با روش محاسبه جعفری (شیعه) دریافت شد؛ ممکن است با تقویم رسمی محل چند دقیقه اختلاف داشته باشد.';
-  localStorage.setItem('sahroud_prayer_location',JSON.stringify({lat:lat,lon:lon,timezone:prayerTimezone}));
- }catch(e){$('adhanStatus').textContent='خطا در دریافت اوقات شرعی؛ اتصال اینترنت را بررسی و دوباره تلاش کنید. '+e.message}
+  localStorage.setItem('sahroud_prayer_location',JSON.stringify({lat,lon,timezone:prayerTimezone}));loadedPrayerDate=prayerToday();
+  $('adhanStatus').textContent='اوقات محل شما به‌روزرسانی شد.';startAdhanScheduler();
+  if(prayerRefresh)clearInterval(prayerRefresh);prayerRefresh=setInterval(()=>{if(prayerLat!==null&&prayerToday()!==loadedPrayerDate)updatePrayerTimes(prayerLat,prayerLon)},60000);
+ }catch(e){$('prayerPlace').textContent='اوقات شرعی در دسترس نیست';$('adhanStatus').textContent='خطا در دریافت اوقات شرعی؛ اینترنت را بررسی کنید و موقعیت را دوباره به‌روزرسانی کنید.'}
 }
-function locateForPrayer(){if(!navigator.geolocation||!isSecureContext){$('adhanStatus').textContent='مکان‌یابی در دسترس نیست؛ نسخه HTTPS و مجوز Location را بررسی کنید.';return}$('adhanStatus').textContent='در حال دریافت موقعیت…';navigator.geolocation.getCurrentPosition(p=>updatePrayerTimes(p.coords.latitude,p.coords.longitude),e=>$('adhanStatus').textContent=e.code===1?'مجوز مکان رد شد؛ آن را در تنظیمات مرورگر فعال کنید.':'GPS در دسترس نیست؛ GPS و اینترنت را روشن کنید.',{enableHighAccuracy:true,timeout:25000,maximumAge:60000})}
-function adhanDatabase(){return new Promise((resolve,reject)=>{let r=indexedDB.open('sahroud-adhan-v1',1);r.onupgradeneeded=()=>r.result.createObjectStore('files');r.onsuccess=()=>resolve(r.result);r.onerror=()=>reject(r.error)})}
-async function selectAdhanFile(e){let f=e.target.files&&e.target.files[0];if(!f)return;if(adhanUrl)URL.revokeObjectURL(adhanUrl);adhanUrl=URL.createObjectURL(f);$('adhanAudio').src=adhanUrl;try{let db=await adhanDatabase();await new Promise((resolve,reject)=>{let q=db.transaction('files','readwrite').objectStore('files').put(f,'selected');q.onsuccess=()=>resolve();q.onerror=()=>reject(q.error)});$('adhanStatus').textContent='فایل اذان انتخاب و در همین گوشی ذخیره شد: '+f.name}catch(err){$('adhanStatus').textContent='فایل انتخاب شد، اما ذخیره دائمی آن ممکن نشد؛ ممکن است پس از بستن برنامه نیاز به انتخاب دوباره باشد.'}}
-async function restoreAdhanFile(){try{let db=await adhanDatabase(),f=await new Promise((resolve,reject)=>{let q=db.transaction('files').objectStore('files').get('selected');q.onsuccess=()=>resolve(q.result);q.onerror=()=>reject(q.error)});if(f){adhanUrl=URL.createObjectURL(f);$('adhanAudio').src=adhanUrl;$('adhanStatus').textContent='فایل اذان ذخیره‌شده آماده است؛ برای فعال‌سازی، گزینه پخش خودکار را روشن کنید.'}}catch(e){}}
-function toggleAdhan(){if($('adhanEnabled').checked&&(!adhanUrl||prayerLat===null)){$('adhanEnabled').checked=false;$('adhanStatus').textContent='ابتدا موقعیت را دریافت و فایل صوتی اذان را انتخاب کنید.';return}if($('adhanEnabled').checked){if(prayerCheck)clearInterval(prayerCheck);let check=()=>{let tm=prayerClock(),day=prayerDayKey();for(let k of ['pFajr','pDhuhr','pMaghrib'])if($(k).textContent===tm&&lastPlayed!==day+k){lastPlayed=day+k;$('adhanAudio').currentTime=0;$('adhanAudio').play().catch(()=>$('adhanStatus').textContent='پخش خودکار مسدود شد؛ برنامه را باز نگه دارید و یک بار صوت را دستی پخش کنید.');break}};check();prayerCheck=setInterval(check,10000);$('adhanStatus').textContent='پخش خودکار فعال است؛ فقط هنگام بازبودن و فعال‌بودن صفحه برنامه قابل اتکاست.'}else{if(prayerCheck)clearInterval(prayerCheck);prayerCheck=null;$('adhanStatus').textContent='پخش خودکار غیرفعال شد.'}}
-window.addEventListener('load',()=>{restoreAdhanFile();try{let p=JSON.parse(localStorage.getItem('sahroud_prayer_location')||'null');if(p&&Number.isFinite(p.lat)&&Number.isFinite(p.lon)){if(p.timezone)prayerTimezone=p.timezone;updatePrayerTimes(p.lat,p.lon)}}catch(e){}});
+function locateForPrayer(){if(!navigator.geolocation||!isSecureContext){$('adhanStatus').textContent='مکان‌یابی در دسترس نیست؛ نسخه HTTPS و مجوز مکان را بررسی کنید.';return}$('adhanStatus').textContent='در حال دریافت موقعیت…';navigator.geolocation.getCurrentPosition(p=>updatePrayerTimes(p.coords.latitude,p.coords.longitude),e=>$('adhanStatus').textContent=e.code===1?'مجوز مکان رد شد؛ از تنظیمات مرورگر فعالش کنید.':'GPS در دسترس نیست؛ مکان‌یابی و اینترنت را روشن کنید.',{enableHighAccuracy:true,timeout:25000,maximumAge:60000})}
+function checkAdhanTime(){
+ if(!$('adhanEnabled').checked||prayerLat===null)return;
+ let now=prayerClock(),nowParts=now.split(':').map(Number),nowMinutes=nowParts[0]*60+nowParts[1],day=prayerDayKey();
+ for(let [key,id] of [['Fajr','pFajr'],['Dhuhr','pDhuhr'],['Maghrib','pMaghrib']]){
+  let p=prayerTime($(id).textContent),m=p.match(/^(\d{1,2}):(\d{2})/);if(!m)continue;
+  let prayerMinutes=Number(m[1])*60+Number(m[2]),diff=nowMinutes-prayerMinutes,stamp=day+'-'+key;
+  if(diff>=0&&diff<=1&&lastPlayed!==stamp){
+   lastPlayed=stamp;localStorage.setItem('sahroud_last_adhan',stamp);
+   let audio=$('adhanAudio');audio.currentTime=0;audio.play().then(()=>$('adhanStatus').textContent='اذان استاد رحیم مؤذن‌زاده اردبیلی در وقت مقرر پخش شد.').catch(()=>$('adhanStatus').textContent='مرورگر اجازه پخش خودکار نداد؛ یک بار در صفحه لمس کنید و برنامه را باز نگه دارید.');break;
+  }
+ }
+}
+function startAdhanScheduler(){if(!$('adhanEnabled').checked||prayerLat===null)return;if(prayerCheck)clearInterval(prayerCheck);checkAdhanTime();prayerCheck=setInterval(checkAdhanTime,5000)}
+function toggleAdhan(){let on=$('adhanEnabled').checked;localStorage.setItem('sahroud_adhan_enabled',on?'true':'false');if(on){$('adhanStatus').textContent='پخش خودکار اذان فعال شد.';if(prayerLat===null)locateForPrayer();else startAdhanScheduler()}else{if(prayerCheck)clearInterval(prayerCheck);prayerCheck=null;$('adhanStatus').textContent='پخش خودکار اذان غیرفعال شد.'}}
+function initSettings(){
+ let enabled=localStorage.getItem('sahroud_adhan_enabled');$('adhanEnabled').checked=enabled!=='false';
+ let q=localStorage.getItem('sahroud_quran_font')||'33',n=localStorage.getItem('sahroud_nahj_font')||'21',r=localStorage.getItem('sahroud_quran_speed')||'1';
+ $('quranFontSize').value=q;$('nahjFontSize').value=n;$('quranSpeedSetting').value=r;applyQuranFontSize();applyNahjFontSize();applyQuranSpeed();
+}
+function applyQuranFontSize(){let v=Number($('quranFontSize').value)||33;document.documentElement.style.setProperty('--quran-arabic-size',v+'px');localStorage.setItem('sahroud_quran_font',String(v))}
+function applyNahjFontSize(){let v=Number($('nahjFontSize').value)||21;document.documentElement.style.setProperty('--nahj-font-size',v+'px');localStorage.setItem('sahroud_nahj_font',String(v))}
+function applyQuranSpeed(){let v=Number($('quranSpeedSetting').value)||1;localStorage.setItem('sahroud_quran_speed',String(v));if(typeof setSpeed==='function')setSpeed(v)}
+let adhanUnlockAttempted=false;
+window.addEventListener('pointerdown',()=>{if(adhanUnlockAttempted)return;adhanUnlockAttempted=true;let a=$('adhanAudio');if(!a)return;let vol=a.volume;a.volume=0;a.play().then(()=>{a.pause();a.currentTime=0;a.volume=vol;$('adhanStatus').textContent='صدای اذان برای پخش خودکار آماده شد.'}).catch(()=>{a.volume=vol})},{once:true});
+document.addEventListener('visibilitychange',()=>{if(!document.hidden)checkAdhanTime()});
+window.addEventListener('load',()=>{
+ initSettings();$('adhanAudio').src=ADHAN_AUDIO_URL;
+ try{let p=JSON.parse(localStorage.getItem('sahroud_prayer_location')||'null');if(p&&Number.isFinite(p.lat)&&Number.isFinite(p.lon)){if(p.timezone)prayerTimezone=p.timezone;updatePrayerTimes(p.lat,p.lon)}else locateForPrayer()}catch(e){locateForPrayer()}
+});
 
 const nahjCounts={khutba:239,nameh:79,hekmat:480};
 function updateNahjRange(){let t=$('nahjType').value,n=nahjCounts[t];$('nahjNumber').innerHTML='';for(let i=1;i<=n;i++){let o=document.createElement('option');o.value=i;o.textContent=fa(i)+(t==='khutba'?' - خطبه':t==='nameh'?' - نامه':' - حکمت');$('nahjNumber').appendChild(o)}$('nahjNumber').value='1'}
@@ -192,61 +217,51 @@ function openNahjSource(){let t=$('nahjType').value,n=Number($('nahjNumber').val
 function saveNahjStudy(showMsg=false){let item={type:$('nahjType').value,number:Number($('nahjNumber').value)||1,scrollY:window.scrollY||0,savedAt:Date.now()};localStorage.setItem('sahroud_study_nahj',JSON.stringify(item));if(showMsg)$('nahjStatus').textContent='محل مطالعه نهج‌البلاغه ذخیره شد.'}
 function restoreNahjStudy(){let p=readSaved('sahroud_study_nahj');if(!p)return;$('nahjType').value=p.type||'khutba';updateNahjRange();$('nahjNumber').value=p.number||1;if(currentPage==='nahj'&&!$('nahjContent').children.length)loadNahj(false)}
 window.addEventListener('scroll',()=>{if(currentPage==='nahj'&&Date.now()>ignoreStudyScrollUntil){clearTimeout(window.__nsave);window.__nsave=setTimeout(()=>saveNahjStudy(false),400)}},{passive:true});
-function hasArabicText(value){for(let ch of String(value)){let n=ch.charCodeAt(0);if(n>=1536&&n<=1791)return true}return false}
-function parseNahjResponse(raw,isMarkdown){
- let parts=[],heading='نهج‌البلاغه',currentNo=null,headingChanged=false;
- if(isMarkdown||String(raw).trim().charAt(0)!=='<'){
+function hasArabicText(value){return /[\u0600-\u06FF]/.test(String(value))}
+const nahjCounts={khutba:239,nameh:79,hekmat:480},nahjMemoryCache={};
+function updateNahjRange(){let t=$('nahjType').value,n=nahjCounts[t];$('nahjNumber').innerHTML='';for(let i=1;i<=n;i++){let o=document.createElement('option');o.value=i;o.textContent=fa(i)+(t==='khutba'?' · خطبه':t==='nameh'?' · نامه':' · حکمت');$('nahjNumber').appendChild(o)}$('nahjNumber').value='1'}
+function nahjUrl(t,n){let path=t==='khutba'?'khutba':t==='nameh'?'nameh':'hikmat',index=t==='hekmat'?Math.ceil(n/20):n;return 'https://persianquran.com/hadis/nahj/'+path+'/'+index+'/'}
+function saveNahjStudy(showMsg=false){let item={type:$('nahjType').value,number:Number($('nahjNumber').value)||1,savedAt:Date.now()};localStorage.setItem('sahroud_study_nahj',JSON.stringify(item));if(showMsg)$('nahjStatus').textContent='محل مطالعه ذخیره شد.'}
+function restoreNahjStudy(){let p=readSaved('sahroud_study_nahj');if(!p)return;$('nahjType').value=p.type||'khutba';updateNahjRange();$('nahjNumber').value=p.number||1;if(currentPage==='nahj'&&!$('nahjContent').children.length)loadNahj(false)}
+window.addEventListener('scroll',()=>{if(currentPage==='nahj'&&Date.now()>ignoreStudyScrollUntil){clearTimeout(window.__nsave);window.__nsave=setTimeout(()=>saveNahjStudy(false),500)}},{passive:true});
+function parseNahjResponse(raw){
+ let parts=[],heading='نهج‌البلاغه',doc=new DOMParser().parseFromString(String(raw),'text/html');
+ let title=doc.querySelector('h1,h2');if(title&&title.textContent.trim())heading=title.textContent.trim();
+ let rows=[...doc.querySelectorAll('table tr')];
+ for(let tr of rows){let cells=[...tr.querySelectorAll('td,th')].map(x=>x.textContent.replace(/\s+/g,' ').trim()).filter(Boolean);if(cells.length>=2&&!/متن عربی|ترجمه استاد|ترجمه فارسی/.test(cells[0])&&hasArabicText(cells[0])&&hasArabicText(cells[1]))parts.push({ar:cells[0],fa:cells.slice(1).join(' '),number:null})}
+ if(!parts.length){
+  let currentNo=null;
   for(let line of String(raw).split('\n')){
-   let clean=line.trim(),h=clean.match(/^#{1,3}\s*حکمت\s*([0-9۰-۹]+)/);
+   let clean=line.trim(),h=clean.match(/^#{1,4}\s*حکمت\s*([0-9۰-۹]+)/);
    if(h){currentNo=Number(h[1].replace(/[۰-۹]/g,d=>'۰۱۲۳۴۵۶۷۸۹'.indexOf(d)));continue}
-   if(clean.startsWith('#')&&!headingChanged){heading=clean.replace(/^#+\s*/,'');headingChanged=true;continue}
-   if(!clean.includes('|')||!hasArabicText(clean))continue;
+   if(!clean.includes('|'))continue;
    let cells=clean.split('|').map(x=>x.trim()).filter(Boolean);
-   if(cells.length>=2&&hasArabicText(cells[0])&&cells[1].length>2&&!/^[-: ]+$/.test(cells[0]))parts.push({ar:cells[0],fa:cells.slice(1).join(' | '),number:currentNo});
-  }
- }else{
-  let doc=new DOMParser().parseFromString(raw,'text/html');
-  heading=doc.querySelector('h1')?.textContent?.trim()||heading;
-  for(let tr of doc.querySelectorAll('table tr')){
-   let cells=[...tr.querySelectorAll('td,th')].map(x=>x.textContent.trim()).filter(Boolean);
-   if(cells.length>=2&&hasArabicText(cells[0])&&cells[1].length>2)parts.push({ar:cells[0],fa:cells.slice(1).join(' '),number:null});
+   if(cells.length<2||/متن عربی|ترجمه استاد|ترجمه فارسی/.test(cells[0])||/^[-: ]+$/.test(cells[0]))continue;
+   if(hasArabicText(cells[0])&&hasArabicText(cells[1]))parts.push({ar:cells[0],fa:cells.slice(1).join(' | '),number:currentNo});
   }
  }
  return {heading,parts};
 }
 async function fetchNahjPage(url){
- let errors=[];
- let targets=[
-  {url:'https://r.jina.ai/http://'+url.replace('https://','').replace('http://',''),md:true},
-  {url:'https://api.allorigins.win/raw?url='+encodeURIComponent(url),md:false},
-  {url:url,md:false}
- ];
- for(let target of targets){
-  try{
-   let response=await fetch(target.url,{mode:'cors',cache:'no-store'});
-   if(!response.ok)throw Error('HTTP '+response.status);
-   let body=await response.text(),parsed=parseNahjResponse(body,target.md);
-   if(parsed.parts.length)return parsed;
-   throw Error('متن قابل استخراج نبود');
-  }catch(err){errors.push(err.message||String(err))}
- }
- throw Error(errors.join(' | '));
+ if(nahjMemoryCache[url])return nahjMemoryCache[url];
+ let targets=['https://api.allorigins.win/raw?url='+encodeURIComponent(url),'https://api.codetabs.com/v1/proxy?quest='+encodeURIComponent(url),'https://r.jina.ai/http://'+url.replace(/^https?:\/\//,'')],errors=[];
+ for(let target of targets){try{let r=await fetch(target,{cache:'no-store'});if(!r.ok)throw Error('HTTP '+r.status);let body=await r.text(),parsed=parseNahjResponse(body);if(parsed.parts.length){nahjMemoryCache[url]=parsed;return parsed}throw Error('متن قابل استخراج نبود')}catch(e){errors.push(e.message||String(e))}}
+ throw Error(errors.join(' / '));
 }
 async function loadNahj(save=true){
- let t=$('nahjType').value,n=Number($('nahjNumber').value)||1,url=nahjUrl(t,n),box=$('nahjContent');
- $('nahjStatus').textContent=t==='hekmat'?'در حال دریافت حکمت '+fa(n)+'…':'در حال دریافت متن و ترجمه…';
- box.innerHTML='<div class="status">لطفاً چند لحظه صبر کنید…</div>';
- if(save)saveNahjStudy(false);
+ let type=$('nahjType').value,num=Number($('nahjNumber').value)||1,url=nahjUrl(type,num),box=$('nahjContent');
+ $('nahjStatus').textContent='در حال دریافت متن…';box.innerHTML='<div class="status">لطفاً چند لحظه صبر کنید.</div>';if(save)saveNahjStudy(false);
  try{
-  let result=await fetchNahjPage(url);
-  if(t==='hekmat'){let chosen=result.parts.filter(p=>p.number===n);if(chosen.length)result.parts=chosen;}
-  box.innerHTML='<h3 class="title">'+esc(result.heading||('نهج‌البلاغه · '+(t==='khutba'?'خطبه':t==='nameh'?'نامه':'حکمت')+' '+fa(n)))+'</h3>'+result.parts.map(p=>'<div class="verse"><div class="arabic">'+esc(p.ar)+'</div><div class="translation">'+esc(p.fa)+'</div></div>').join('')+'<p class="sourceNote">منبع: <a href="'+url+'" target="_blank" rel="noopener">مشاهده متن اصلی و ترجمه</a></p>';
-  $('nahjStatus').textContent='متن و ترجمه دریافت شد · '+fa(result.parts.length)+' فراز';
-  saveNahjStudy(false);
- }catch(e){
-  $('nahjStatus').textContent='دریافت خودکار متن از منبع ممکن نشد. برای بازکردن مستقیم، پیوند زیر را لمس کنید.';
-  box.innerHTML='<a class="nahjOpenLink" href="'+url+'" target="_blank" rel="noopener">📖 بازکردن '+(t==='khutba'?'خطبه':t==='nameh'?'نامه':'حکمت')+' '+fa(n)+' در مرورگر</a><div class="status">نمایش داخل برنامه به دسترسی وب‌سایت منبع و سرویس واسط وابسته است؛ پیوند بالا مستقیماً به صفحه متن می‌رود.</div>';
- }
+  let result=await fetchNahjPage(url),parts=result.parts;
+  if(type==='hekmat'){
+   let exact=parts.filter(p=>p.number===num);
+   if(exact.length)parts=exact.slice(0,1);
+   else if(parts.length>1){let offset=(num-1)%20;parts=parts[offset]?[parts[offset]]:[]}
+  }
+  if(!parts.length)throw Error('متن این بخش پیدا نشد');
+  box.innerHTML='<h3 class="title">'+esc((type==='khutba'?'خطبه ':type==='nameh'?'نامه ':'حکمت ')+fa(num))+'</h3>'+parts.map(p=>'<div class="verse"><div class="arabic">'+esc(p.ar)+'</div><div class="translation">'+esc(p.fa)+'</div></div>').join('');
+  $('nahjStatus').textContent='متن و ترجمه آماده مطالعه است.';saveNahjStudy(false);
+ }catch(e){box.innerHTML='';$('nahjStatus').textContent='متن نهج‌البلاغه بارگذاری نشد. اتصال اینترنت را بررسی کنید و دوباره شماره را انتخاب کنید.'}
 }
 updateNahjRange();
 
