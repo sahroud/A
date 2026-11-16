@@ -1,1 +1,20 @@
-const CACHE='sahroud-tasbih-shell-v23';const CORE=['./','./index.html','./manifest.webmanifest','./icon.svg'];self.addEventListener('install',e=>e.waitUntil(caches.open(CACHE).then(c=>c.addAll(CORE)).then(()=>self.skipWaiting())));self.addEventListener('activate',e=>e.waitUntil(caches.keys().then(keys=>Promise.all(keys.filter(k=>k.startsWith('sahroud-tasbih-shell-')&&k!==CACHE).map(k=>caches.delete(k)))).then(()=>self.clients.claim())));self.addEventListener('fetch',e=>{const u=new URL(e.request.url);if(e.request.method!=='GET'||u.origin!==location.origin)return;e.respondWith(caches.match(e.request).then(hit=>hit||fetch(e.request).then(r=>{if(r.ok){const copy=r.clone();caches.open(CACHE).then(c=>c.put(e.request,copy))}return r}).catch(()=>caches.match('./index.html'))))});
+const CACHE='sahroud-tasbih-shell-v24';
+const CORE=['./','./index.html','./manifest.webmanifest','./icon.svg'];
+self.addEventListener('install',event=>event.waitUntil(caches.open(CACHE).then(cache=>cache.addAll(CORE)).then(()=>self.skipWaiting())));
+self.addEventListener('activate',event=>event.waitUntil(caches.keys().then(keys=>Promise.all(keys.filter(key=>key.startsWith('sahroud-tasbih-shell-')&&key!==CACHE).map(key=>caches.delete(key)))).then(()=>self.clients.claim())));
+self.addEventListener('fetch',event=>{
+ const request=event.request,url=new URL(request.url);
+ if(request.method!=='GET'||url.origin!==location.origin)return;
+ const isPage=request.mode==='navigate'||url.pathname.endsWith('/index.html')||url.pathname.endsWith('/');
+ if(isPage){
+  event.respondWith(fetch(request,{cache:'no-store'}).then(response=>{
+   if(response.ok){const copy=response.clone();caches.open(CACHE).then(cache=>cache.put(request,copy));}
+   return response;
+  }).catch(()=>caches.match(request).then(hit=>hit||caches.match('./index.html'))));
+  return;
+ }
+ event.respondWith(caches.match(request).then(hit=>hit||fetch(request).then(response=>{
+  if(response.ok){const copy=response.clone();caches.open(CACHE).then(cache=>cache.put(request,copy));}
+  return response;
+ })));
+});
