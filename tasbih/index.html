@@ -149,27 +149,22 @@ function restoreNahjStudy(){let p=readSaved('sahroud_study_nahj');if(!p)return;$
 window.addEventListener('scroll',()=>{if(currentPage==='nahj'&&Date.now()>ignoreStudyScrollUntil){clearTimeout(window.__nsave);window.__nsave=setTimeout(()=>saveNahjStudy(false),400)}},{passive:true});
 function hasArabicText(value){for(let ch of String(value)){let n=ch.charCodeAt(0);if(n>=1536&&n<=1791)return true}return false}
 function parseNahjResponse(raw,isMarkdown){
- let parts=[],heading='نهج‌البلاغه';
+ let parts=[],heading='نهج‌البلاغه',currentNo=null,headingChanged=false;
  if(isMarkdown||String(raw).trim().charAt(0)!=='<'){
-  let lines=String(raw).split('\n');
-  for(let line of lines){
-   let clean=line.trim();
-   if(clean.startsWith('#')){heading=clean.replace(/^#+\\s*/,'');continue}
+  for(let line of String(raw).split('\n')){
+   let clean=line.trim(),h=clean.match(/^#{1,3}\s*حکمت\s*(\d+)/);
+   if(h){currentNo=Number(h[1]);continue}
+   if(clean.startsWith('#')&&!headingChanged){heading=clean.replace(/^#+\s*/,'');headingChanged=true;continue}
    if(!clean.includes('|')||!hasArabicText(clean))continue;
    let cells=clean.split('|').map(x=>x.trim()).filter(Boolean);
-   if(cells.length>=2&&hasArabicText(cells[0])&&hasArabicText(cells[1])&&!cells[0].startsWith('---'))parts.push({ar:cells[0],fa:cells[1]});
+   if(cells.length>=2&&hasArabicText(cells[0])&&cells[1].length>2&&!/^[-: ]+$/.test(cells[0]))parts.push({ar:cells[0],fa:cells.slice(1).join(' | '),number:currentNo});
   }
  }else{
   let doc=new DOMParser().parseFromString(raw,'text/html');
   heading=doc.querySelector('h1')?.textContent?.trim()||heading;
   for(let tr of doc.querySelectorAll('table tr')){
    let cells=[...tr.querySelectorAll('td,th')].map(x=>x.textContent.trim()).filter(Boolean);
-   if(cells.length>=2&&hasArabicText(cells[0])&&hasArabicText(cells[1]))parts.push({ar:cells[0],fa:cells.slice(1).join(' ')});
-  }
-  if(!parts.length){
-   let main=doc.querySelector('main,article,.entry-content,.post-content')||doc.body;
-   let lines=(main.innerText||'').split('\n').map(x=>x.trim()).filter(Boolean);
-   for(let i=0;i<lines.length-1;i++)if(hasArabicText(lines[i])&&hasArabicText(lines[i+1]))parts.push({ar:lines[i],fa:lines[i+1]});
+   if(cells.length>=2&&hasArabicText(cells[0])&&cells[1].length>2)parts.push({ar:cells[0],fa:cells.slice(1).join(' '),number:null});
   }
  }
  return {heading,parts};
@@ -177,9 +172,9 @@ function parseNahjResponse(raw,isMarkdown){
 async function fetchNahjPage(url){
  let errors=[];
  let targets=[
+  {url:'https://r.jina.ai/http://'+url.replace('https://','').replace('http://',''),md:true},
   {url:'https://api.allorigins.win/raw?url='+encodeURIComponent(url),md:false},
-  {url:url,md:false},
-  {url:'https://r.jina.ai/http://'+url.replace('https://','').replace('http://',''),md:true}
+  {url:url,md:false}
  ];
  for(let target of targets){
   try{
@@ -199,6 +194,7 @@ async function loadNahj(save=true){
  if(save)saveNahjStudy(false);
  try{
   let result=await fetchNahjPage(url);
+  if(t==='hekmat'){let chosen=result.parts.filter(p=>p.number===n);if(chosen.length)result.parts=chosen;}
   box.innerHTML='<h3 class="title">'+esc(result.heading||('نهج‌البلاغه · '+(t==='khutba'?'خطبه':t==='nameh'?'نامه':'حکمت')+' '+fa(n)))+'</h3>'+result.parts.map(p=>'<div class="verse"><div class="arabic">'+esc(p.ar)+'</div><div class="translation">'+esc(p.fa)+'</div></div>').join('')+'<p class="sourceNote">منبع: <a href="'+url+'" target="_blank" rel="noopener">مشاهده متن اصلی و ترجمه</a></p>';
   $('nahjStatus').textContent='متن و ترجمه دریافت شد · '+fa(result.parts.length)+' فراز';
   saveNahjStudy(false);
