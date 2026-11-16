@@ -119,6 +119,27 @@ function stopAudio(){let a=$('qAudio');if(a){a.pause();a.removeAttribute('src');
 $('qAudio').addEventListener('play',()=>{if(currentPage!=='quran')$('miniAudio').style.display='flex';$('miniAudioText').textContent='تلاوت قرآن · سوره '+names[currentSurah-1]+' · آیه '+fa(currentAyah)});
 $('qAudio').addEventListener('pause',()=>{if($('qAudio').ended)$('miniAudio').style.display='none'});async function downloadAll(){let bar=$('dlbar'),status=$('qstatus');for(let ch=1;ch<=114;ch++){try{await getSurahData(ch);bar.style.width=(ch/114*100)+'%';status.textContent='ذخیره آفلاین سوره '+names[ch-1]+' ('+fa(ch)+'/۱۱۴)';await new Promise(r=>setTimeout(r,250))}catch(e){status.textContent='دانلود در سوره '+names[ch-1]+' متوقف شد: '+e.message;return}}status.textContent='قرآن کامل و ترجمه مکارم در حافظه آفلاین ذخیره شد.'}
 
+
+let prayerLat=null,prayerLon=null,prayerCheck=null,adhanUrl=null,lastPlayed='';
+function prayerToday(){let d=new Date();return String(d.getDate()).padStart(2,'0')+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+d.getFullYear()}
+function prayerTime(v){return String(v||'—:—').split(' ')[0]}
+async function updatePrayerTimes(lat,lon){
+ prayerLat=lat;prayerLon=lon;$('prayerPlace').textContent='در حال شناسایی شهر…';
+ try{
+  let g=await fetch('https://nominatim.openstreetmap.org/reverse?format=jsonv2&lat='+lat+'&lon='+lon+'&zoom=10&accept-language=fa');
+  if(g.ok){let x=await g.json(),a=x.address||{};$('prayerPlace').textContent=a.village||a.town||a.city||a.county||a.state||'موقعیت فعلی'}else $('prayerPlace').textContent='موقعیت فعلی';
+  let u='https://api.aladhan.com/v1/timings/'+prayerToday()+'?latitude='+lat+'&longitude='+lon+'&method=0&latitudeAdjustmentMethod=3';
+  let r=await fetch(u);if(!r.ok)throw Error('HTTP '+r.status);let j=await r.json();if(j.code!==200||!j.data||!j.data.timings)throw Error('پاسخ نامعتبر');
+  let t=j.data.timings;$('pFajr').textContent=prayerTime(t.Fajr);$('pSunrise').textContent=prayerTime(t.Sunrise);$('pDhuhr').textContent=prayerTime(t.Dhuhr);$('pMaghrib').textContent=prayerTime(t.Maghrib);
+  $('adhanStatus').textContent='اوقات شرعی با روش محاسبه جعفری (شیعه) دریافت شد؛ ممکن است با تقویم رسمی محل چند دقیقه اختلاف داشته باشد.';
+  localStorage.setItem('sahroud_prayer_location',JSON.stringify({lat:lat,lon:lon}));
+ }catch(e){$('adhanStatus').textContent='خطا در دریافت اوقات شرعی؛ اتصال اینترنت را بررسی و دوباره تلاش کنید. '+e.message}
+}
+function locateForPrayer(){if(!navigator.geolocation||!isSecureContext){$('adhanStatus').textContent='مکان‌یابی در دسترس نیست؛ نسخه HTTPS و مجوز Location را بررسی کنید.';return}$('adhanStatus').textContent='در حال دریافت موقعیت…';navigator.geolocation.getCurrentPosition(p=>updatePrayerTimes(p.coords.latitude,p.coords.longitude),e=>$('adhanStatus').textContent=e.code===1?'مجوز مکان رد شد؛ آن را در تنظیمات مرورگر فعال کنید.':'GPS در دسترس نیست؛ GPS و اینترنت را روشن کنید.',{enableHighAccuracy:true,timeout:25000,maximumAge:60000})}
+function selectAdhanFile(e){let f=e.target.files&&e.target.files[0];if(!f)return;if(adhanUrl)URL.revokeObjectURL(adhanUrl);adhanUrl=URL.createObjectURL(f);$('adhanAudio').src=adhanUrl;$('adhanStatus').textContent='فایل اذان انتخاب شد: '+f.name}
+function toggleAdhan(){if($('adhanEnabled').checked&&(!adhanUrl||prayerLat===null)){$('adhanEnabled').checked=false;$('adhanStatus').textContent='ابتدا موقعیت را دریافت و فایل صوتی اذان را انتخاب کنید.';return}if($('adhanEnabled').checked){if(prayerCheck)clearInterval(prayerCheck);let check=()=>{let d=new Date(),tm=String(d.getHours()).padStart(2,'0')+':'+String(d.getMinutes()).padStart(2,'0'),day=d.getFullYear()+'-'+d.getMonth()+'-'+d.getDate();for(let k of ['pFajr','pDhuhr','pMaghrib'])if($(k).textContent===tm&&lastPlayed!==day+k){lastPlayed=day+k;$('adhanAudio').currentTime=0;$('adhanAudio').play().catch(()=>$('adhanStatus').textContent='پخش خودکار مسدود شد؛ برنامه را باز نگه دارید و یک بار صوت را دستی پخش کنید.');break}};check();prayerCheck=setInterval(check,10000);$('adhanStatus').textContent='پخش خودکار فعال است؛ فقط هنگام بازبودن و فعال‌بودن صفحه برنامه قابل اتکاست.'}else{if(prayerCheck)clearInterval(prayerCheck);prayerCheck=null;$('adhanStatus').textContent='پخش خودکار غیرفعال شد.'}}
+window.addEventListener('load',()=>{try{let p=JSON.parse(localStorage.getItem('sahroud_prayer_location')||'null');if(p&&Number.isFinite(p.lat)&&Number.isFinite(p.lon))updatePrayerTimes(p.lat,p.lon)}catch(e){}});
+
 const nahjCounts={khutba:239,nameh:79,hekmat:480};
 function updateNahjRange(){let t=$('nahjType').value,n=nahjCounts[t];$('nahjNumber').innerHTML='';for(let i=1;i<=n;i++){let o=document.createElement('option');o.value=i;o.textContent=fa(i)+(t==='khutba'?' - خطبه':t==='nameh'?' - نامه':' - حکمت');$('nahjNumber').appendChild(o)}$('nahjNumber').value='1'}
 function nahjUrl(t,n){let path=t==='khutba'?'khutba':t==='nameh'?'nameh':'hikmat';let index=t==='hekmat'?Math.ceil(n/20):n;return 'https://persianquran.com/hadis/nahj/'+path+'/'+index+'/'}
