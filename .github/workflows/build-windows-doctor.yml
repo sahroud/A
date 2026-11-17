@@ -1,0 +1,43 @@
+name: Build SAHROUD Windows Doctor
+on:
+  workflow_dispatch:
+  push:
+    branches: [ main ]
+    paths:
+      - 'windows-doctor/native/**'
+      - '.github/workflows/build-windows-doctor.yml'
+  push:
+    tags:
+      - 'windows-doctor-v*'
+permissions:
+  contents: write
+jobs:
+  build:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Validate PowerShell syntax
+        shell: pwsh
+        run: |
+          $tokens = $null
+          $errors = $null
+          [System.Management.Automation.Language.Parser]::ParseFile("$PWD/windows-doctor/native/SAHROUD-WINDOWS-DOCTOR.ps1", [ref]$tokens, [ref]$errors) | Out-Null
+          if ($errors.Count -gt 0) { $errors | Format-List | Out-String | Write-Error }
+      - name: Package ZIP
+        shell: pwsh
+        run: |
+          New-Item -ItemType Directory -Force dist | Out-Null
+          Copy-Item windows-doctor/native/* dist/ -Recurse
+          Compress-Archive -Path dist/* -DestinationPath SAHROUD-WINDOWS-DOCTOR-1.0.0.zip -Force
+      - name: Upload build artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: SAHROUD-WINDOWS-DOCTOR-1.0.0
+          path: SAHROUD-WINDOWS-DOCTOR-1.0.0.zip
+          if-no-files-found: error
+      - name: Publish GitHub Release
+        if: startsWith(github.ref, 'refs/tags/')
+        uses: softprops/action-gh-release@v2
+        with:
+          files: SAHROUD-WINDOWS-DOCTOR-1.0.0.zip
+          generate_release_notes: true
