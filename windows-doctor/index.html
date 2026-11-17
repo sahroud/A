@@ -1,0 +1,85 @@
+<!doctype html>
+<html lang="fa" dir="rtl">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#101e32"><title>SAHROUD WINDOWS DOCTOR</title>
+<style>
+:root{--bg:#f3f6fa;--card:#fff;--ink:#17263b;--muted:#68788d;--line:#e1e8f0;--nav:#101e32;--teal:#0b887e;--blue:#2874d0;--amber:#c77b16;--red:#c44747}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font:14px Tahoma,Arial,sans-serif}
+.app{min-height:100vh;display:grid;grid-template-columns:250px 1fr}
+aside{background:var(--nav);color:#fff;padding:24px 16px;position:sticky;top:0;height:100vh}
+.brand{font-size:19px;font-weight:bold;line-height:1.7}.brand small{display:block;color:#9fb3ca;font-size:11px;font-weight:normal}
+nav{margin-top:28px;display:grid;gap:7px}nav button{border:0;background:transparent;color:#c9d5e4;text-align:right;padding:13px 14px;border-radius:10px;font:inherit;cursor:pointer}nav button.active,nav button:hover{background:#203650;color:white}
+.aside-note{position:absolute;bottom:20px;right:16px;left:16px;color:#9fb3ca;font-size:11px;line-height:2}
+main{padding:28px;max-width:1400px;width:100%;margin:auto}.top{display:flex;align-items:center;justify-content:space-between;gap:15px;margin-bottom:24px}.top h1{margin:0;font-size:23px}.sub{color:var(--muted);margin-top:8px;font-size:12px}
+.pill{border-radius:30px;padding:8px 12px;background:#e8f5f2;color:#08766d;font-size:12px}
+.cards{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:14px;margin-bottom:18px}.card{background:var(--card);border:1px solid var(--line);border-radius:15px;padding:18px;box-shadow:0 5px 20px #152b4308}.metric small{color:var(--muted);display:block;margin-bottom:12px}.metric strong{font-size:22px}.metric p{color:var(--muted);font-size:11px;margin:8px 0 0}
+.layout{display:grid;grid-template-columns:1.25fr .75fr;gap:16px}.section-title{font-size:16px;margin:0 0 15px}.row{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:13px 0;border-bottom:1px solid var(--line)}.row:last-child{border:0}.muted{color:var(--muted);font-size:12px;line-height:1.8}.status{font-size:11px;padding:6px 9px;border-radius:20px;background:#edf2f7;color:#52647a;white-space:nowrap}.good{background:#e6f6ef;color:#14734b}.warn{background:#fff3df;color:#97600d}.bad{background:#ffeded;color:#a33333}
+button.primary,button.secondary,button.danger{border:0;border-radius:9px;padding:11px 15px;font:inherit;font-weight:bold;cursor:pointer}.primary{background:var(--teal);color:white}.secondary{background:#eaf0f6;color:#263c55}.danger{background:#fff0f0;color:#a33333}.actions{display:flex;gap:9px;flex-wrap:wrap;margin-top:15px}
+.panel{display:none}.panel.active{display:block}.bar{height:8px;border-radius:20px;background:#e9eef4;overflow:hidden;margin-top:10px}.bar i{display:block;height:100%;background:var(--teal);width:0}
+.result{background:#f7f9fc;border:1px solid var(--line);padding:13px;border-radius:10px;margin-top:10px;line-height:1.9;font-size:12px}
+.toolgrid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px}.tool{border:1px solid var(--line);border-radius:12px;padding:15px;background:#fff;text-align:right;cursor:pointer}.tool b{display:block;margin-bottom:7px}.tool span{color:var(--muted);font-size:11px;line-height:1.8}
+input,select{padding:11px;border:1px solid var(--line);border-radius:9px;font:inherit;width:100%;background:white}
+footer{text-align:center;color:var(--muted);font-size:11px;padding:25px}
+@media(max-width:900px){.app{grid-template-columns:1fr}aside{position:relative;height:auto;padding:15px}.brand{font-size:16px}nav{display:flex;overflow:auto;margin-top:12px}nav button{white-space:nowrap;padding:10px}.aside-note{display:none}main{padding:16px}.cards{grid-template-columns:repeat(2,1fr)}.layout{grid-template-columns:1fr}}
+@media(max-width:480px){.top{align-items:flex-start;flex-direction:column}.top h1{font-size:19px}.cards{gap:9px}.card{padding:14px}.metric strong{font-size:18px}.toolgrid{grid-template-columns:1fr}}
+</style></head>
+<body><div class="app">
+<aside><div class="brand">SAHROUD<small>WINDOWS DOCTOR · مرکز عیب‌یابی</small></div>
+<nav>
+<button class="active" data-page="home">نمای کلی</button><button data-page="scan">بررسی سیستم</button><button data-page="slow">عیب‌یابی کندی</button><button data-page="storage">حافظه و دیسک</button><button data-page="security">امنیت و شبکه</button><button data-page="guide">راهنمای رفع مشکل</button><button data-page="report">گزارش</button>
+</nav><div class="aside-note">نسخه وب تشخیصی 0.2.0<br>تهیه‌کننده: مهندس احمد نوری<br>هیچ تغییری در سیستم بدون اقدام صریح شما انجام نمی‌شود.</div></aside>
+<main>
+<div class="top"><div><h1 id="pageTitle">داشبورد سلامت سیستم</h1><div class="sub">بررسی اولیه و راهنمای عیب‌یابی · رابط فارسی و سازگار با موبایل و رایانه</div></div><span class="pill">نسخه 0.2.0 · وب</span></div>
+<section class="panel active" id="home">
+<div class="cards">
+<div class="card metric"><small>وضعیت اتصال</small><strong id="net">—</strong><p>وضعیت شبکه مرورگر</p></div>
+<div class="card metric"><small>حافظه دستگاه (تقریبی)</small><strong id="ram">—</strong><p>در صورت پشتیبانی مرورگر</p></div>
+<div class="card metric"><small>فضای ذخیره‌سازی وب</small><strong id="disk">—</strong><p>فضای قابل مشاهده برای سایت</p></div>
+<div class="card metric"><small>ابعاد نمایشگر</small><strong id="screen">—</strong><p>رزولوشن صفحه</p></div>
+</div>
+<div class="layout"><div class="card"><h3 class="section-title">وضعیت بررسی‌ها</h3>
+<div class="row"><span>اتصال اینترنت</span><span class="status" id="netStatus">در انتظار</span></div>
+<div class="row"><span>فضای ذخیره‌سازی وب</span><span class="status" id="diskStatus">در انتظار</span></div>
+<div class="row"><span>حالت صرفه‌جویی داده مرورگر</span><span class="status">نامشخص</span></div>
+<div class="row"><span>دسترسی به اطلاعات سخت‌افزار</span><span class="status warn">محدودیت مرورگر</span></div>
+<div class="actions"><button class="primary" id="runAll">اجرای بررسی اولیه</button><button class="secondary" onclick="show('scan')">جزئیات بررسی</button></div><div id="homeResult" class="result">برای شروع، اجرای بررسی اولیه را انتخاب کنید.</div>
+</div><div class="card"><h3 class="section-title">دسترسی سریع</h3><div class="toolgrid">
+<button class="tool" onclick="show('slow')"><b>عیب‌یابی کندی</b><span>بررسی عوامل رایج کندی و راهنمای گام‌به‌گام</span></button>
+<button class="tool" onclick="show('storage')"><b>حافظه و دیسک</b><span>بررسی فضای وب و راهنمای پاک‌سازی امن</span></button>
+<button class="tool" onclick="show('security')"><b>امنیت و شبکه</b><span>راهنمای بررسی Defender و اتصال</span></button>
+<button class="tool" onclick="show('report')"><b>گزارش سیستم</b><span>ساخت گزارش از داده‌های قابل دسترس</span></button>
+</div></div></div></section>
+<section class="panel" id="scan"><div class="card"><h3 class="section-title">بررسی سیستم</h3><p class="muted">این صفحه اطلاعاتی را که مرورگر اجازه دسترسی می‌دهد بررسی می‌کند. وب‌سایت به پردازش‌ها، سرویس‌ها، درایورها یا مقدار واقعی RAM ویندوز دسترسی مستقیم ندارد.</p><div id="scanRows"></div><div class="actions"><button class="primary" id="scanBtn">اجرای بررسی</button></div></div></section>
+<section class="panel" id="slow"><div class="card"><h3 class="section-title">عیب‌یابی کندی ویندوز</h3><p class="muted">موارد زیر را روی رایانه بررسی کنید. نتیجه هر مرحله را انتخاب کنید تا راهکار مناسب نمایش داده شود.</p>
+<label>هنگام روشن شدن ویندوز کند است؟</label><select id="startup"><option value="">انتخاب کنید</option><option value="yes">بله</option><option value="no">خیر</option></select>
+<label>هنگام باز بودن چند برنامه کند می‌شود؟</label><select id="multitask"><option value="">انتخاب کنید</option><option value="yes">بله</option><option value="no">خیر</option></select>
+<label>درایو C فضای خالی کمی دارد؟</label><select id="lowdisk"><option value="">انتخاب کنید</option><option value="yes">بله</option><option value="no">خیر</option><option value="unknown">نمی‌دانم</option></select>
+<label>کندی پس از به‌روزرسانی یا نصب برنامه شروع شده؟</label><select id="recent"><option value="">انتخاب کنید</option><option value="yes">بله</option><option value="no">خیر</option></select>
+<div class="actions"><button class="primary" id="diagnoseSlow">تحلیل پاسخ‌ها</button></div><div id="slowResult" class="result">پاسخ‌ها را انتخاب و تحلیل را اجرا کنید.</div></div></section>
+<section class="panel" id="storage"><div class="card"><h3 class="section-title">حافظه و ذخیره‌سازی</h3><div id="storageDetails" class="result">برای دریافت اطلاعات قابل دسترس، بررسی اولیه را اجرا کنید.</div><h3 class="section-title" style="margin-top:22px">پاک‌سازی امن ویندوز</h3><p class="muted">این نسخه فقط راهنمای دستی ارائه می‌دهد و چیزی را حذف نمی‌کند.</p><ol class="muted"><li>Settings → System → Storage را باز کنید.</li><li>Temporary files را بررسی کنید.</li><li>پیش از حذف، Downloads و Recycle Bin را جداگانه بازبینی کنید.</li><li>گزینه‌های مربوط به فایل‌های شخصی یا نصب قبلی ویندوز را بدون اطمینان انتخاب نکنید.</li></ol><button class="secondary" onclick="copyText('Settings → System → Storage')">کپی مسیر تنظیمات</button></div></section>
+<section class="panel" id="security"><div class="card"><h3 class="section-title">امنیت و شبکه</h3><div class="row"><span>اتصال اینترنت مرورگر</span><span id="securityNet" class="status">در انتظار</span></div><div class="row"><span>وضعیت آنتی‌ویروس ویندوز</span><span class="status warn">از وب قابل بررسی نیست</span></div><div class="row"><span>به‌روزرسانی‌های امنیتی</span><span class="status warn">از وب قابل بررسی نیست</span></div><h3 class="section-title" style="margin-top:22px">مراحل بررسی امنیت</h3><ol class="muted"><li>Windows Security را از Start باز کنید.</li><li>Virus & threat protection را انتخاب کنید.</li><li>Protection updates را بررسی کنید.</li><li>Quick scan را اجرا کنید؛ برای بررسی عمیق‌تر Full scan را در زمان مناسب اجرا کنید.</li></ol><div class="result">برای باز کردن تنظیمات ویندوز، کلیدهای Win + I را بزنید و بخش Privacy & security را انتخاب کنید.</div></div></section>
+<section class="panel" id="guide"><div class="card"><h3 class="section-title">راهنمای رفع مشکل</h3><div class="row"><span><b>مصرف زیاد RAM</b><div class="muted">Task Manager → Processes → مرتب‌سازی بر اساس Memory</div></span><span class="status warn">بررسی دستی</span></div><div class="row"><span><b>برنامه‌های شروع خودکار</b><div class="muted">Task Manager → Startup apps؛ فقط برنامه‌های شناخته‌شده و غیرضروری را غیرفعال کنید.</div></span><span class="status">با احتیاط</span></div><div class="row"><span><b>خطاهای ویندوز</b><div class="muted">Event Viewer → Windows Logs → System</div></span><span class="status">تحلیل لازم</span></div><div class="row"><span><b>سلامت دیسک</b><div class="muted">از ابزار سازنده SSD/HDD و پشتیبان‌گیری منظم استفاده کنید.</div></span><span class="status warn">پشتیبان‌گیری</span></div><div class="result">هیچ سرویس، درایور یا فایل سیستمی را صرفاً برای افزایش سرعت غیرفعال یا حذف نکنید.</div></div></section>
+<section class="panel" id="report"><div class="card"><h3 class="section-title">گزارش تشخیصی</h3><p class="muted">گزارش شامل اطلاعاتی است که مرورگر در اختیار این صفحه قرار داده است؛ نه گزارش کامل سخت‌افزار و ویندوز.</p><textarea id="reportText" rows="12" style="width:100%;padding:12px;border:1px solid var(--line);border-radius:10px;font:12px Tahoma" readonly>هنوز گزارشی تولید نشده است.</textarea><div class="actions"><button class="primary" id="downloadReport">دانلود گزارش متنی</button><button class="secondary" id="copyReport">کپی گزارش</button></div></div></section>
+<footer>SAHROUD WINDOWS DOCTOR · نسخه وب تشخیصی · تهیه‌کننده: مهندس احمد نوری</footer>
+</main></div>
+<script>
+const $=id=>document.getElementById(id);let report={};
+function show(id){document.querySelectorAll('.panel').forEach(p=>p.classList.toggle('active',p.id===id));document.querySelectorAll('nav button').forEach(b=>b.classList.toggle('active',b.dataset.page===id));const titles={home:'داشبورد سلامت سیستم',scan:'بررسی سیستم',slow:'عیب‌یابی کندی ویندوز',storage:'حافظه و دیسک',security:'امنیت و شبکه',guide:'راهنمای رفع مشکل',report:'گزارش تشخیصی'};$('pageTitle').textContent=titles[id];if(id==='report')buildReport()}
+document.querySelectorAll('nav button').forEach(b=>b.addEventListener('click',()=>show(b.dataset.page)));
+function fmt(n){return n==null?'در دسترس نیست':n.toFixed(1)+' GB'}
+async function scan(){report={زمان:new Date().toLocaleString('fa-IR'),مرورگر:navigator.userAgent,سیستم_عامل: navigator.platform||'نامشخص',آنلاین:navigator.onLine?'بله':'خیر',حافظه_تقریبی:navigator.deviceMemory?fmt(navigator.deviceMemory):'پشتیبانی نمی‌شود',هسته_پردازشی:navigator.hardwareConcurrency||'نامشخص',نمایشگر:screen.width+'×'+screen.height};
+$('net').textContent=navigator.onLine?'متصل':'قطع';$('netStatus').textContent=navigator.onLine?'متصل':'قطع';$('netStatus').className='status '+(navigator.onLine?'good':'bad');$('securityNet').textContent=navigator.onLine?'متصل':'قطع';$('securityNet').className='status '+(navigator.onLine?'good':'bad');
+$('ram').textContent=navigator.deviceMemory?fmt(navigator.deviceMemory):'نامشخص';$('screen').textContent=screen.width+'×'+screen.height;
+let storage=await navigator.storage?.estimate?.().catch(()=>null);if(storage&&storage.quota){let used=storage.usage||0;report.فضای_مصرفی_وب=(used/1073741824).toFixed(2)+' GB';report.سهمیه_فضای_وب=(storage.quota/1073741824).toFixed(2)+' GB';$('disk').textContent=(storage.quota/1073741824).toFixed(1)+' GB';$('diskStatus').textContent='قابل خواندن';$('diskStatus').className='status good';$('storageDetails').textContent='مصرف داده‌های این وب‌سایت: '+report.فضای_مصرفی_وب+' از سهمیه تقریبی '+report.سهمیه_فضای_وب+'. این مقدار فضای کل درایو ویندوز نیست.'}else{$('disk').textContent='نامشخص';$('diskStatus').textContent='پشتیبانی نمی‌شود'}
+$('homeResult').textContent='بررسی مرورگر تکمیل شد. این نتایج فقط مربوط به قابلیت‌های قابل دسترس وب هستند؛ برای تحلیل واقعی پردازش‌ها، RAM و دیسک باید ابزار محلی ویندوز اجرا شود.';
+$('scanRows').innerHTML=Object.entries(report).map(([k,v])=>'<div class="row"><span>'+k+'</span><b>'+v+'</b></div>').join('');buildReport()}
+function buildReport(){$('reportText').value=Object.entries(report).map(([k,v])=>k+': '+v).join('\n')+'\n\nمحدودیت: گزارش وب به اطلاعات کامل ویندوز، پردازش‌ها، سرویس‌ها، درایورها و وضعیت واقعی دیسک دسترسی ندارد.'}
+$('runAll').onclick=scan;$('scanBtn').onclick=scan;
+$('diagnoseSlow').onclick=()=>{let a=[];if($('startup').value==='yes')a.push('برنامه‌های شروع خودکار را در Task Manager → Startup apps بررسی کنید.');if($('multitask').value==='yes')a.push('در Task Manager → Processes مصرف‌کنندگان بالای Memory و CPU را شناسایی کنید؛ پردازش ناشناس را کورکورانه متوقف نکنید.');if($('lowdisk').value==='yes')a.push('فضای درایو C را با Settings → System → Storage بررسی و فایل‌های موقت را پس از بازبینی حذف کنید.');if($('recent').value==='yes')a.push('زمان شروع مشکل را با تاریخ نصب برنامه یا Windows Update مقایسه کنید؛ ابتدا نقطه بازیابی و پشتیبان را بررسی کنید.');if(!a.length)a.push('پاسخ کافی ثبت نشده یا علامت مشخصی انتخاب نشده است. Task Manager و Event Viewer را بررسی کنید.');$('slowResult').innerHTML=a.map(x=>'• '+x).join('<br>')+'<br><br>این پیشنهادها تشخیص قطعی نیستند؛ برای نتیجه دقیق باید گزارش محلی ویندوز بررسی شود.'};
+function copyText(t){navigator.clipboard?.writeText(t).then(()=>alert('کپی شد')).catch(()=>alert(t))}
+$('downloadReport').onclick=()=>{buildReport();let blob=new Blob([$ ('reportText').value],{type:'text/plain;charset=utf-8'});let a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='SAHROUD-Windows-Doctor-Report.txt';a.click();URL.revokeObjectURL(a.href)};
+$('copyReport').onclick=()=>copyText($('reportText').value);
+window.addEventListener('online',()=>{if(report)scan()});window.addEventListener('offline',()=>{if(report)scan()});
+scan();
+</script></body></html>
