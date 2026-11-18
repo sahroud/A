@@ -66,7 +66,7 @@ body{font-size:17px}.brand{font-size:20px}.brand small{font-size:13px}.btn{font-
 <label class="settingRow"><span><b>اذان مغرب</b></span><input type="checkbox" id="adhanMaghrib" checked onchange="savePrayerSettings()"></label>
 <h3>🔔 یادآوری پیش از زمان‌ها</h3><div class="settingsHint">برای هر رویداد جداگانه اعلان را فعال و زمان آن را انتخاب کنید.</div>
 <div class="settingRow"><span><b>طلوع آفتاب</b><small>اعلان پیش از زمان</small></span><div style="display:flex;align-items:center;gap:8px"><input type="checkbox" id="notifySunrise" onchange="savePrayerSettings()"><select id="notifyLeadSunrise" aria-label="دقیقه پیش از طلوع آفتاب" onchange="savePrayerSettings()" style="width:92px;margin:0"><option value="10">۱۰ دقیقه</option><option value="5" selected>۵ دقیقه</option><option value="2">۲ دقیقه</option><option value="1">۱ دقیقه</option></select></div></div><div class="settingRow"><span><b>غروب آفتاب</b><small>اعلان پیش از زمان</small></span><div style="display:flex;align-items:center;gap:8px"><input type="checkbox" id="notifySunset" onchange="savePrayerSettings()"><select id="notifyLeadSunset" aria-label="دقیقه پیش از غروب آفتاب" onchange="savePrayerSettings()" style="width:92px;margin:0"><option value="10">۱۰ دقیقه</option><option value="5" selected>۵ دقیقه</option><option value="2">۲ دقیقه</option><option value="1">۱ دقیقه</option></select></div></div><div class="settingRow"><span><b>اذان صبح</b><small>اعلان پیش از زمان</small></span><div style="display:flex;align-items:center;gap:8px"><input type="checkbox" id="notifyFajr" onchange="savePrayerSettings()"><select id="notifyLeadFajr" aria-label="دقیقه پیش از اذان صبح" onchange="savePrayerSettings()" style="width:92px;margin:0"><option value="10">۱۰ دقیقه</option><option value="5" selected>۵ دقیقه</option><option value="2">۲ دقیقه</option><option value="1">۱ دقیقه</option></select></div></div><div class="settingRow"><span><b>اذان ظهر</b><small>اعلان پیش از زمان</small></span><div style="display:flex;align-items:center;gap:8px"><input type="checkbox" id="notifyDhuhr" onchange="savePrayerSettings()"><select id="notifyLeadDhuhr" aria-label="دقیقه پیش از اذان ظهر" onchange="savePrayerSettings()" style="width:92px;margin:0"><option value="10">۱۰ دقیقه</option><option value="5" selected>۵ دقیقه</option><option value="2">۲ دقیقه</option><option value="1">۱ دقیقه</option></select></div></div><div class="settingRow"><span><b>اذان عصر</b><small>اعلان پیش از زمان</small></span><div style="display:flex;align-items:center;gap:8px"><input type="checkbox" id="notifyAsr" onchange="savePrayerSettings()"><select id="notifyLeadAsr" aria-label="دقیقه پیش از اذان عصر" onchange="savePrayerSettings()" style="width:92px;margin:0"><option value="10">۱۰ دقیقه</option><option value="5" selected>۵ دقیقه</option><option value="2">۲ دقیقه</option><option value="1">۱ دقیقه</option></select></div></div><div class="settingRow"><span><b>اذان مغرب</b><small>اعلان پیش از زمان</small></span><div style="display:flex;align-items:center;gap:8px"><input type="checkbox" id="notifyMaghrib" onchange="savePrayerSettings()"><select id="notifyLeadMaghrib" aria-label="دقیقه پیش از اذان مغرب" onchange="savePrayerSettings()" style="width:92px;margin:0"><option value="10">۱۰ دقیقه</option><option value="5" selected>۵ دقیقه</option><option value="2">۲ دقیقه</option><option value="1">۱ دقیقه</option></select></div></div>
-<button class="btn light" onclick="requestPrayerNotifications()">اجازه اعلان‌های گوشی</button><button class="btn light" onclick="locateForPrayer()">به‌روزرسانی موقعیت و اوقات شرعی</button><button class="btn light" onclick="testAdhan()">پخش آزمایشی اذان</button>
+<button class="btn light" onclick="requestPrayerNotifications()">اجازه اعلان‌های گوشی</button><button class="btn light" onclick="locateForPrayer()">به‌روزرسانی موقعیت و اوقات شرعی</button><button class="btn light" onclick="testReminderBell()">آزمایش صدای ناقوس یادآوری</button><button class="btn light" onclick="testAdhan()">پخش آزمایشی اذان</button>
 <div id="notificationStatus" class="status">برای نمایش اعلان، یک بار اجازه اعلان‌های گوشی را فعال کنید.</div><div id="adhanStatus" class="status">اذان پیش‌فرض برنامه انتخاب شده است.</div>
 <p class="settingsHint">برای اجرای زمان‌بندی، برنامه و مرورگر باید فعال بمانند. اندروید ممکن است اجرای صفحه در پس‌زمینه یا هنگام قفل را متوقف کند؛ اعلان در این حالت تضمین‌شده نیست.</p></div><div class="panel settingsPanel"><h3>📖 تنظیمات قرآن</h3><label class="settingField">اندازه متن عربی<select id="quranFontSize" onchange="applyQuranFontSize()"><option value="29">معمولی</option><option value="33" selected>بزرگ</option><option value="37">خیلی بزرگ</option></select></label><label class="settingField">سرعت پیش‌فرض تلاوت<select id="quranSpeedSetting" onchange="applyQuranSpeed()"><option value="1">۱ برابر</option><option value="1.5">۱٫۵ برابر</option><option value="2">۲ برابر</option></select></label></div><div class="panel settingsPanel"><h3>📜 تنظیمات نهج‌البلاغه</h3><label class="settingField">اندازه متن عربی و ترجمه<select id="nahjFontSize" onchange="applyNahjFontSize()"><option value="18">معمولی</option><option value="21" selected>بزرگ</option><option value="24">خیلی بزرگ</option></select></label></div><div class="panel settingsPanel"><h3>🧭 قبله‌نما</h3><p class="settingsHint">موقعیت مکانی برای محاسبه جهت قبله استفاده می‌شود. اگر گوشی حسگر قطب‌نما نداشته باشد، جهت پیکان با چرخاندن گوشی تغییر نمی‌کند.</p><button class="btn light" onclick="getGPS()">به‌روزرسانی موقعیت قبله</button></div></section>
 <section id="quran" class="page"><button class="btn light back" onclick="page('home')">↩ بازگشت به برنامه</button><h2 class="title">قرآن کریم</h2><div class="panel quranPanel">
@@ -209,6 +209,32 @@ function requestPrayerNotifications(){
  if(!('Notification'in window)){$('notificationStatus').textContent='این مرورگر از اعلان‌های گوشی پشتیبانی نمی‌کند.';return}
  Notification.requestPermission().then(p=>{$('notificationStatus').textContent=p==='granted'?'اجازه اعلان‌ها فعال شد.':p==='denied'?'اجازه اعلان رد شد؛ از تنظیمات سایت آن را فعال کنید.':'اجازه اعلان داده نشد.'});
 }
+let reminderBellCtx=null;
+function playReminderBell(count){
+ try{
+  const AC=window.AudioContext||window.webkitAudioContext;if(!AC)return false;
+  if(!reminderBellCtx)reminderBellCtx=new AC();
+  const ctx=reminderBellCtx;
+  const run=()=>{
+   const total=Math.max(1,Math.min(10,Number(count)||1)),start=ctx.currentTime+0.06;
+   for(let i=0;i<total;i++){
+    const t=start+i*0.58;
+    [[880,0.17],[1320,0.085],[1760,0.045],[2230,0.022]].forEach(([hz,vol])=>{
+     const osc=ctx.createOscillator(),gain=ctx.createGain();
+     osc.type='sine';osc.frequency.setValueAtTime(hz,t);
+     gain.gain.setValueAtTime(0.0001,t);
+     gain.gain.exponentialRampToValueAtTime(vol,t+0.012);
+     gain.gain.exponentialRampToValueAtTime(0.0001,t+1.25);
+     osc.connect(gain);gain.connect(ctx.destination);
+     osc.start(t);osc.stop(t+1.28);
+    });
+   }
+  };
+  if(ctx.state==='suspended')return ctx.resume().then(run).then(()=>true);
+  run();return true;
+ }catch(e){return false}
+}
+function testReminderBell(){const r=playReminderBell(3);$('notificationStatus').textContent='صدای آزمایشی ناقوس: ۳ ضربه.';if(r&&typeof r.then==='function')r.catch(()=>{$('notificationStatus').textContent='پخش صدا ممکن نشد؛ یک بار صفحه را لمس و دوباره آزمایش کنید.'})}
 function sendPrayerNotification(title,body,tag){
  if(!('Notification'in window)||Notification.permission!=='granted')return;
  if('serviceWorker'in navigator)navigator.serviceWorker.ready.then(reg=>reg.showNotification(title,{body,tag,icon:'./icon.svg',badge:'./icon.svg'})).catch(()=>{try{new Notification(title,{body,tag})}catch(e){}});
@@ -233,6 +259,7 @@ function checkAdhanTime(){
    if(diffNotice>=0&&diffNotice<=1&&localStorage.getItem('sahroud_'+noticeStamp)!=='1'){
     localStorage.setItem('sahroud_'+noticeStamp,'1');
     sendPrayerNotification('یادآوری '+ev.label,lead+' دقیقه تا '+ev.label+' باقی مانده است.',noticeStamp);
+    playReminderBell(lead);
     $('notificationStatus').textContent='اعلان '+ev.label+' برای '+fa(lead)+' دقیقه قبل ثبت شد.';
    }
   }
