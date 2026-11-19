@@ -1,0 +1,21 @@
+{
+  "name": "ماموریت تونل – امیرعلی قهرمان",
+  "short_name": "امیرعلی قهرمان",
+  "description": "بازی ماجراجویی امیرعلی در تونل",
+  "lang": "fa",
+  "dir": "rtl",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "landscape",
+  "background_color": "#090d16",
+  "theme_color": "#090d16",
+  "icons": [
+    {
+      "src": "./icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ]
+}
