@@ -4,6 +4,12 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
 <meta name="theme-color" content="#090d16">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="امیرعلی قهرمان">
+<link rel="manifest" href="./manifest.json">
+<link rel="icon" type="image/svg+xml" href="./icon.svg">
+<link rel="apple-touch-icon" href="./icon.svg">
 <title>ماموریت تونل | امیرعلی قهرمان</title>
 <style>
 *{box-sizing:border-box}html,body{margin:0;width:100%;height:100%;overflow:hidden;background:#090d16;font-family:Tahoma,Arial,sans-serif;touch-action:none}
@@ -16,13 +22,14 @@ button:active{transform:translateY(3px);box-shadow:0 2px 0 #07101c;background:#3
 #fire{background:#8b2929ef}
 #hint{position:fixed;left:50%;bottom:calc(max(32px,env(safe-area-inset-bottom)) + 88px);transform:translateX(-50%);color:#fff;background:#111d;border:1px solid #ffffff30;border-radius:12px;padding:7px 12px;font-size:clamp(10px,2.5vw,12px);white-space:nowrap;pointer-events:none}
 #credit{position:fixed;bottom:4px;left:0;right:0;text-align:center;color:#ffdf85;font-size:clamp(12px,3vw,17px);font-weight:bold;text-shadow:0 2px 5px #000;pointer-events:none}
-#sound{position:fixed;top:max(10px,env(safe-area-inset-top));left:12px;width:42px;height:42px;border-radius:12px;font-size:19px;z-index:3}
+#sound{position:fixed;top:max(10px,env(safe-area-inset-top));left:12px;width:42px;height:42px;border-radius:12px;font-size:19px;z-index:3}\n#install{position:fixed;top:max(10px,env(safe-area-inset-top));right:12px;width:auto;height:42px;padding:0 13px;border:1px solid #ffffff70;border-radius:12px;background:#176b50;color:#fff;font: bold 13px Tahoma;z-index:4;display:none;white-space:nowrap}
 @media(orientation:portrait){#hint:after{content:" • گوشی را افقی بچرخانید";color:#ffdf85}}
 </style>
 </head>
 <body>
 <div id="gameWrap"><canvas id="c" width="960" height="540"></canvas></div>
 <button id="sound" aria-label="فعال یا قطع کردن صدا">🔊</button>
+<button id="install" type="button">⬇ نصب بازی</button>
 <div id="hint">حرکت: چپ و راست • دکمه قرمز: شلیک / برداشتن / تعامل</div>
 <div id="controls"><div class="cluster"><button id="left" aria-label="چپ">◀</button><button id="right" aria-label="راست">▶</button></div><div class="cluster"><button id="fire" aria-label="شلیک یا تعامل">●</button></div></div>
 <div id="credit">🏆 امیر علی قهرمان 🏆</div>
@@ -73,6 +80,11 @@ function draw(){ctx.clearRect(0,0,W,H);if(state==='party')partyDraw();else drawW
 function bindHold(id,key){const el=document.getElementById(id);el.addEventListener('pointerdown',e=>{e.preventDefault();audioReady();held[key]=true;try{el.setPointerCapture(e.pointerId)}catch(_){}});const up=e=>{e.preventDefault();held[key]=false};el.addEventListener('pointerup',up);el.addEventListener('pointercancel',up);el.addEventListener('lostpointercapture',()=>held[key]=false)}
 bindHold('left','left');bindHold('right','right');document.getElementById('fire').addEventListener('pointerdown',e=>{e.preventDefault();shoot()});canvas.addEventListener('pointerdown',()=>{audioReady();if(state==='lost')reset()});document.getElementById('sound').onclick=()=>{soundOn=!soundOn;document.getElementById('sound').textContent=soundOn?'🔊':'🔇';if(soundOn)audioReady()};
 window.addEventListener('keydown',e=>{if(e.key==='ArrowLeft'||e.key==='4'){held.left=true;e.preventDefault()}if(e.key==='ArrowRight'||e.key==='6'){held.right=true;e.preventDefault()}if(e.key===' '||e.key==='Enter'){shoot();e.preventDefault()}});window.addEventListener('keyup',e=>{if(e.key==='ArrowLeft'||e.key==='4')held.left=false;if(e.key==='ArrowRight'||e.key==='6')held.right=false});window.addEventListener('blur',()=>{held.left=held.right=false});
+let installPrompt=null;const installBtn=document.getElementById('install');
+window.addEventListener('beforeinstallprompt',e=>{e.preventDefault();installPrompt=e;installBtn.style.display='block'});
+installBtn.addEventListener('click',async()=>{if(installPrompt){installPrompt.prompt();await installPrompt.userChoice;installPrompt=null;installBtn.style.display='none'}else{say('از منوی مرورگر: افزودن به صفحه اصلی');}});
+window.addEventListener('appinstalled',()=>{installBtn.style.display='none';say('بازی به صفحه اصلی اضافه شد')});
+if('serviceWorker' in navigator){window.addEventListener('load',()=>navigator.serviceWorker.register('./service-worker.js').catch(()=>{}))}
 function loop(){update();draw();requestAnimationFrame(loop)}reset();loop();
 })();</script>
 </body></html>
