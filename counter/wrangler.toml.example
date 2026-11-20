@@ -1,0 +1,12 @@
+name = "sahroud-counter"
+main = "worker.js"
+compatibility_date = "2026-11-20"
+
+[[d1_databases]]
+binding = "DB"
+database_name = "sahroud-counter"
+database_id = "REPLACE_WITH_D1_DATABASE_ID"
+
+# Configure secrets separately:
+# npx wrangler secret put ADMIN_TOKEN
+# npx wrangler secret put HASH_SECRET
