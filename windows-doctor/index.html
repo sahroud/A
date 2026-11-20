@@ -82,4 +82,9 @@ $('downloadReport').onclick=()=>{buildReport();let blob=new Blob([$ ('reportText
 $('copyReport').onclick=()=>copyText($('reportText').value);
 window.addEventListener('online',()=>{if(report)scan()});window.addEventListener('offline',()=>{if(report)scan()});
 scan();
-</script></body></html>
+</script>
+<!-- SAHROUD COUNTER shared analytics; activates after central API configuration and user consent -->
+<script>window.SAHROUD_COUNTER_CONFIG={appId:"windows-doctor",appName:"Windows Doctor",version:"1.0"};</script>
+<script src="https://sahroud.github.io/A/counter/config.js"></script>
+<script src="https://sahroud.github.io/A/counter/client.js" defer></script>
+</body></html>
