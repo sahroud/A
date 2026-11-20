@@ -180,7 +180,7 @@ $('qAudio').addEventListener('pause',()=>{if($('qAudio').ended)$('miniAudio').st
 
 
 const ADHAN_AUDIO_URL='https://dl.namaz.ir/s/c/other/azan/rahim_moazenzadeh.mp3';
-let prayerLat=null,prayerLon=null,prayerCheck=null,prayerRefresh=null,lastPlayed=localStorage.getItem('sahroud_last_adhan')||'',prayerTimezone=Intl.DateTimeFormat().resolvedOptions().timeZone||'UTC',loadedPrayerDate='',prayerEvents={};
+let prayerLat=null,prayerLon=null,prayerWatchId=null,prayerCheck=null,prayerRefresh=null,lastPlayed=localStorage.getItem('sahroud_last_adhan')||'',prayerTimezone=Intl.DateTimeFormat().resolvedOptions().timeZone||'UTC',loadedPrayerDate='',prayerEvents={};
 function prayerToday(){let p=new Intl.DateTimeFormat('en-GB',{timeZone:prayerTimezone,day:'2-digit',month:'2-digit',year:'numeric'}).formatToParts(new Date()),v={};p.forEach(x=>v[x.type]=x.value);return v.day+'-'+v.month+'-'+v.year}
 function prayerClock(){return new Intl.DateTimeFormat('en-GB',{timeZone:prayerTimezone,hour:'2-digit',minute:'2-digit',hourCycle:'h23'}).format(new Date())}
 function prayerDayKey(){return new Intl.DateTimeFormat('en-CA',{timeZone:prayerTimezone,year:'numeric',month:'2-digit',day:'2-digit'}).format(new Date())}
@@ -198,7 +198,9 @@ async function updatePrayerTimes(lat,lon){
   if(prayerRefresh)clearInterval(prayerRefresh);prayerRefresh=setInterval(()=>{if(prayerLat!==null&&prayerToday()!==loadedPrayerDate)updatePrayerTimes(prayerLat,prayerLon)},60000);
  }catch(e){$('prayerPlace').textContent='اوقات شرعی در دسترس نیست';$('adhanStatus').textContent='خطا در دریافت اوقات شرعی؛ اینترنت را بررسی کنید و موقعیت را دوباره به‌روزرسانی کنید.'}
 }
-function locateForPrayer(){if(!navigator.geolocation||!isSecureContext){$('adhanStatus').textContent='مکان‌یابی در دسترس نیست؛ نسخه HTTPS و مجوز مکان را بررسی کنید.';return}$('adhanStatus').textContent='در حال دریافت موقعیت…';navigator.geolocation.getCurrentPosition(p=>updatePrayerTimes(p.coords.latitude,p.coords.longitude),e=>$('adhanStatus').textContent=e.code===1?'مجوز مکان رد شد؛ از تنظیمات مرورگر فعالش کنید.':'GPS در دسترس نیست؛ مکان‌یابی و اینترنت را روشن کنید.',{enableHighAccuracy:true,timeout:25000,maximumAge:60000})}
+function prayerDistanceMeters(a,b,c,d){const rad=v=>v*Math.PI/180,R=6371000,dl=rad(c-a),dn=rad(d-b),q=Math.sin(dl/2)**2+Math.cos(rad(a))*Math.cos(rad(c))*Math.sin(dn/2)**2;return 2*R*Math.atan2(Math.sqrt(q),Math.sqrt(1-q))}
+function startPrayerLocationWatch(){if(!navigator.geolocation||prayerWatchId!==null)return;prayerWatchId=navigator.geolocation.watchPosition(p=>{const lat=p.coords.latitude,lon=p.coords.longitude;if(prayerLat===null||prayerDistanceMeters(prayerLat,prayerLon,lat,lon)>=750)updatePrayerTimes(lat,lon)},()=>{}, {enableHighAccuracy:true,timeout:30000,maximumAge:30000})}
+function locateForPrayer(){if(!navigator.geolocation||!isSecureContext){$('adhanStatus').textContent='مکان‌یابی در دسترس نیست؛ نسخه HTTPS و مجوز مکان را بررسی کنید.';return}$('adhanStatus').textContent='در حال دریافت موقعیت…';navigator.geolocation.getCurrentPosition(p=>{updatePrayerTimes(p.coords.latitude,p.coords.longitude);startPrayerLocationWatch()},e=>$('adhanStatus').textContent=e.code===1?'مجوز مکان رد شد؛ از تنظیمات مرورگر فعالش کنید.':'GPS در دسترس نیست؛ مکان‌یابی و اینترنت را روشن کنید.',{enableHighAccuracy:true,timeout:25000,maximumAge:60000})}
 function optionOn(id,defaultValue=false){let v=localStorage.getItem('sahroud_'+id);return v===null?defaultValue:v==='true'}
 function savePrayerSettings(){
  for(let id of ['adhanEnabled','adhanFajr','adhanDhuhr','adhanAsr','adhanMaghrib','notifySunrise','notifySunset','notifyFajr','notifyDhuhr','notifyMaghrib'])localStorage.setItem('sahroud_'+id,$(id).checked?'true':'false');
