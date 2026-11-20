@@ -4,6 +4,7 @@
  * Deploy this Worker separately; GitHub Pages cannot securely receive/store analytics.
  */
 const ALLOWED_ORIGINS = new Set(["https://sahroud.github.io"]);
+const ALLOWED_APPS = new Set(["gps","earth","steel-legacy","tasbih","rakat","amirali-tunnel","windows-doctor","utm","utm-legacy","survey-apps","rtk","topography","steel","metreh","110","danky"]);
 const JSON_HEADERS = { "content-type": "application/json; charset=utf-8", "cache-control": "no-store" };
 
 function response(data, status = 200, origin = "") {
@@ -36,12 +37,12 @@ export default {
     if (url.pathname === "/health" && request.method === "GET") return response({ ok: true, service: "SAHROUD COUNTER", version: "1.0.0" }, 200, origin);
 
     if (url.pathname === "/collect" && request.method === "POST") {
-      if (origin && !ALLOWED_ORIGINS.has(origin)) return response({ error: "origin_not_allowed" }, 403, origin);
+      if (!ALLOWED_ORIGINS.has(origin)) return response({ error: "origin_not_allowed" }, 403, origin);
       let body;
       try { body = await request.json(); } catch (_) { return response({ error: "invalid_json" }, 400, origin); }
       const appId = safeText(body.appId, 48).toLowerCase();
       const visitorId = safeText(body.visitorId, 120);
-      if (!/^[a-z0-9_-]{2,48}$/.test(appId) || visitorId.length < 8) return response({ error: "invalid_payload" }, 400, origin);
+      if (!ALLOWED_APPS.has(appId) || visitorId.length < 8) return response({ error: "invalid_payload" }, 400, origin);
       if (!env.HASH_SECRET) return response({ error: "server_not_configured" }, 503, origin);
       const visitorHash = await hmac(visitorId, env.HASH_SECRET);
       const cf = request.cf || {};
