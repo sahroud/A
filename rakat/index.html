@@ -118,7 +118,8 @@ function setCount(n){count=Math.max(0,Math.min(total,n));$('rakCount').textConte
 function processPose(p){
  const now=Date.now();if(p!==candidate){candidate=p;candidateAt=now;return}if(now-candidateAt<550||p===pose||now-lastTransition<650)return;
  pose=p;lastTransition=now;$('poseLabel').textContent='وضعیت تشخیص: '+(labels[p]||'نامشخص');
- if(p==='standing'&&sequence.length===0)sequence=['standing'];\n else if(p==='bow'&&sequence.at(-1)==='standing')sequence=['standing','bow'];
+ if(p==='standing'&&sequence.length===0)sequence=['standing'];
+ else if(p==='bow'&&sequence.at(-1)==='standing')sequence=['standing','bow'];
  else if(p==='standing'&&sequence.at(-1)==='bow')sequence.push('standing');
  else if(p==='prostrate'&&sequence.at(-1)==='standing')sequence.push('prostrate');
  else if(p==='sitting'&&sequence.at(-1)==='prostrate')sequence.push('sitting');
