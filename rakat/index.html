@@ -65,13 +65,14 @@ function vector(){if(!orientation)return null;const b=orientation.beta*Math.PI/1
 function normalize(v){const n=Math.hypot(...v)||1;return v.map(x=>x/n)}
 function dot(a,b){return a.reduce((s,x,i)=>s+x*b[i],0)}
 function classify(){
- const v=vector();if(!v||Object.keys(cal).length<4)return 'unknown';
+ const v=vector();if(!v||Object.keys(cal).length<4){window.__rakatMatch=null;return 'unknown'}
  let best='unknown',score=-2;
  for(const k of Object.keys(cal)){const s=dot(normalize(v),cal[k]);if(s>score){score=s;best=k}}
- return score>.93?best:'unknown';
+ window.__rakatMatch={best,score};
+ return score>.80?best:'unknown';
 }
 function setSensorVisual(state,message){const lamp=$('sensorLamp'),live=$('sensorLive');if(!lamp||!live)return;const colors={off:'#9b9180',waiting:'#d49b26',on:'#27834b',error:'#b53c32'};lamp.style.background=colors[state]||colors.off;lamp.style.boxShadow='0 0 0 4px '+(colors[state]||colors.off)+'22';live.textContent=message;}
-function onOrientation(e){if(e.beta===null||e.gamma===null)return;orientation={beta:e.beta,gamma:e.gamma};const firstSensorData=!sensorActive;sensorActive=true;if(firstSensorData)updateReady();window.clearTimeout(window.__rakatSensorTimeout);$('sensorBtn').disabled=true;$('sensorBtn').textContent='حسگر فعال است';setSensorVisual('on','وضعیت حسگر: فعال و در حال دریافت داده');$('sensorValues').textContent='β: '+e.beta.toFixed(0)+'° | γ: '+e.gamma.toFixed(0)+'°';if(calibrating){samples.push(vector());return}if(active)processPose(classify())}
+function onOrientation(e){if(e.beta===null||e.gamma===null)return;orientation={beta:e.beta,gamma:e.gamma};const firstSensorData=!sensorActive;sensorActive=true;if(firstSensorData)updateReady();window.clearTimeout(window.__rakatSensorTimeout);$('sensorBtn').disabled=true;$('sensorBtn').textContent='حسگر فعال است';setSensorVisual('on','وضعیت حسگر: فعال و در حال دریافت داده');$('sensorValues').textContent='β: '+e.beta.toFixed(0)+'° | γ: '+e.gamma.toFixed(0)+'°';if(calibrating){samples.push(vector());return}if(active){const detected=classify(),match=window.__rakatMatch;$('poseLabel').textContent=match?'نزدیک‌ترین وضعیت: '+labels[match.best]+' · تطبیق '+Math.round(match.score*100)+'٪'+(detected==='unknown'?' · اطمینان ناکافی':''):'وضعیت تشخیص: —';processPose(detected)}}
 function requestSensors(){
  if(!window.isSecureContext){status('sensorStatus','برای دسترسی به حسگر، صفحه باید از نشانی امن HTTPS باز شود.','bad');setSensorVisual('error','وضعیت حسگر: اتصال ناامن');return}
  if(typeof DeviceOrientationEvent==='undefined'){status('sensorStatus','این مرورگر رابط حسگر جهت‌یابی را پشتیبانی نمی‌کند. Chrome را به‌روز کنید یا مرورگر دیگری آزمایش کنید.','bad');setSensorVisual('error','وضعیت حسگر: پشتیبانی‌نشده');return}
