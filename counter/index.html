@@ -1,0 +1,46 @@
+<!doctype html>
+<html lang="fa" dir="rtl">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#123b52"><title>SAHROUD COUNTER | پنل آمار</title>
+<style>
+:root{font-family:Tahoma,Arial,sans-serif;color:#19313b;background:#f2f6f8}*{box-sizing:border-box}body{margin:0}header{background:linear-gradient(130deg,#123b52,#16778a);color:#fff;padding:22px 16px}header h1{margin:0 0 8px;font-size:21px}header p{margin:0;font-size:12px;opacity:.9}main{max-width:1100px;margin:auto;padding:14px}.card{background:#fff;border:1px solid #dce6eb;border-radius:14px;padding:15px;margin-bottom:13px;box-shadow:0 3px 12px #123b5209}.toolbar{display:flex;gap:8px;flex-wrap:wrap;align-items:center}.toolbar input,.toolbar select{flex:1;min-width:150px}input,select{border:1px solid #cbd9df;border-radius:9px;padding:11px;font:13px Tahoma;min-height:42px}button{border:0;border-radius:9px;padding:11px 15px;background:#087e75;color:#fff;font:bold 12px Tahoma;min-height:42px;cursor:pointer}button.secondary{background:#e7eff3;color:#123b52}button:disabled{opacity:.5}.grid{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}.stat{background:#f3f7f9;border:1px solid #e0e9ed;border-radius:11px;padding:13px}.stat small{display:block;color:#657b84;font-size:11px;margin-bottom:8px}.stat strong{font-size:24px;color:#123b52}.status{font-size:12px;line-height:1.8;color:#8a5a00;background:#fff4dc;padding:10px;border-radius:9px;margin-top:10px}.status.good{background:#e6f6ec;color:#126b3c}.status.bad{background:#fdebea;color:#98251d}.tables{display:grid;grid-template-columns:1fr 1fr;gap:12px}.tablewrap{overflow:auto}table{width:100%;border-collapse:collapse;min-width:320px;font-size:12px}th,td{text-align:right;padding:10px;border-bottom:1px solid #e6ecef;white-space:nowrap}th{background:#f1f6f8;color:#31515e}.bar{height:8px;border-radius:8px;background:#dce9ed;overflow:hidden;min-width:70px}.bar i{display:block;height:100%;background:#168b84;border-radius:8px}h2{font-size:15px;margin:0 0 12px;color:#123b52}.muted{font-size:11px;color:#70848c;line-height:1.8}.hidden{display:none}@media(max-width:760px){.grid{grid-template-columns:repeat(2,1fr)}.tables{grid-template-columns:1fr}.stat strong{font-size:21px}}@media(max-width:380px){.grid{grid-template-columns:1fr 1fr}.stat{padding:10px}}
+</style></head>
+<body>
+<header><h1>SAHROUD COUNTER</h1><p>سامانه مرکزی آمار استفاده از نرم‌افزارهای شهرود</p></header>
+<main>
+<section class="card">
+<h2>اتصال امن به سرور آمار</h2>
+<div class="toolbar"><input id="api" type="url" placeholder="آدرس Worker، مانند https://sahroud-counter.example.workers.dev"><input id="token" type="password" placeholder="کلید مدیر (Admin Token)" autocomplete="off"><select id="days"><option value="7">۷ روز اخیر</option><option value="30" selected>۳۰ روز اخیر</option><option value="90">۹۰ روز اخیر</option><option value="365">یک سال اخیر</option></select><button id="load">دریافت آمار</button></div>
+<div id="status" class="status">برای مشاهده آمار، آدرس سرور و کلید مدیر را وارد کنید. کلید فقط در حافظه همین صفحه نگهداری می‌شود.</div>
+<p class="muted">این پنل تا زمان راه‌اندازی Worker و پایگاه داده، آمار واقعی نمایش نمی‌دهد. هیچ عدد آزمایشی به‌عنوان آمار واقعی نشان داده نمی‌شود.</p>
+</section>
+<section class="card">
+<h2>خلاصه عملکرد</h2>
+<div class="grid">
+<div class="stat"><small>کل رویدادها در بازه</small><strong id="events">—</strong></div>
+<div class="stat"><small>کاربران یکتای ناشناس</small><strong id="visitors">—</strong></div>
+<div class="stat"><small>رویدادهای امروز</small><strong id="today">—</strong></div>
+<div class="stat"><small>رویدادهای ۳۰ روزه</small><strong id="month">—</strong></div>
+</div>
+</section>
+<div class="tables">
+<section class="card"><h2>آمار نرم‌افزارها</h2><div class="tablewrap"><table><thead><tr><th>نرم‌افزار</th><th>رویداد</th><th>کاربر یکتا</th></tr></thead><tbody id="apps"><tr><td colspan="3">هنوز داده‌ای دریافت نشده است.</td></tr></tbody></table></div></section>
+<section class="card"><h2>شهرها و کشورها</h2><div class="tablewrap"><table><thead><tr><th>مکان</th><th>رویداد</th><th>کاربر یکتا</th></tr></thead><tbody id="cities"><tr><td colspan="3">هنوز داده‌ای دریافت نشده است.</td></tr></tbody></table></div></section>
+</div>
+<section class="card"><h2>روند روزانه استفاده</h2><div id="daily" class="muted">هنوز داده‌ای دریافت نشده است.</div></section>
+<section class="card"><h2>حریم خصوصی و دقت آمار</h2><p class="muted">مکان فقط از فراداده اتصال اینترنت در لبه سرور (شهر و کشور) استخراج می‌شود. GPS درخواست نمی‌شود. آدرس IP خام در جدول آمار ذخیره نمی‌شود؛ شناسه تصادفی کاربر با کلید محرمانه به هش تبدیل می‌شود. مکان ممکن است به‌علت VPN، اپراتور یا پایگاه داده IP اشتباه یا نامشخص باشد. کاربر در هر نرم‌افزار می‌تواند آمارگیری را نپذیرد و همچنان از آن استفاده کند.</p></section>
+</main>
+<script>
+const $=id=>document.getElementById(id),fmt=n=>Number(n||0).toLocaleString('fa-IR');
+function rows(target,list,cols){if(!list||!list.length){target.innerHTML='<tr><td colspan="'+cols+'">داده‌ای در این بازه ثبت نشده است.</td></tr>';return}target.innerHTML=list.map(x=>'<tr>'+x.map(v=>'<td>'+String(v??'—').replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]))+'</td>').join('')+'</tr>').join('')}
+async function load(){const base=$('api').value.trim().replace(/\/$/,'');const token=$('token').value.trim();if(!base||!token){$('status').className='status bad';$('status').textContent='آدرس سرور و کلید مدیر را وارد کنید.';return}
+$('load').disabled=true;$('status').className='status';$('status').textContent='در حال دریافت گزارش…';
+try{const r=await fetch(base+'/stats?days='+encodeURIComponent($('days').value),{headers:{Authorization:'Bearer '+token}});const d=await r.json();if(!r.ok)throw Error(d.error==='unauthorized'?'کلید مدیر معتبر نیست.':('خطای سرور '+r.status));$('events').textContent=fmt(d.totals.events);$('visitors').textContent=fmt(d.totals.visitors);$('today').textContent=fmt(d.today.events);$('month').textContent=fmt(d.month.events);
+rows($('apps'),d.apps.map(x=>[x.app_name+' ('+x.app_id+')',fmt(x.events),fmt(x.visitors)]),3);
+rows($('cities'),d.cities.map(x=>[(x.city||'نامشخص')+'، '+(x.country||'--'),fmt(x.events),fmt(x.visitors)]),3);
+if(!d.daily.length){$('daily').textContent='داده‌ای ثبت نشده است.'}else{const max=Math.max(1,...d.daily.map(x=>x.events));$('daily').innerHTML=d.daily.map(x=>'<div style="display:grid;grid-template-columns:95px 1fr 65px;gap:8px;align-items:center;margin:9px 0"><span>'+new Date(x.day+'T00:00:00').toLocaleDateString('fa-IR')+'</span><div class="bar"><i style="width:'+(100*x.events/max)+'%"></i></div><b>'+fmt(x.events)+'</b></div>').join('')}
+$('status').className='status good';$('status').textContent='آمار با موفقیت دریافت شد. بازه: '+$('days').selectedOptions[0].text;
+}catch(e){$('status').className='status bad';$('status').textContent='دریافت آمار ناموفق: '+e.message}finally{$('load').disabled=false}}
+$('load').addEventListener('click',load);
+</script></body></html>
