@@ -137,4 +137,9 @@ $('stopBtn').addEventListener('click',()=>{active=false;$('stopBtn').disabled=tr
 $('minusBtn').addEventListener('click',()=>{setCount(count-1);status('runStatus','شمارش به‌صورت دستی اصلاح شد.')});
 $('plusBtn').addEventListener('click',()=>{setCount(count+1);status('runStatus','شمارش به‌صورت دستی اصلاح شد.')});
 if('serviceWorker'in navigator&&location.protocol.startsWith('http'))navigator.serviceWorker.register('./sw.js',{updateViaCache:'none'}).catch(()=>{});
-</script></body></html>
+</script>
+<!-- SAHROUD COUNTER shared analytics; activates after central API configuration and user consent -->
+<script>window.SAHROUD_COUNTER_CONFIG={appId:"rakat",appName:"SAHROUD Rakat",version:"1.0"};</script>
+<script src="https://sahroud.github.io/A/counter/config.js"></script>
+<script src="https://sahroud.github.io/A/counter/client.js" defer></script>
+</body></html>
