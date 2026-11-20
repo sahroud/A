@@ -42,7 +42,8 @@ export default {
       const appId = safeText(body.appId, 48).toLowerCase();
       const visitorId = safeText(body.visitorId, 120);
       if (!/^[a-z0-9_-]{2,48}$/.test(appId) || visitorId.length < 8) return response({ error: "invalid_payload" }, 400, origin);
-      const visitorHash = await hmac(visitorId, env.HASH_SECRET || "missing-secret");
+      if (!env.HASH_SECRET) return response({ error: "server_not_configured" }, 503, origin);
+      const visitorHash = await hmac(visitorId, env.HASH_SECRET);
       const cf = request.cf || {};
       const city = safeText(cf.city, 100) || null;
       const country = safeText(cf.country, 2).toUpperCase() || null;
