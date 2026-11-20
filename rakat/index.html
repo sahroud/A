@@ -20,7 +20,7 @@
 <h2 class="section">۱. آماده‌سازی حسگر</h2>
 <p class="hint">گوشی را در بازوبند یا محل ثابتی روی بازو محکم کنید؛ در تمام مراحل کالیبراسیون و نماز، جهت قرارگیری گوشی تغییر نکند. این نسخه آزمایشی است و هنوز دقت آن برای استفاده قطعی در نماز تأیید نشده است.</p>
 <div class="actions"><button class="btn" id="sensorBtn">فعال‌سازی حسگر</button><button class="btn light" id="testBtn" disabled>آزمایش هشدار</button></div>
-<div id="sensorStatus" class="status">حسگر هنوز فعال نشده است.</div>
+<div id="sensorStatus" class="status">حسگر هنوز فعال نشده است.</div><div class="status" style="display:flex;align-items:center;gap:9px"><span id="sensorLamp" style="display:inline-block;width:12px;height:12px;border-radius:50%;background:#9b9180;box-shadow:0 0 0 4px #9b918022"></span><b id="sensorLive">وضعیت حسگر: خاموش</b><span id="sensorValues" style="margin-right:auto;font-size:11px;color:#776e5b">β: — | γ: —</span></div>
 </section>
 <section class="panel">
 <h2 class="section">۲. کالیبراسیون وضعیت بدن</h2>
@@ -70,12 +70,35 @@ function classify(){
  for(const k of Object.keys(cal)){const s=dot(normalize(v),cal[k]);if(s>score){score=s;best=k}}
  return score>.93?best:'unknown';
 }
-function onOrientation(e){if(e.beta===null||e.gamma===null)return;orientation={beta:e.beta,gamma:e.gamma};if(calibrating){samples.push(vector());return}if(active)processPose(classify())}
+function setSensorVisual(state,message){const lamp=$('sensorLamp'),live=$('sensorLive');if(!lamp||!live)return;const colors={off:'#9b9180',waiting:'#d49b26',on:'#27834b',error:'#b53c32'};lamp.style.background=colors[state]||colors.off;lamp.style.boxShadow='0 0 0 4px '+(colors[state]||colors.off)+'22';live.textContent=message;}
+function onOrientation(e){if(e.beta===null||e.gamma===null)return;orientation={beta:e.beta,gamma:e.gamma};sensorActive=true;window.clearTimeout(window.__rakatSensorTimeout);$('sensorBtn').disabled=true;$('sensorBtn').textContent='حسگر فعال است';setSensorVisual('on','وضعیت حسگر: فعال و در حال دریافت داده');$('sensorValues').textContent='β: '+e.beta.toFixed(0)+'° | γ: '+e.gamma.toFixed(0)+'°';if(calibrating){samples.push(vector());return}if(active)processPose(classify())}
 function requestSensors(){
- const asks=[];
- if(typeof DeviceOrientationEvent!=='undefined'&&typeof DeviceOrientationEvent.requestPermission==='function')asks.push(DeviceOrientationEvent.requestPermission());
- if(typeof DeviceMotionEvent!=='undefined'&&typeof DeviceMotionEvent.requestPermission==='function')asks.push(DeviceMotionEvent.requestPermission());
- Promise.all(asks).then(results=>{if(results.some(x=>x!=='granted'))throw Error('مجوز حسگر داده نشد')}).then(()=>{window.addEventListener('deviceorientation',onOrientation,true);sensorActive=true;$('sensorBtn').disabled=true;updateReady();$('testBtn').disabled=false;status('sensorStatus','حسگر فعال شد. گوشی را ثابت نگه دارید و کالیبراسیون را انجام دهید.','good');}).catch(e=>status('sensorStatus','فعال‌سازی حسگر ناموفق بود: '+(e.message||'مجوز یا پشتیبانی مرورگر را بررسی کنید.'),'bad'));
+ if(!window.isSecureContext){status('sensorStatus','برای دسترسی به حسگر، صفحه باید از نشانی امن HTTPS باز شود.','bad');setSensorVisual('error','وضعیت حسگر: اتصال ناامن');return}
+ if(typeof DeviceOrientationEvent==='undefined'){status('sensorStatus','این مرورگر رابط حسگر جهت‌یابی را پشتیبانی نمی‌کند. Chrome را به‌روز کنید یا مرورگر دیگری آزمایش کنید.','bad');setSensorVisual('error','وضعیت حسگر: پشتیبانی‌نشده');return}
+ $('sensorBtn').disabled=true;$('sensorBtn').textContent='در حال بررسی حسگر…';sensorActive=false;orientation=null;
+ setSensorVisual('waiting','وضعیت حسگر: در انتظار داده واقعی');
+ status('sensorStatus','درخواست دسترسی ارسال شد؛ گوشی را کمی حرکت دهید و تا ۵ ثانیه منتظر بمانید.','');
+ let permission=Promise.resolve('granted');
+ if(typeof DeviceOrientationEvent.requestPermission==='function'){
+  try{permission=DeviceOrientationEvent.requestPermission()}catch(e){permission=Promise.reject(e)}
+ }
+ permission.then(result=>{
+  if(result!=='granted')throw Error('مجوز دسترسی به حسگر رد شد؛ مجوز Motion & Orientation را در مرورگر بررسی کنید.');
+  window.removeEventListener('deviceorientation',onOrientation,true);
+  window.addEventListener('deviceorientation',onOrientation,true);
+  window.clearTimeout(window.__rakatSensorTimeout);
+  window.__rakatSensorTimeout=window.setTimeout(()=>{
+   if(!sensorActive){
+    $('sensorBtn').disabled=false;$('sensorBtn').textContent='تلاش دوباره برای فعال‌سازی';
+    status('sensorStatus','تا کنون هیچ داده‌ای از حسگر دریافت نشده است. قفل حسگر گوشی، مجوزهای مرورگر و فعال بودن حسگرها را بررسی کنید.','bad');
+    setSensorVisual('error','وضعیت حسگر: داده‌ای دریافت نشد');
+   }
+  },5000);
+ }).catch(e=>{
+  $('sensorBtn').disabled=false;$('sensorBtn').textContent='فعال‌سازی حسگر';
+  status('sensorStatus',e.message||'دسترسی به حسگر ناموفق بود.','bad');
+  setSensorVisual('error','وضعیت حسگر: خطا یا عدم دسترسی');
+ });
 }
 function capture(k){
  if(!orientation){status('calStatus','ابتدا حسگر را فعال کنید و چند ثانیه گوشی را حرکت دهید.','bad');return}
