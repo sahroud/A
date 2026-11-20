@@ -57,7 +57,7 @@
 <script>
 'use strict';
 const $=id=>document.getElementById(id),fa=n=>Number(n).toLocaleString('fa-IR');
-let active=false,calibrating=null,cal={},samples=[],orientation=null,pose='unknown',candidate='unknown',candidateAt=0,lastTransition=0,sequence=[],count=0,total=4,stableTimer=null;
+let active=false,sensorActive=false,calibrating=null,cal={},samples=[],orientation=null,pose='unknown',candidate='unknown',candidateAt=0,lastTransition=0,sequence=[],count=0,total=4,stableTimer=null;
 const labels={standing:'قیام',bow:'رکوع',prostrate:'سجده',sitting:'نشستن',unknown:'نامشخص'};
 function status(id,msg,type=''){const e=$(id);e.textContent=msg;e.className='status'+(type?' '+type:'')}
 function mean(a){return a.reduce((x,y)=>x+y,0)/a.length}
@@ -68,14 +68,14 @@ function classify(){
  const v=vector();if(!v||Object.keys(cal).length<4)return 'unknown';
  let best='unknown',score=-2;
  for(const k of Object.keys(cal)){const s=dot(normalize(v),cal[k]);if(s>score){score=s;best=k}}
- return score>.88?best:'unknown';
+ return score>.93?best:'unknown';
 }
 function onOrientation(e){if(e.beta===null||e.gamma===null)return;orientation={beta:e.beta,gamma:e.gamma};if(calibrating){samples.push(vector());return}if(active)processPose(classify())}
 function requestSensors(){
  const asks=[];
  if(typeof DeviceOrientationEvent!=='undefined'&&typeof DeviceOrientationEvent.requestPermission==='function')asks.push(DeviceOrientationEvent.requestPermission());
  if(typeof DeviceMotionEvent!=='undefined'&&typeof DeviceMotionEvent.requestPermission==='function')asks.push(DeviceMotionEvent.requestPermission());
- Promise.all(asks).then(results=>{if(results.some(x=>x!=='granted'))throw Error('مجوز حسگر داده نشد')}).then(()=>{window.addEventListener('deviceorientation',onOrientation,true);$('sensorBtn').disabled=true;$('testBtn').disabled=false;status('sensorStatus','حسگر فعال شد. گوشی را ثابت نگه دارید و کالیبراسیون را انجام دهید.','good');}).catch(e=>status('sensorStatus','فعال‌سازی حسگر ناموفق بود: '+(e.message||'مجوز یا پشتیبانی مرورگر را بررسی کنید.'),'bad'));
+ Promise.all(asks).then(results=>{if(results.some(x=>x!=='granted'))throw Error('مجوز حسگر داده نشد')}).then(()=>{window.addEventListener('deviceorientation',onOrientation,true);sensorActive=true;$('sensorBtn').disabled=true;updateReady();$('testBtn').disabled=false;status('sensorStatus','حسگر فعال شد. گوشی را ثابت نگه دارید و کالیبراسیون را انجام دهید.','good');}).catch(e=>status('sensorStatus','فعال‌سازی حسگر ناموفق بود: '+(e.message||'مجوز یا پشتیبانی مرورگر را بررسی کنید.'),'bad'));
 }
 function capture(k){
  if(!orientation){status('calStatus','ابتدا حسگر را فعال کنید و چند ثانیه گوشی را حرکت دهید.','bad');return}
@@ -83,7 +83,7 @@ function capture(k){
  setTimeout(()=>{calibrating=null;if(samples.length<8){status('calStatus','نمونه کافی دریافت نشد؛ دوباره تلاش کنید.','bad');return}
  const v=[0,1,2].map(i=>mean(samples.map(x=>x[i])));cal[k]=normalize(v);$('c-'+k).textContent='ثبت شد ✓';status('calStatus','وضعیت '+labels[k]+' ثبت شد.','good');$('sensorBtn').disabled=false;updateReady()},2200)
 }
-function updateReady(){const ok=['standing','bow','prostrate','sitting'].every(k=>cal[k]);$('startBtn').disabled=!ok||!$('sensorBtn').disabled; if(ok)status('calStatus','هر چهار وضعیت ثبت شده‌اند. کالیبراسیون را ذخیره کنید و آماده آزمایش شوید.','good')}
+function updateReady(){const ok=['standing','bow','prostrate','sitting'].every(k=>cal[k]);$('startBtn').disabled=!(ok&&sensorActive); if(ok)status('calStatus','هر چهار وضعیت ثبت شده‌اند. کالیبراسیون را ذخیره کنید و آماده آزمایش شوید.','good')}
 document.querySelectorAll('[data-cal]').forEach(b=>b.addEventListener('click',()=>{if(!orientation){status('calStatus','ابتدا حسگر را فعال کنید.','bad');return}capture(b.dataset.cal)}));
 $('sensorBtn').addEventListener('click',requestSensors);
 $('clearCal').addEventListener('click',()=>{cal={};['standing','bow','prostrate','sitting'].forEach(k=>$('c-'+k).textContent='ثبت نشده');$('startBtn').disabled=true;status('calStatus','کالیبراسیون پاک شد.')});
@@ -95,19 +95,19 @@ function setCount(n){count=Math.max(0,Math.min(total,n));$('rakCount').textConte
 function processPose(p){
  const now=Date.now();if(p!==candidate){candidate=p;candidateAt=now;return}if(now-candidateAt<550||p===pose||now-lastTransition<650)return;
  pose=p;lastTransition=now;$('poseLabel').textContent='وضعیت تشخیص: '+(labels[p]||'نامشخص');
- if(p==='bow'&&sequence.at(-1)==='standing')sequence=['standing','bow'];
+ if(p==='standing'&&sequence.length===0)sequence=['standing'];\n else if(p==='bow'&&sequence.at(-1)==='standing')sequence=['standing','bow'];
  else if(p==='standing'&&sequence.at(-1)==='bow')sequence.push('standing');
  else if(p==='prostrate'&&sequence.at(-1)==='standing')sequence.push('prostrate');
  else if(p==='sitting'&&sequence.at(-1)==='prostrate')sequence.push('sitting');
  else if(p==='prostrate'&&sequence.at(-1)==='sitting'){
    sequence.push('prostrate');const valid=sequence.join('|')==='standing|bow|standing|prostrate|sitting|prostrate';
    if(valid){setCount(count+1);notify();status('runStatus','یک رکعت کامل تشخیص داده شد. شمارنده: '+fa(count)+' از '+fa(total), 'good');}
-   sequence=['standing','bow','standing','prostrate','sitting','prostrate'];
+   sequence=[];
  }
  if(sequence.length>6)sequence=sequence.slice(-6);
  if(count>=total){active=false;$('stopBtn').disabled=true;$('startBtn').disabled=false;status('runStatus','شمارش به تعداد رکعت انتخابی رسید. نتیجه را با نماز واقعی تطبیق دهید.','good')}
 }
-$('startBtn').addEventListener('click',()=>{total=Number($('prayer').value);count=0;sequence=[];pose='unknown';candidate='unknown';active=true;$('startBtn').disabled=true;$('stopBtn').disabled=false;setCount(0);status('runStatus','شمارش فعال شد. ابتدا در حالت قیام قرار بگیرید؛ سپس حرکات را انجام دهید.');});
+$('startBtn').addEventListener('click',()=>{total=Number($('prayer').value);count=0;sequence=[];pose='unknown';candidate='unknown';active=true;sequence=['standing'];$('startBtn').disabled=true;$('stopBtn').disabled=false;setCount(0);status('runStatus','شمارش فعال شد. ابتدا در حالت قیام قرار بگیرید؛ سپس حرکات را انجام دهید.');});
 $('stopBtn').addEventListener('click',()=>{active=false;$('stopBtn').disabled=true;$('startBtn').disabled=false;status('runStatus','شمارش متوقف شد. تعداد ثبت‌شده: '+fa(count));});
 $('minusBtn').addEventListener('click',()=>{setCount(count-1);status('runStatus','شمارش به‌صورت دستی اصلاح شد.')});
 $('plusBtn').addEventListener('click',()=>{setCount(count+1);status('runStatus','شمارش به‌صورت دستی اصلاح شد.')});
