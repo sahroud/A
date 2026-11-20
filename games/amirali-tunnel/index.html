@@ -87,4 +87,9 @@ window.addEventListener('appinstalled',()=>{installBtn.style.display='none';say(
 if('serviceWorker' in navigator){window.addEventListener('load',()=>navigator.serviceWorker.register('./service-worker.js').catch(()=>{}))}
 function loop(){update();draw();requestAnimationFrame(loop)}reset();loop();
 })();</script>
+
+<!-- SAHROUD COUNTER shared analytics; activates after central API configuration and user consent -->
+<script>window.SAHROUD_COUNTER_CONFIG={appId:"amirali-tunnel",appName:"Amirali Tunnel Game",version:"1.0"};</script>
+<script src="https://sahroud.github.io/A/counter/config.js"></script>
+<script src="https://sahroud.github.io/A/counter/client.js" defer></script>
 </body></html>
