@@ -5,7 +5,7 @@
 (function () {
   "use strict";
   const cfg = window.SAHROUD_COUNTER_CONFIG || {};
-  const API = String(cfg.apiBase || "").replace(/\/$/, "");
+  const API = String(cfg.apiBase || window.SAHROUD_COUNTER_API || "").replace(/\/$/, "");
   const APP_ID = String(cfg.appId || "unknown").toLowerCase().replace(/[^a-z0-9_-]/g, "").slice(0, 48);
   const APP_NAME = String(cfg.appName || APP_ID).slice(0, 80);
   const CONSENT_KEY = "sahroud_counter_consent_v1";
