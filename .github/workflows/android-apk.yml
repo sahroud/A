@@ -1,0 +1,58 @@
+name: Build Amirali Tunnel APK
+
+on:
+  push:
+    paths:
+      - 'games/amirali-tunnel/**'
+      - 'android/**'
+      - '.github/workflows/android-apk.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout source
+        uses: actions/checkout@v4
+
+      - name: Set up Java
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '17'
+
+      - name: Set up Android SDK
+        uses: android-actions/setup-android@v3
+
+      - name: Install Android platform
+        run: sdkmanager "platforms;android-35" "build-tools;35.0.0"
+
+      - name: Prepare offline game asset
+        run: |
+          mkdir -p android/app/src/main/assets
+          python3 - <<'PY'
+          from pathlib import Path
+          import re
+          source = Path('games/amirali-tunnel/index.html').read_text(encoding='utf-8')
+          source = re.sub(
+              r'<!-- SAHROUD COUNTER[\\s\\S]*?<script src="https://sahroud\\.github\\.io/A/counter/client\\.js" defer></script>',
+              '',
+              source
+          )
+          Path('android/app/src/main/assets/index.html').write_text(source, encoding='utf-8')
+          PY
+
+      - name: Build debug APK
+        working-directory: android
+        run: gradle --no-daemon assembleDebug
+
+      - name: Publish APK artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: amirali-tunnel-offline-apk
+          path: android/app/build/outputs/apk/debug/app-debug.apk
+          if-no-files-found: error
+          retention-days: 30
