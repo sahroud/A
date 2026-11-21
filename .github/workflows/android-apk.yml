@@ -24,6 +24,11 @@ jobs:
           distribution: temurin
           java-version: '17'
 
+      - name: Set up Gradle
+        uses: gradle/actions/setup-gradle@v4
+        with:
+          gradle-version: '8.9'
+
       - name: Set up Android SDK
         uses: android-actions/setup-android@v3
 
@@ -35,13 +40,10 @@ jobs:
           mkdir -p android/app/src/main/assets
           python3 - <<'PY'
           from pathlib import Path
-          import re
           source = Path('games/amirali-tunnel/index.html').read_text(encoding='utf-8')
-          source = re.sub(
-              r'<!-- SAHROUD COUNTER[\\s\\S]*?<script src="https://sahroud\\.github\\.io/A/counter/client\\.js" defer></script>',
-              '',
-              source
-          )
+          marker = '<!-- SAHROUD COUNTER'
+          if marker in source:
+              source = source.split(marker, 1)[0] + '</body></html>\\n'
           Path('android/app/src/main/assets/index.html').write_text(source, encoding='utf-8')
           PY
 
