@@ -1,4 +1,4 @@
-name: Build Amirali Tunnel APK
+name: Build Amirali Tunnel APK v2
 
 on:
   push:
@@ -46,21 +46,35 @@ jobs:
           mkdir -p android/app/src/main/assets
           python3 - <<'PY'
           from pathlib import Path
-          source = Path('games/amirali-tunnel/index.html').read_text(encoding='utf-8')
+          source = Path('games/amirali-tunnel/v2/index.html').read_text(encoding='utf-8')
           marker = '<!-- SAHROUD COUNTER'
           if marker in source:
               source = source.split(marker, 1)[0] + '</body></html>\\n'
           Path('android/app/src/main/assets/index.html').write_text(source, encoding='utf-8')
           PY
 
-      - name: Build debug APK
+      - name: Build version 2 debug APK
         working-directory: android
         run: gradle --no-daemon assembleDebug
 
-      - name: Publish APK artifact
+      - name: Verify APK package and integrity
+        run: |
+          APK="android/app/build/outputs/apk/debug/app-debug.apk"
+          test -s "$APK"
+          ls -lh "$APK"
+          unzip -t "$APK"
+          "${ANDROID_HOME}/build-tools/35.0.0/aapt" dump badging "$APK" | head -n 5
+          "${ANDROID_HOME}/build-tools/35.0.0/apksigner" verify --verbose "$APK"
+          mkdir -p dist
+          cp "$APK" dist/Amirali-Tunnel-v2.apk
+          echo "## APK v2 verification" >> "$GITHUB_STEP_SUMMARY"
+          stat -c "File size: %s bytes" "$APK" >> "$GITHUB_STEP_SUMMARY"
+          sha256sum "$APK" >> "$GITHUB_STEP_SUMMARY"
+
+      - name: Publish version 2 APK artifact
         uses: actions/upload-artifact@v4
         with:
-          name: amirali-tunnel-offline-apk
-          path: android/app/build/outputs/apk/debug/app-debug.apk
+          name: amirali-tunnel-v2-offline-apk
+          path: dist/Amirali-Tunnel-v2.apk
           if-no-files-found: error
           retention-days: 30
