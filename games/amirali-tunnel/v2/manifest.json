@@ -1,0 +1,17 @@
+{
+  "id": "./",
+  "name": "ماموریت تونل - نسخه دوم",
+  "short_name": "تونل ۲",
+  "description": "بازی آفلاین ماموریت تونل با قهرمان دلخواه",
+  "lang": "fa",
+  "dir": "rtl",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "landscape",
+  "background_color": "#090d16",
+  "theme_color": "#090d16",
+  "icons": [
+    {"src": "../icon.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "any maskable"}
+  ]
+}
