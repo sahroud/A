@@ -375,22 +375,35 @@ initSurahs();buildBeads();changeDhikr();setSpeed(1);renderSurahSidebar();if('ser
 let rakatSajdaCount=0,rakatTotal=4,rakatRunning=false,rakatLastTouch=0;
 const rakatFa=n=>Number(n).toLocaleString('fa-IR');
 function rakatPlayPhrase(text){
- const a=document.getElementById('rakatPhraseAudio'),st=document.getElementById('rakatStatus');if(!a)return;
- let fallbackUsed=false;
- const fallback=()=>{
-  if(fallbackUsed)return;fallbackUsed=true;
-  if('speechSynthesis'in window){
-   try{speechSynthesis.cancel();const u=new SpeechSynthesisUtterance(text);u.lang='ar-SA';u.rate=.78;u.onstart=()=>{if(st){st.className='rakatStatus good';st.textContent='در حال پخش ذکر عربی با صدای دستگاه…'}};u.onerror=()=>{if(st){st.className='rakatStatus';st.textContent='صدای ذکر در دسترس نیست؛ صدای عربی دستگاه یا اینترنت را بررسی کنید.'}};speechSynthesis.speak(u)}
-   catch(e){if(st)st.textContent='پخش ذکر عربی ممکن نشد.'}
-  }else if(st)st.textContent='پخش ذکر عربی ممکن نشد؛ دستگاه صدای گفتار ندارد.';
+ const a=document.getElementById('rakatPhraseAudio'),st=document.getElementById('rakatStatus');
+ if(!a)return;
+ let finished=false,watchdog=0;
+ const sayWithDevice=()=>{
+  if(finished)return;finished=true;clearTimeout(watchdog);
+  a.onerror=null;a.onended=null;a.pause();a.removeAttribute('src');a.load();
+  if(!('speechSynthesis'in window)||typeof SpeechSynthesisUtterance==='undefined'){
+   if(st){st.className='rakatStatus';st.textContent='پخش ذکر ممکن نشد؛ موتور تبدیل متن به گفتار عربی در گوشی فعال نیست.'}
+   return;
+  }
+  try{
+   speechSynthesis.cancel();
+   const u=new SpeechSynthesisUtterance(text);u.lang='ar-SA';u.rate=.82;u.pitch=1;u.volume=1;
+   const voices=speechSynthesis.getVoices();
+   const arabic=voices.find(v=>/^ar([_-]|$)/i.test(v.lang));
+   if(arabic)u.voice=arabic;
+   u.onstart=()=>{if(st){st.className='rakatStatus good';st.textContent='در حال پخش ذکر با موتور گفتار گوشی…'}};
+   u.onend=()=>{if(st){st.className='rakatStatus good';st.textContent='ذکر پخش شد.'}};
+   u.onerror=()=>{if(st){st.className='rakatStatus';st.textContent='گوشی نتوانست ذکر عربی را بخواند؛ موتور گفتار و صدای رسانه را بررسی کنید.'}};
+   speechSynthesis.speak(u);
+   setTimeout(()=>{if(speechSynthesis.pending||speechSynthesis.speaking)return;if(st&&st.textContent.includes('آماده‌سازی'))st.textContent='موتور گفتار گوشی پاسخی نداد؛ تنظیمات تبدیل متن به گفتار را بررسی کنید.'},1800);
+  }catch(e){if(st)st.textContent='اجرای صدای ذکر با خطا روبه‌رو شد.'}
  };
  a.pause();a.removeAttribute('src');a.load();
- a.onerror=fallback;
- a.onended=null;
+ a.onerror=sayWithDevice;a.onended=()=>{finished=true;clearTimeout(watchdog);if(st){st.className='rakatStatus good';st.textContent='ذکر پخش شد.'}};
  a.src='https://translate.google.com/translate_tts?ie=UTF-8&tl=ar&client=tw-ob&q='+encodeURIComponent(text);
  a.load();
- const p=a.play();
- if(p&&p.catch)p.catch(fallback);
+ const p=a.play();if(p&&p.catch)p.catch(sayWithDevice);
+ watchdog=window.setTimeout(sayWithDevice,6500);
  if(st){st.className='rakatStatus';st.textContent='در حال آماده‌سازی پخش ذکر عربی…'}
 }
 function rakatSpeak(after){
@@ -398,8 +411,9 @@ function rakatSpeak(after){
  if(toggle&&!toggle.checked)return false;
  if(document.getElementById('rakatCueSujud')&&!document.getElementById('rakatCueSujud').checked)return false;
  if(!audio){if(st)st.textContent='پخش‌کننده صدای مکبر در این نسخه آماده نیست.';return false}
- audio.pause();audio.currentTime=0;audio.volume=1;audio.onended=()=>{audio.onended=null;if(typeof after==='function')after()};
- audio.play().then(()=>{if(st){st.className='rakatStatus good';st.textContent='فایل صوتی مکبر در حال پخش است…'}}).catch(()=>{audio.onended=null;if(st){st.className='rakatStatus';st.textContent='دریافت صدای مکبر انجام نشد. برای دریافت اولیه به اینترنت وصل شوید و دوباره آزمایش کنید.'}});
+ audio.pause();audio.currentTime=0;audio.volume=1;let advanced=false;const advance=()=>{if(advanced)return;advanced=true;audio.onended=null;clearTimeout(audio._rakatWatchdog);if(typeof after==='function')after()};
+ audio.onended=advance;clearTimeout(audio._rakatWatchdog);audio._rakatWatchdog=window.setTimeout(advance,7000);
+ audio.play().then(()=>{if(st){st.className='rakatStatus good';st.textContent='فایل صوتی الله‌اکبر در حال پخش است…'}}).catch(()=>{clearTimeout(audio._rakatWatchdog);audio.onended=null;if(st){st.className='rakatStatus';st.textContent='فایل الله‌اکبر پخش نشد؛ اینترنت و صدای رسانه را بررسی کنید.'}});
  return true;
 }
 function rakatUnlockAudio(){
