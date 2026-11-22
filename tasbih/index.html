@@ -63,7 +63,7 @@ body{font-size:17px}.brand{font-size:20px}.brand small{font-size:13px}.btn{font-
 <section id="rakat" class="page"><div class="rakatTop"><button class="btn light" onclick="page('home')">بازگشت</button><h2 class="title">رکعت‌شمار نماز</h2></div><div class="panel"><div class="rakatControls"><select id="rakatPrayerTotal" aria-label="تعداد رکعت نماز" onchange="rakatStart()"><option value="2">نماز ۲ رکعتی</option><option value="3">نماز ۳ رکعتی</option><option value="4" selected>نماز ۴ رکعتی</option></select></div><div id="rakatTouchArea" class="rakatTouchArea" aria-label="فقط برای ثبت سجده، صفحه را لمس کنید"><div class="rakatDisplay"><div class="rakatSajdaLine left" id="rakatSajdaLine1" aria-hidden="true"></div><div class="rakatSajdaLine right" id="rakatSajdaLine2" aria-hidden="true"></div><div id="rakatBigNumber" class="rakatDigit">۰</div><div id="rakatBigLabel" class="rakatDigitLabel">رکعت</div><div id="rakatSubLabel" class="rakatSubLabel">آماده شروع نماز</div></div><label class="rakatVoice"><span><b>مکبر صوتی</b><br><small>فعال‌سازی یا قطع صدای تکبیر</small></span><input id="rakatVoiceToggle" type="checkbox" checked onchange="saveRakatVoiceToggle()"></label><div class="rakatTouchHint">فقط سجده شمارش می‌شود · هر دو سجده = یک رکعت</div></div><div class="panel rakatCompassPanel" style="margin:5px auto 4px;padding:6px;max-width:220px;text-align:center"><b style="font-size:12px">قبله‌نمای همراه نماز</b><div class="compass" style="width:116px;height:116px;margin:5px auto"><div class="compassDial" id="rakatCompassDial"><span class="dir n">شمال</span><span class="dir s">جنوب</span><span class="dir e">شرق</span><span class="dir w">غرب</span><div class="needle" id="rakatNeedle"><span class="kaabaTip" role="img" aria-label="کعبه"><svg viewBox="0 0 64 64" aria-hidden="true"><path d="M8 20 32 9l24 11-24 12L8 20Z" fill="#171717"/><path d="M8 20v27l24 12V32L8 20Z" fill="#292929"/><path d="M56 20v27L32 59V32l24-12Z" fill="#080808"/><path d="m8 20 24 12 24-12v7L32 39 8 27v-7Z" fill="#c49a4a"/><path d="m8 28 24 12 24-12v4L32 44 8 32v-4Z" fill="#e0c477"/></svg></span></div></div><div class="pivot" id="rakatPivot"></div></div><div id="rakatCompassStatus" class="muted">در حال دریافت موقعیت و فعال‌سازی قطب‌نما…</div><div id="rakatCompassAngle" style="font-weight:bold;color:#173d2c">—°</div></div><div id="rakatStatus" class="rakatStatus">نماز را انتخاب کنید؛ شمارش به‌صورت خودکار آغاز می‌شود.</div><audio id="rakatAudio" preload="auto" src="./audio/takbir.oga"></audio><audio id="rakatPhraseAudio" preload="none"></audio><div class="muted" style="font-size:11px">منبع صوت: Assem Khidhr، ویکی‌مدیا کامنز، مجوز CC BY-SA 4.0. پس از دریافت نخست، فایل در حافظهٔ برنامه نگهداری می‌شود.</div><div class="rakatActionRow"><button class="btn light" id="rakatUndo" type="button">اصلاح آخرین سجده</button><button class="btn light" id="rakatReset" type="button">شروع مجدد</button></div></div></section>
 <section id="qibla" class="page"><button class="btn light back" onclick="page('home')">بازگشت</button><h2 class="title">قبله‌نمای هوشمند</h2><div class="panel" style="text-align:center"><div class="compass" aria-label="قطب‌نمای جهت‌یابی"><div class="compassDial" id="compassDial"><span class="dir n">شمال</span><span class="dir s">جنوب</span><span class="dir e">شرق</span><span class="dir w">غرب</span><div class="needle" id="needle" aria-label="جهت قبله"><span class="kaabaTip" role="img" aria-label="کعبه"><svg viewBox="0 0 64 64" aria-hidden="true"><path d="M8 20 32 9l24 11-24 12L8 20Z" fill="#171717"/><path d="M8 20v27l24 12V32L8 20Z" fill="#292929"/><path d="M56 20v27L32 59V32l24-12Z" fill="#080808"/><path d="m8 20 24 12 24-12v7L32 39 8 27v-7Z" fill="#c49a4a"/><path d="m8 28 24 12 24-12v4L32 44 8 32v-4Z" fill="#e0c477"/><path d="M17 37v9l5 2v-9l-5-2Z" fill="#c49a4a"/></svg></span></div></div><div class="pivot"></div></div><div class="muted">شاخهٔ طلایی جهت قبله را نشان می‌دهد؛ حروف چهار جهت و شاخهٔ قبله با هم می‌چرخند.</div><div id="qangle" style="font-size:28px;color:#173d2c;font-weight:bold">—°</div><div id="qiblaStatus" class="status">برای تعیین قبله، موقعیت مکانی را دریافت کنید.</div><div class="actions"><button class="btn" onclick="getGPS()">دریافت موقعیت من</button><button class="btn gold" onclick="startCompass()">بررسی حسگر جهت‌یابی</button></div><div id="qdist" class="muted"></div><div class="muted">نکته مهم برای Galaxy A03: این گوشی قطب‌نمای مغناطیسی ندارد. عدد نمایش‌داده‌شده زاویه قبله از شمال حقیقی است؛ برای تعیین جهت روی زمین، ابتدا شمال حقیقی را با نقشه یا مرجع مستقل پیدا کنید و لبه بالایی گوشی را هم‌جهت آن بگیرید. پیکان در این حالت نسبت به شمال حقیقی ثابت است و با چرخاندن گوشی نمی‌چرخد.</div></div></section>
 <section id="dhikr" class="page"><button class="btn light back" onclick="page('home')">بازگشت</button><h2 class="title">اذکار و شمارنده مستقل</h2><div class="panel"><select id="dhikrSelect" onchange="changeDhikr()"><option>صلوات</option><option>استغفرالله</option><option>لا اله الا الله</option><option>سبحان الله</option><option>الحمدلله</option><option>الله اکبر</option></select><div class="count" id="otherCount" style="text-align:center">۰</div><div class="actions"><button class="btn" onclick="otherAdd()">شمارش +۱</button><button class="btn light" onclick="otherReset()">صفر کردن</button></div></div></section>
-<section id="settings" class="page"><button class="btn light back" onclick="page('home')">↩ بازگشت</button><h2 class="title">تنظیمات برنامه</h2><div class="panel settingsPanel"><h3>🕌 مکبر و ذکرهای رکعت‌شمار</h3><div class="settingsHint">برای شنیدن ترتیب کامل تکبیر و ذکرها، آزمایش صدا را از همین قسمت اجرا کنید.</div><button class="btn gold" id="rakatTestVoice" type="button" style="width:100%;margin:8px 0">🔊 آزمایش صدای مکبر و ذکرها</button><div id="rakatTestStatus" class="settingsHint" aria-live="polite">آماده آزمایش صدا</div><div class="settingsHint">هر صدا مستقل قابل فعال‌سازی است. ذکر اول پس از تکبیر سجده اول و ذکر دوم پس از تکبیر سجده دوم پخش می‌شود؛ ذکر دوم در رکعت آخر پخش نمی‌شود.</div><label class="settingRow"><span><b>پخش تکبیر هنگام هر سجده</b><small>فعال‌سازی صدای الله‌اکبر</small></span><input type="checkbox" id="rakatCueSujud" checked onchange="saveRakatCueSettings()"></label><label class="settingRow"><span><b>ذکر بین دو سجده</b><small>أَسْتَغْفِرُ اللَّهَ رَبِّي وَأَتُوبُ إِلَيْهِ</small></span><input type="checkbox" id="rakatPhraseIstighfar" checked onchange="saveRakatPhraseSettings()"></label><label class="settingRow"><span><b>ذکر برخاستن پس از سجده دوم</b><small>بِحَوْلِ اللَّهِ وَقُوَّتِهِ أَقُومُ وَأَقْعُدُ · به‌جز رکعت آخر</small></span><input type="checkbox" id="rakatPhraseQiyam" checked onchange="saveRakatPhraseSettings()"></label><label class="settingRow"><span><b>تأخیر پخش الله‌اکبر</b><small>فاصله از لمس تا شروع پخش</small></span><select id="rakatTakbirDelay" onchange="saveRakatDelay()"><option value="1000" selected>۱ ثانیه</option><option value="1500">۱٫۵ ثانیه</option><option value="2000">۲ ثانیه</option></select></label></div><div class="panel settingsPanel"><h3>📿 تنظیمات تسبیح</h3><label class="settingRow"><span><b>صدای کلیک شمارش</b><small>صدای ملایم شبیه ضربه تسبیح چوبی</small></span><input type="checkbox" id="tasbihSoundSetting" checked onchange="setTasbihSound(this.checked)"></label></div><div class="panel settingsPanel"><h3>🕌 اوقات شرعی و اذان</h3><label class="settingRow"><span><b>فعال‌سازی پخش خودکار اذان</b><small>کلید اصلی پخش خودکار</small></span><input type="checkbox" id="adhanEnabled" checked onchange="toggleAdhan()"></label>
+<section id="settings" class="page"><button class="btn light back" onclick="page('home')">↩ بازگشت</button><h2 class="title">تنظیمات برنامه</h2><div class="panel settingsPanel"><h3>🕌 مکبر و ذکرهای رکعت‌شمار</h3><div class="settingsHint">برای شنیدن ترتیب کامل تکبیر و ذکرها، آزمایش صدا را از همین قسمت اجرا کنید.</div><button class="btn gold" id="rakatTestVoice" type="button" style="width:100%;margin:8px 0">🔊 آزمایش صدای مکبر و ذکرها</button><div id="rakatTestStatus" class="settingsHint" aria-live="polite">آماده آزمایش صدا</div><div class="settingsHint">هر مرحله با یک صدای پیوسته خوانده می‌شود: سجده اول همراه استغفار؛ سجده دوم رکعت‌های ۱ و ۳ همراه بحول‌الله و رکعت‌های ۲ و ۴ همراه الحمدلله.</div><label class="settingRow"><span><b>پخش تکبیر هنگام هر سجده</b><small>فعال‌سازی صدای الله‌اکبر</small></span><input type="checkbox" id="rakatCueSujud" checked onchange="saveRakatCueSettings()"></label><label class="settingRow"><span><b>ذکر بین دو سجده</b><small>أَسْتَغْفِرُ اللَّهَ رَبِّي وَأَتُوبُ إِلَيْهِ</small></span><input type="checkbox" id="rakatPhraseIstighfar" checked onchange="saveRakatPhraseSettings()"></label><label class="settingRow"><span><b>ذکر پس از سجده دوم</b><small>بحول‌الله در رکعت‌های ۱ و ۳؛ الحمدلله در رکعت‌های ۲ و ۴</small></span><input type="checkbox" id="rakatPhraseQiyam" checked onchange="saveRakatPhraseSettings()"></label><label class="settingRow"><span><b>تأخیر پخش الله‌اکبر</b><small>فاصله از لمس تا شروع پخش</small></span><select id="rakatTakbirDelay" onchange="saveRakatDelay()"><option value="1000" selected>۱ ثانیه</option><option value="1500">۱٫۵ ثانیه</option><option value="2000">۲ ثانیه</option></select></label></div><div class="panel settingsPanel"><h3>📿 تنظیمات تسبیح</h3><label class="settingRow"><span><b>صدای کلیک شمارش</b><small>صدای ملایم شبیه ضربه تسبیح چوبی</small></span><input type="checkbox" id="tasbihSoundSetting" checked onchange="setTasbihSound(this.checked)"></label></div><div class="panel settingsPanel"><h3>🕌 اوقات شرعی و اذان</h3><label class="settingRow"><span><b>فعال‌سازی پخش خودکار اذان</b><small>کلید اصلی پخش خودکار</small></span><input type="checkbox" id="adhanEnabled" checked onchange="toggleAdhan()"></label>
 <div class="settingsHint">پخش هر اذان را جداگانه انتخاب کنید:</div><label class="settingField">روش محاسبه اوقات شرعی<select id="prayerMethod" onchange="savePrayerMethod()"><option value="7">روش مؤسسه ژئوفیزیک دانشگاه تهران (پیشنهادی برای ایران)</option><option value="0">روش جعفری / مؤسسه لِوا، قم</option><option value="auto">انتخاب خودکار متناسب با موقعیت</option></select></label><div class="settingsHint">روش تهران با کد ۷؛ در صورت استفاده خارج از ایران می‌توانید روش قم یا انتخاب خودکار را برگزینید.</div>
 <label class="settingRow"><span><b>اذان صبح</b></span><input type="checkbox" id="adhanFajr" checked onchange="savePrayerSettings()"></label>
 <label class="settingRow"><span><b>اذان ظهر</b></span><input type="checkbox" id="adhanDhuhr" checked onchange="savePrayerSettings()"></label>
@@ -381,45 +381,26 @@ let rakatSajdaCount=0,rakatTotal=4,rakatRunning=false,rakatLastTouch=0;
 const rakatFa=n=>Number(n).toLocaleString('fa-IR');
 function rakatPlayPhrase(text,onDone){
  const a=document.getElementById('rakatPhraseAudio'),st=document.getElementById('rakatStatus');
- if(!a){if(st)st.textContent='پخش‌کننده ذکر در دسترس نیست.';if(onDone)onDone(false);return}
- let settled=false,watchdog=0,remoteStarted=false;
- const finish=(ok,message)=>{
-  if(settled)return;settled=true;clearTimeout(watchdog);
-  a.onended=null;a.onerror=null;a.onplaying=null;
-  if(st){st.className=ok?'rakatStatus good':'rakatStatus';st.textContent=message}
-  if(typeof onDone==='function')onDone(ok);
- };
- const speakOnDevice=()=>{
+ let settled=false,watchdog=0;
+ const finish=(ok,message)=>{if(settled)return;settled=true;clearTimeout(watchdog);if(a){a.onended=null;a.onerror=null;a.onplaying=null}if(st){st.className=ok?'rakatStatus good':'rakatStatus';st.textContent=message}if(typeof onDone==='function')onDone(ok)};
+ const deviceSpeech=()=>{
   if(settled)return;
-  if(!('speechSynthesis'in window)||typeof SpeechSynthesisUtterance==='undefined'){
-   finish(false,'ذکر پخش نشد؛ موتور گفتار گوشی در دسترس نیست. اتصال اینترنت و صدای رسانه را بررسی کنید.');return;
-  }
+  if(!('speechSynthesis'in window)||typeof SpeechSynthesisUtterance==='undefined'){finish(false,'صدای ذکر در دسترس نیست؛ موتور گفتار عربی گوشی را فعال کنید.');return}
   try{
-   a.onended=null;a.onerror=null;a.onplaying=null;a.pause();a.removeAttribute('src');a.load();
+   if(a){a.pause();a.removeAttribute('src');a.load()}
    speechSynthesis.cancel();
-   const utterance=new SpeechSynthesisUtterance(text);
-   utterance.lang='ar-SA';utterance.rate=.78;utterance.pitch=1;utterance.volume=1;
-   const voices=speechSynthesis.getVoices()||[];
-   const arabic=voices.find(v=>/^ar([_-]|$)/i.test(v.lang));
-   if(arabic)utterance.voice=arabic;
-   let began=false;
-   utterance.onstart=()=>{began=true;if(st){st.className='rakatStatus good';st.textContent='در حال پخش ذکر با صدای گوشی…'}};
-   utterance.onend=()=>finish(began,began?'ذکر با صدای گوشی پخش شد.':'موتور گفتار گوشی پخش ذکر را آغاز نکرد.');
-   utterance.onerror=()=>finish(false,'پخش ذکر با صدای گوشی ناموفق بود؛ موتور گفتار عربی را در تنظیمات گوشی فعال کنید.');
-   speechSynthesis.speak(utterance);
-   watchdog=window.setTimeout(()=>{if(!settled){speechSynthesis.cancel();finish(false,'پخش ذکر توسط موتور گفتار کامل نشد.')}},18000);
-  }catch(e){finish(false,'اجرای صدای گوشی ناموفق بود.')}
+   const u=new SpeechSynthesisUtterance(text);u.lang='ar-SA';u.rate=.82;u.pitch=1;u.volume=1;
+   const voices=speechSynthesis.getVoices()||[],v=voices.find(x=>/^ar([_-]|$)/i.test(x.lang));if(v)u.voice=v;
+   let started=false;
+   u.onstart=()=>{started=true;if(st){st.className='rakatStatus good';st.textContent='در حال خواندن الله‌اکبر و ذکر به‌صورت پیوسته…'}};
+   u.onend=()=>finish(started,started?'الله‌اکبر و ذکر با هم پخش شد.':'موتور گفتار گوشی پخش را آغاز نکرد.');
+   u.onerror=()=>finish(false,'پخش ذکر ناموفق بود؛ زبان عربی موتور گفتار گوشی را بررسی کنید.');
+   speechSynthesis.speak(u);
+   watchdog=window.setTimeout(()=>{if(!settled){speechSynthesis.cancel();finish(false,'خواندن ذکر کامل نشد؛ موتور گفتار گوشی را بررسی کنید.')}},22000);
+  }catch(e){finish(false,'اجرای صدای ذکر در گوشی ناموفق بود.')}
  };
- a.onended=()=>finish(true,'ذکر صوتی به پایان رسید.');
- a.onerror=()=>speakOnDevice();
- a.onplaying=()=>{remoteStarted=true};
- a.pause();a.removeAttribute('src');a.load();
- a.src='https://translate.google.com/translate_tts?ie=UTF-8&tl=ar&client=tw-ob&q='+encodeURIComponent(text);
- a.load();
- if(st){st.className='rakatStatus';st.textContent='در حال دریافت صدای ذکر…'}
- const playPromise=a.play();
- if(playPromise&&playPromise.catch)playPromise.catch(()=>speakOnDevice());
- watchdog=window.setTimeout(()=>{if(!settled){a.pause();speakOnDevice()}},9000);
+ if(st){st.className='rakatStatus';st.textContent='در حال آماده‌سازی پخش پیوسته ذکر…'}
+ deviceSpeech();
 }
 function rakatSpeak(after){
  const toggle=document.getElementById('rakatVoiceToggle'),st=document.getElementById('rakatStatus'),audio=document.getElementById('rakatAudio');
@@ -448,7 +429,27 @@ function rakatRender(){
  document.getElementById('rakatSubLabel').textContent=completed>=rakatTotal?'نماز کامل شد':rakatRunning?'سجده '+(partial?'اول':'دوم')+' رکعت '+rakatFa(current):'آماده شروع نماز';
 }
 function rakatStart(){const selected=Number(document.getElementById('rakatPrayerTotal').value)||4;if(rakatRunning&&rakatTotal===selected)return;rakatTotal=selected;rakatSajdaCount=0;rakatRunning=true;rakatLastTouch=0;rakatUnlockAudio();document.getElementById('rakat').classList.add('rakat-running');document.getElementById('rakatStatus').className='rakatStatus good';document.getElementById('rakatStatus').textContent='شمارش خودکار آغاز شد؛ برای هر سجده یک بار روی مهر لمس کنید.';rakatRender()}
-function rakatRegisterTouch(){if(!rakatRunning||rakatSajdaCount>=rakatTotal*2)return;const now=Date.now();if(now-rakatLastTouch<450)return;rakatLastTouch=now;rakatSajdaCount++;rakatRender();const completed=Math.floor(rakatSajdaCount/2),partial=rakatSajdaCount%2;const st=document.getElementById('rakatStatus');st.className='rakatStatus good';st.textContent=rakatSajdaCount>=rakatTotal*2?'شمارش کامل شد: '+rakatFa(rakatTotal)+' رکعت.':partial?'سجده اول رکعت '+rakatFa(completed+1)+' ثبت شد. سجده بعدی، سجده دوم همین رکعت است.':'سجده دوم رکعت '+rakatFa(completed)+' ثبت شد؛ رکعت کامل شد.';const isFirstSajda=partial===1,isLastPrayerSajda=rakatSajdaCount>=rakatTotal*2;const playAfterTakbir=()=>{if(isFirstSajda&&localStorage.getItem('sahroud_rakat_phrase_istighfar')!=='false')rakatPlayPhrase('أستغفر الله ربي وأتوب إليه');else if(!isFirstSajda&&!isLastPrayerSajda&&localStorage.getItem('sahroud_rakat_phrase_qiyam')!=='false')rakatPlayPhrase('بحول الله وقوته أقوم وأقعد')};if(document.getElementById('rakatCueSujud').checked&&document.getElementById('rakatVoiceToggle').checked)window.setTimeout(()=>rakatSpeak(playAfterTakbir),Number(localStorage.getItem('sahroud_rakat_delay')||'1000'));else playAfterTakbir();if(isLastPrayerSajda){rakatRunning=false;document.getElementById('rakat').classList.remove('rakat-running');}}
+function rakatRegisterTouch(){
+ if(!rakatRunning||rakatSajdaCount>=rakatTotal*2)return;
+ const now=Date.now();if(now-rakatLastTouch<450)return;rakatLastTouch=now;
+ rakatSajdaCount++;rakatRender();
+ const completed=Math.floor(rakatSajdaCount/2),partial=rakatSajdaCount%2;
+ const isFirstSajda=partial===1,isLastPrayerSajda=rakatSajdaCount>=rakatTotal*2;
+ const st=document.getElementById('rakatStatus');
+ st.className='rakatStatus good';
+ st.textContent=isFirstSajda?'سجده اول رکعت '+rakatFa(completed+1)+' ثبت شد.':(isLastPrayerSajda?'سجده دوم رکعت آخر ثبت شد.':'سجده دوم رکعت '+rakatFa(completed)+' ثبت شد.');
+ const voiceOn=document.getElementById('rakatCueSujud').checked&&document.getElementById('rakatVoiceToggle').checked;
+ const phraseEnabled=isFirstSajda?localStorage.getItem('sahroud_rakat_phrase_istighfar')!=='false':localStorage.getItem('sahroud_rakat_phrase_qiyam')!=='false';
+ if(voiceOn&&phraseEnabled){
+  const spoken=isFirstSajda
+   ?'اللَّهُ أَكْبَرُ. أَسْتَغْفِرُ اللَّهَ رَبِّي وَأَتُوبُ إِلَيْهِ.'
+   :((completed===1||completed===3)
+     ?'اللَّهُ أَكْبَرُ. بِحَوْلِ اللَّهِ وَقُوَّتِهِ أَقُومُ وَأَقْعُدُ.'
+     :'اللَّهُ أَكْبَرُ. الْحَمْدُ لِلَّهِ.');
+  window.setTimeout(()=>rakatPlayPhrase(spoken),Number(localStorage.getItem('sahroud_rakat_delay')||'1000'));
+ }
+ if(isLastPrayerSajda){rakatRunning=false;document.getElementById('rakat').classList.remove('rakat-running')}
+}
 function rakatUndo(){if(rakatSajdaCount>0){rakatSajdaCount--;rakatRunning=true;document.getElementById('rakat').classList.add('rakat-running');document.getElementById('rakatStatus').className='rakatStatus';document.getElementById('rakatStatus').textContent='آخرین سجده برگشت داده شد؛ شمارش را ادامه دهید.';rakatRender()}}
 function rakatReset(){rakatSajdaCount=0;rakatRunning=false;rakatLastTouch=0;document.getElementById('rakat').classList.remove('rakat-running');rakatStart()}
 (()=>{const area=document.getElementById('rakatTouchArea');if(!area)return;area.addEventListener('pointerup',e=>{if(e.target.closest('button,a,input,select,label'))return;e.preventDefault();rakatRegisterTouch()});area.addEventListener('contextmenu',e=>e.preventDefault());document.getElementById('rakatUndo').addEventListener('click',rakatUndo);document.getElementById('rakatReset').addEventListener('click',rakatReset);document.getElementById('rakatTestVoice').addEventListener('click',()=>{
