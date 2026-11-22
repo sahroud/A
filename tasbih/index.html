@@ -377,11 +377,6 @@ initSurahs();buildBeads();changeDhikr();setSpeed(1);renderSurahSidebar();if('ser
   window.addEventListener('focus',update);
  }).catch(()=>{});
 }
-</script>
-<!-- SAHROUD COUNTER shared analytics; activates after central API configuration and user consent -->
-<script>window.SAHROUD_COUNTER_CONFIG={appId:"tasbih",appName:"SAHROUD TASBIH",version:"1.0"};</script>
-<script src="https://sahroud.github.io/A/counter/config.js"></script>
-<script src="https://sahroud.github.io/A/counter/client.js" defer>
 // SAHROUD TASBIH: full-screen touch rak'at counter and delayed mukabbir
 let rakatSajdaCount=0,rakatTotal=4,rakatRunning=false,rakatLastTouch=0;
 const rakatFa=n=>Number(n).toLocaleString('fa-IR');
@@ -405,5 +400,11 @@ function rakatRegisterTouch(){if(!rakatRunning||rakatSajdaCount>=rakatTotal*2)re
 function rakatUndo(){if(rakatSajdaCount>0){rakatSajdaCount--;rakatRunning=true;document.getElementById('rakat').classList.add('rakat-running');document.getElementById('rakatStartBtn').textContent='ادامه شمارش';document.getElementById('rakatStatus').className='rakatStatus';document.getElementById('rakatStatus').textContent='آخرین سجده برگشت داده شد؛ شمارش را ادامه دهید.';rakatRender()}}
 function rakatReset(){rakatSajdaCount=0;rakatRunning=false;rakatLastTouch=0;document.getElementById('rakat').classList.remove('rakat-running');document.getElementById('rakatStartBtn').textContent='شروع نماز';document.getElementById('rakatStatus').className='rakatStatus';document.getElementById('rakatStatus').textContent='شمارنده صفر شد. برای آغاز، شروع نماز را بزنید.';rakatRender()}
 (()=>{const area=document.getElementById('rakat');if(!area)return;area.addEventListener('pointerup',e=>{if(e.target.closest('button,a,input,select,label'))return;e.preventDefault();rakatRegisterTouch()});area.addEventListener('contextmenu',e=>e.preventDefault());document.getElementById('rakatUndo').addEventListener('click',rakatUndo);document.getElementById('rakatReset').addEventListener('click',rakatReset);document.getElementById('rakatTestVoice').addEventListener('click',()=>rakatSpeak('اللَّهُ أَكْبَرُ'));rakatRender()})();
+
+</script>
+<!-- SAHROUD COUNTER shared analytics; activates after central API configuration and user consent -->
+<script>window.SAHROUD_COUNTER_CONFIG={appId:"tasbih",appName:"SAHROUD TASBIH",version:"1.0"};</script>
+<script src="https://sahroud.github.io/A/counter/config.js"></script>
+<script src="https://sahroud.github.io/A/counter/client.js" defer>
 </script>
 </body></html>
