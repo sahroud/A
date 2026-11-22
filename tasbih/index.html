@@ -84,7 +84,7 @@ body{font-size:17px}.brand{font-size:20px}.brand small{font-size:13px}.btn{font-
 <div class="actions"><button class="btn light" onclick="downloadAll()">ذخیره متن برای استفاده آفلاین</button></div><div class="progress" style="margin-top:12px"><i id="dlbar"></i></div><div id="qstatus" class="status">برای شروع، یک سوره یا جزء را انتخاب کنید.</div><div id="qcontent" class="quranContent"></div>
 </div></div></section>
 
-<section id="nahj" class="page"><button class="btn light back" onclick="page('home')">↩ بازگشت به برنامه</button><h2 class="title">نهج‌البلاغه</h2><div class="panel quranPanel"><div class="quranIntro">کلام امیرالمؤمنین علی (ع)</div><div class="nahjControls"><select id="nahjType" class="field" onchange="updateNahjRange();loadNahj()"><option value="khutba">خطبه‌ها</option><option value="nameh">نامه‌ها</option><option value="hekmat">حکمت‌ها</option></select><select id="nahjNumber" class="field" onchange="loadNahj()"></select></div><div id="nahjStatus" class="status">در حال آماده‌سازی…</div><div id="nahjContent"></div></div></section>
+<section id="nahj" class="page"><button class="btn light back" onclick="page('home')">↩ بازگشت به برنامه</button><h2 class="title">نهج‌البلاغه</h2><div class="panel quranPanel"><div class="quranIntro">کلام امیرالمؤمنین علی (ع)</div><div class="nahjControls"><select id="nahjType" class="field" onchange="updateNahjRange();loadNahj()"><option value="khutba">خطبه‌ها</option><option value="nameh">نامه‌ها</option><option value="hekmat">حکمت‌ها</option></select><select id="nahjNumber" class="field" onchange="loadNahj()"></select></div><div id="nahjStatus" class="status">در حال آماده‌سازی…</div><div class="nahjTools" style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin:10px 0"><button class="btn light" onclick="saveNahjBookmark()">★ ذخیره این مطلب</button><button class="btn light" onclick="showNahjBookmarks()">مطالب ذخیره‌شده</button><input id="nahjSearch" class="field" placeholder="جست‌وجوی عبارت در نهج‌البلاغه…" style="grid-column:1/-1;min-width:0"><button class="btn gold" onclick="searchNahjSource()" style="grid-column:1/-1">جست‌وجو در متن کامل نهج‌البلاغه ↗</button></div><div id="nahjBookmarks" hidden class="status" style="text-align:right"></div><div id="nahjStatus" class="status">در حال آماده‌سازی…</div><div id="nahjContent"></div></div></section>
 <div id="miniAudio" style="display:none;position:fixed;bottom:10px;left:10px;right:10px;z-index:20;max-width:730px;margin:auto;background:#173d2c;color:#fff4dc;border:1px solid #c49a4a;border-radius:15px;padding:9px;box-shadow:0 5px 20px #0003;align-items:center;justify-content:space-between;gap:8px"><span id="miniAudioText" style="font-size:11px">تلاوت در حال پخش است</span><div style="display:flex;gap:6px"><button class="btn gold" onclick="page('quran')">بازگشت به قرآن</button><button class="btn light" onclick="stopAudio();$('miniAudio').style.display='none'">توقف</button></div></div>
 <div class="foot">تهیه‌کننده: احمد نوری · التماس دعا</div></main>
 <script>
@@ -331,6 +331,30 @@ window.addEventListener('scroll',()=>{
  }
 },{passive:true});
 let nahjRequestId=0;
+function searchNahjSource(){
+ const q=($('nahjSearch').value||'').trim();
+ if(!q){$('nahjStatus').textContent='عبارت مورد جست‌وجو را وارد کنید.';return}
+ window.open('https://fa.balaghah.net/?s='+encodeURIComponent(q),'_blank','noopener');
+}
+function saveNahjBookmark(){
+ const item={type:$('nahjType').value,number:Number($('nahjNumber').value)||1,label:($('nahjType').value==='khutba'?'خطبه':$('nahjType').value==='nameh'?'نامه':'حکمت')+' '+fa($('nahjNumber').value),url:nahjUrl($('nahjType').value,Number($('nahjNumber').value)||1)};
+ let list=[];try{list=JSON.parse(localStorage.getItem('sahroud_nahj_bookmarks')||'[]')}catch(e){}
+ list=list.filter(x=>x.type!==item.type||x.number!==item.number);list.unshift(item);list=list.slice(0,50);
+ localStorage.setItem('sahroud_nahj_bookmarks',JSON.stringify(list));
+ $('nahjStatus').textContent='این مطلب در نشانک‌های شما ذخیره شد.';
+}
+function showNahjBookmarks(){
+ const box=$('nahjBookmarks');let list=[];try{list=JSON.parse(localStorage.getItem('sahroud_nahj_bookmarks')||'[]')}catch(e){}
+ box.hidden=!box.hidden;
+ if(box.hidden)return;
+ box.innerHTML=list.length?'<b>مطالب ذخیره‌شده</b>'+list.map((x,i)=>'<button class="btn light" style="display:block;width:100%;margin:6px 0;text-align:right" onclick="openNahjBookmark('+i+')">'+esc(x.label||'مطلب نهج‌البلاغه')+'</button>').join(''):'هنوز مطلبی ذخیره نشده است.';
+}
+function openNahjBookmark(index){
+ let list=[];try{list=JSON.parse(localStorage.getItem('sahroud_nahj_bookmarks')||'[]')}catch(e){}
+ const x=list[index];if(!x)return;
+ $('nahjType').value=x.type;updateNahjRange();$('nahjNumber').value=x.number;loadNahj();
+ $('nahjBookmarks').hidden=true;
+}
 function loadNahj(save=true){
  const request=++nahjRequestId,t=$('nahjType').value,n=Number($('nahjNumber').value)||1,url=nahjUrl(t,n);
  const box=$('nahjContent'),label=t==='khutba'?'خطبه':t==='nameh'?'نامه':'حکمت';
