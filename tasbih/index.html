@@ -453,27 +453,23 @@ function rakatRegisterTouch(){
 function rakatUndo(){if(rakatSajdaCount>0){rakatSajdaCount--;rakatRunning=true;document.getElementById('rakat').classList.add('rakat-running');document.getElementById('rakatStatus').className='rakatStatus';document.getElementById('rakatStatus').textContent='آخرین سجده برگشت داده شد؛ شمارش را ادامه دهید.';rakatRender()}}
 function rakatReset(){rakatSajdaCount=0;rakatRunning=false;rakatLastTouch=0;document.getElementById('rakat').classList.remove('rakat-running');rakatStart()}
 (()=>{const area=document.getElementById('rakatTouchArea');if(!area)return;area.addEventListener('pointerup',e=>{if(e.target.closest('button,a,input,select,label'))return;e.preventDefault();rakatRegisterTouch()});area.addEventListener('contextmenu',e=>e.preventDefault());document.getElementById('rakatUndo').addEventListener('click',rakatUndo);document.getElementById('rakatReset').addEventListener('click',rakatReset);document.getElementById('rakatTestVoice').addEventListener('click',()=>{
- const test=document.getElementById('rakatTestStatus'),main=document.getElementById('rakatStatus'),audio=document.getElementById('rakatAudio');
- const say=message=>{if(test)test.textContent=message;if(main){main.className='rakatStatus';main.textContent=message}};
- if(!audio){say('آزمایش ناموفق: فایل تکبیر پیدا نشد.');return}
- let finished=false,watchdog=0;
- const stop=message=>{if(finished)return;finished=true;clearTimeout(watchdog);audio.onended=null;audio.onerror=null;say(message)};
- const phrase=(number,label,spokenText,next)=>{
-  if(finished)return;
-  say('مرحله '+number+' از ۳: '+label+'؛ لطفاً تا پایان صدا صبر کنید…');
-  rakatPlayPhrase(spokenText,ok=>{
-   if(finished)return;
-   if(!ok){stop('آزمایش ناموفق: '+label+' پخش نشد. برای جزئیات، پیام وضعیت پایین صفحه را بخوانید.');return}
-   if(next)next();
+ const test=document.getElementById('rakatTestStatus');
+ let step=0;
+ const samples=[
+  ['سجده اول','اللَّهُ أَكْبَرُ. أَسْتَغْفِرُ اللَّهَ رَبِّي وَأَتُوبُ إِلَيْهِ.'],
+  ['سجده دوم رکعت ۱ و ۳','اللَّهُ أَكْبَرُ. بِحَوْلِ اللَّهِ وَقُوَّتِهِ أَقُومُ وَأَقْعُدُ.'],
+  ['سجده دوم رکعت ۲ و ۴','اللَّهُ أَكْبَرُ. الْحَمْدُ لِلَّهِ.']
+ ];
+ const next=()=>{
+  if(step>=samples.length){if(test)test.textContent='آزمایش هر سه عبارت پیوسته با موفقیت به پایان رسید.';return}
+  const [label,words]=samples[step++];
+  if(test)test.textContent='در حال آزمایش '+label+'؛ تا پایان پخش صبر کنید…';
+  rakatPlayPhrase(words,ok=>{
+   if(!ok){if(test)test.textContent='پخش '+label+' ناموفق بود؛ موتور گفتار عربی گوشی را بررسی کنید.';return}
+   next();
   });
  };
- say('مرحله ۱ از ۳: در حال پخش الله‌اکبر…');
- audio.pause();audio.currentTime=0;audio.volume=1;
- audio.onended=()=>phrase(2,'ذکر استغفار','أستغفر الله ربي وأتوب إليه',()=>phrase(3,'ذکر برخاستن','بحول الله وقوته أقوم وأقعد',()=>stop('آزمایش کامل شد: هر سه فایل/گفتار به پایان رسیدند.')));
- audio.onerror=()=>stop('آزمایش ناموفق: فایل الله‌اکبر باز نشد.');
- const promise=audio.play();
- if(promise&&promise.catch)promise.catch(()=>stop('آزمایش ناموفق: پخش الله‌اکبر توسط مرورگر مسدود شد.'));
- watchdog=window.setTimeout(()=>{if(!finished)stop('آزمایش متوقف شد: یکی از صداها در زمان مقرر به پایان نرسید؛ مرحله بعدی پخش نشد.')},45000);
+ next();
 });
 rakatRender()})();
 
