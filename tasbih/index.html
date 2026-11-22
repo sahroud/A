@@ -304,12 +304,40 @@ window.addEventListener('load',()=>{
  try{let p=JSON.parse(localStorage.getItem('sahroud_prayer_location')||'null');if(p&&Number.isFinite(p.lat)&&Number.isFinite(p.lon)){if(p.timezone)prayerTimezone=p.timezone;updatePrayerTimes(p.lat,p.lon)}else locateForPrayer()}catch(e){locateForPrayer()}
 });
 
-const nahjCounts={khutba:239,nameh:79,hekmat:480},nahjMemoryCache={};
-function hasArabicText(value){return /[\u0600-\u06FF]/.test(String(value))}
-function updateNahjRange(){let t=$('nahjType').value,n=nahjCounts[t];$('nahjNumber').innerHTML='';for(let i=1;i<=n;i++){let o=document.createElement('option');o.value=i;o.textContent=fa(i)+(t==='khutba'?' · خطبه':t==='nameh'?' · نامه':' · حکمت');$('nahjNumber').appendChild(o)}$('nahjNumber').value='1'}
-function nahjUrl(t,n){let path=t==='khutba'?'khutba':t==='nameh'?'nameh':'hikmat',index=t==='hekmat'?Math.ceil(n/20):n;return 'https://persianquran.com/hadis/nahj/'+path+'/'+index+'/'}
-function saveNahjStudy(showMsg=false){let item={type:$('nahjType').value,number:Number($('nahjNumber').value)||1,savedAt:Date.now()};localStorage.setItem('sahroud_study_nahj',JSON.stringify(item));if(showMsg)$('nahjStatus').textContent='محل مطالعه ذخیره شد.'}
-function restoreNahjStudy(){let p=readSaved('sahroud_study_nahj');if(!p)return;$('nahjType').value=p.type||'khutba';updateNahjRange();$('nahjNumber').value=p.number||1;if(currentPage==='nahj'&&!$('nahjContent').children.length)loadNahj(false)}
+const nahjCounts={khutba:239,nameh:79,hekmat:480};
+function updateNahjRange(){
+ const t=$('nahjType').value,n=nahjCounts[t];
+ $('nahjNumber').innerHTML='';
+ for(let i=1;i<=n;i++){let o=document.createElement('option');o.value=i;o.textContent=fa(i)+(t==='khutba'?' · خطبه':t==='nameh'?' · نامه':' · حکمت');$('nahjNumber').appendChild(o)}
+ $('nahjNumber').value='1';
+}
+function nahjUrl(t,n){
+ const suffix=t==='khutba'?'-2':t==='hekmat'?'-3':'';
+ return 'https://fa.balaghah.net/balagha/'+n+suffix+'/';
+}
+function saveNahjStudy(showMsg=false){
+ const item={type:$('nahjType').value,number:Number($('nahjNumber').value)||1,savedAt:Date.now()};
+ localStorage.setItem('sahroud_study_nahj',JSON.stringify(item));
+ if(showMsg)$('nahjStatus').textContent='محل مطالعه ذخیره شد.';
+}
+function restoreNahjStudy(){
+ const p=readSaved('sahroud_study_nahj');if(!p)return;
+ $('nahjType').value=p.type||'khutba';updateNahjRange();$('nahjNumber').value=p.number||1;
+ if(currentPage==='nahj')loadNahj(false);
+}
+window.addEventListener('scroll',()=>{
+ if(currentPage==='nahj'&&Date.now()>ignoreStudyScrollUntil){
+  clearTimeout(window.__nsave);window.__nsave=setTimeout(()=>saveNahjStudy(false),500);
+ }
+},{passive:true});
+let nahjRequestId=0;
+function loadNahj(save=true){
+ const request=++nahjRequestId,t=$('nahjType').value,n=Number($('nahjNumber').value)||1,url=nahjUrl(t,n);
+ const box=$('nahjContent'),label=t==='khutba'?'خطبه':t==='nameh'?'نامه':'حکمت';
+ if(save)saveNahjStudy(false);
+ $('nahjStatus').textContent='در حال بازکردن '+label+' شماره '+fa(n)+' از پایگاه تخصصی نهج‌البلاغه…';
+ box.innerHTML='<div class="status" style="padding:10px">در حال بارگذاری متن عربی و ترجمه فارسی…</div><iframe title="متن نهج‌البلاغه" src="'+url+'" loading="eager" referrerpolicy="strict-origin-when-cross-origin" style="width:100%;height:72vh;min-height:560px;border:1px solid #d8c79f;border-radius:13px;background:#fff" onload="if('+request+'===nahjRequestId)document.getElementById(\'nahjStatus\').textContent=\'صفحه منبع بارگذاری شد؛ متن و ترجمه در قاب زیر نمایش داده می‌شود.\'"></iframe><div class="actions"><a class="btn gold" href="'+url+'" target="_blank" rel="noopener" style="text-decoration:none;display:inline-flex;align-items:center">باز کردن مستقیم متن در سایت منبع ↗</a><a class="btn light" href="https://fa.balaghah.net/balagha/" target="_blank" rel="noopener" style="text-decoration:none;display:inline-flex;align-items:center">فهرست و جست‌وجوی نهج‌البلاغه ↗</a></div>';
+}$('nahjNumber').value=p.number||1;if(currentPage==='nahj'&&!$('nahjContent').children.length)loadNahj(false)}
 window.addEventListener('scroll',()=>{if(currentPage==='nahj'&&Date.now()>ignoreStudyScrollUntil){clearTimeout(window.__nsave);window.__nsave=setTimeout(()=>saveNahjStudy(false),500)}},{passive:true});
 function nahjNumberValue(v){return Number(String(v).replace(/[۰-۹]/g,d=>'۰۱۲۳۴۵۶۷۸۹'.indexOf(d)).replace(/[٠-٩]/g,d=>'٠١٢٣٤٥٦٧٨٩'.indexOf(d)))}
 function parseNahjResponse(raw,type='khutba',requestedNumber=1){
