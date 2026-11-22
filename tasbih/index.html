@@ -377,42 +377,51 @@ const rakatFa=n=>Number(n).toLocaleString('fa-IR');
 function rakatPlayPhrase(text,onDone){
  const a=document.getElementById('rakatPhraseAudio'),st=document.getElementById('rakatStatus');
  if(!a){if(st)st.textContent='پخش‌کننده ذکر در دسترس نیست.';if(onDone)onDone(false);return}
- let settled=false,watchdog=0,fallbackStarted=false;
+ let settled=false,watchdog=0,fallbackStarted=false,playStartedAt=0;
  const finish=(ok,message)=>{
   if(settled)return;settled=true;clearTimeout(watchdog);
-  a.onended=null;a.onerror=null;a.onloadedmetadata=null;
+  a.onended=null;a.onerror=null;a.onplaying=null;
   if(st){st.className=ok?'rakatStatus good':'rakatStatus';st.textContent=message}
   if(typeof onDone==='function')onDone(ok);
  };
- const speakOnDevice=(reason)=>{
+ const speakOnDevice=()=>{
   if(settled||fallbackStarted)return;fallbackStarted=true;clearTimeout(watchdog);
-  a.pause();a.removeAttribute('src');a.load();
+  a.onended=null;a.onerror=null;a.onplaying=null;a.pause();a.removeAttribute('src');a.load();
   if(!('speechSynthesis'in window)||typeof SpeechSynthesisUtterance==='undefined'){
-   finish(false,'ذکر پخش نشد؛ صدای اینترنتی در دسترس نبود و موتور گفتار گوشی نیز پشتیبانی نمی‌شود.');return;
+   finish(false,'ذکر پخش نشد؛ صدای آنلاین در دسترس نبود و موتور گفتار گوشی نیز فعال نیست.');return;
   }
   try{
    speechSynthesis.cancel();
    const utterance=new SpeechSynthesisUtterance(text);
-   utterance.lang='ar-SA';utterance.rate=.82;utterance.pitch=1;utterance.volume=1;
+   utterance.lang='ar-SA';utterance.rate=.78;utterance.pitch=1;utterance.volume=1;
    const voices=speechSynthesis.getVoices()||[];
    const arabic=voices.find(v=>/^ar([_-]|$)/i.test(v.lang));
    if(arabic)utterance.voice=arabic;
-   utterance.onstart=()=>{if(st){st.className='rakatStatus';st.textContent='در حال پخش ذکر با موتور گفتار گوشی…'}};
-   utterance.onend=()=>finish(true,'ذکر با صدای گوشی پخش شد.');
-   utterance.onerror=(e)=>finish(false,'ذکر پخش نشد؛ خطای موتور گفتار گوشی: '+(e&&e.error?e.error:'نامشخص')+'. زبان عربی را در تنظیمات تبدیل متن به گفتار نصب/فعال کنید.');
+   let began=false;
+   utterance.onstart=()=>{began=true;if(st){st.className='rakatStatus';st.textContent='در حال پخش ذکر با صدای گوشی…'}};
+   utterance.onend=()=>finish(began,began?'ذکر با موتور گفتار گوشی به پایان رسید.':'ذکر توسط موتور گفتار آغاز نشد.');
+   utterance.onerror=e=>finish(false,'ذکر پخش نشد؛ خطای موتور گفتار: '+(e&&e.error?e.error:'نامشخص')+'. زبان عربی گوشی را بررسی کنید.');
    speechSynthesis.speak(utterance);
-   watchdog=window.setTimeout(()=>{if(!settled){speechSynthesis.cancel();finish(false,'موتور گفتار گوشی تا ۱۵ ثانیه پاسخی نداد؛ ذکر پخش نشد.')}},15000);
-  }catch(e){finish(false,'اجرای موتور گفتار گوشی ناموفق بود: '+(e&&e.message?e.message:'خطای ناشناخته'))}
+   watchdog=window.setTimeout(()=>{if(!settled){speechSynthesis.cancel();finish(false,'پخش ذکر توسط موتور گفتار در زمان مقرر کامل نشد؛ این مرحله ناموفق است.')}},18000);
+  }catch(e){finish(false,'اجرای صدای گوشی ناموفق بود: '+(e&&e.message?e.message:'خطای ناشناخته'))}
  };
- a.pause();a.removeAttribute('src');a.load();
- a.onended=()=>finish(true,'ذکر صوتی پخش شد.');
- a.onerror=()=>speakOnDevice('audio-error');
+ // Remove old handlers BEFORE stopping/resetting the previous phrase, so a stale onended
+ // event can never be mistaken for completion of this phrase.
+ a.onended=null;a.onerror=null;a.onplaying=null;a.pause();a.removeAttribute('src');a.load();
+ a.onplaying=()=>{playStartedAt=Date.now()};
+ a.onended=()=>{
+  const elapsed=playStartedAt?Date.now()-playStartedAt:0;
+  // Empty/failed TTS responses can end almost immediately; do not count those as spoken.
+  if(elapsed<1100){speakOnDevice();return}
+  finish(true,'ذکر صوتی به پایان رسید.');
+ };
+ a.onerror=()=>speakOnDevice();
  a.src='https://translate.google.com/translate_tts?ie=UTF-8&tl=ar&client=tw-ob&q='+encodeURIComponent(text);
  a.load();
+ if(st){st.className='rakatStatus';st.textContent='در حال دریافت صدای ذکر…'}
  const playPromise=a.play();
- if(playPromise&&playPromise.catch)playPromise.catch(()=>speakOnDevice('play-rejected'));
- watchdog=window.setTimeout(()=>{if(!settled&&!fallbackStarted){a.pause();speakOnDevice('network-timeout')}},9000);
- if(st){st.className='rakatStatus';st.textContent='در حال دریافت صدای ذکر از منبع آنلاین…'}
+ if(playPromise&&playPromise.catch)playPromise.catch(()=>speakOnDevice());
+ watchdog=window.setTimeout(()=>{if(!settled&&!fallbackStarted)speakOnDevice()},10000);
 }
 function rakatSpeak(after){
  const toggle=document.getElementById('rakatVoiceToggle'),st=document.getElementById('rakatStatus'),audio=document.getElementById('rakatAudio');
@@ -446,28 +455,27 @@ function rakatUndo(){if(rakatSajdaCount>0){rakatSajdaCount--;rakatRunning=true;d
 function rakatReset(){rakatSajdaCount=0;rakatRunning=false;rakatLastTouch=0;document.getElementById('rakat').classList.remove('rakat-running');rakatStart()}
 (()=>{const area=document.getElementById('rakatTouchArea');if(!area)return;area.addEventListener('pointerup',e=>{if(e.target.closest('button,a,input,select,label'))return;e.preventDefault();rakatRegisterTouch()});area.addEventListener('contextmenu',e=>e.preventDefault());document.getElementById('rakatUndo').addEventListener('click',rakatUndo);document.getElementById('rakatReset').addEventListener('click',rakatReset);document.getElementById('rakatTestVoice').addEventListener('click',()=>{
  const test=document.getElementById('rakatTestStatus'),main=document.getElementById('rakatStatus'),audio=document.getElementById('rakatAudio');
- const say=(message)=>{if(test)test.textContent=message;if(main){main.className='rakatStatus';main.textContent=message}};
- if(test)test.textContent='مرحله ۱ از ۳: در حال پخش فایل الله‌اکبر…';
- if(!audio){say('فایل صوتی تکبیر پیدا نشد.');return}
- audio.pause();audio.currentTime=0;audio.volume=1;
+ const say=message=>{if(test)test.textContent=message;if(main){main.className='rakatStatus';main.textContent=message}};
+ if(!audio){say('آزمایش ناموفق: فایل تکبیر پیدا نشد.');return}
  let finished=false,watchdog=0;
- const stop=(message)=>{if(finished)return;finished=true;clearTimeout(watchdog);audio.onended=null;audio.onerror=null;say(message)};
- const playFirstPhrase=()=>{
+ const stop=message=>{if(finished)return;finished=true;clearTimeout(watchdog);audio.onended=null;audio.onerror=null;say(message)};
+ const phrase=(number,label,spokenText,next)=>{
   if(finished)return;
-  say('مرحله ۲ از ۳: تکبیر تمام شد؛ اکنون ذکر استغفار پخش می‌شود…');
-  rakatPlayPhrase('أستغفر الله ربي وأتوب إليه',ok=>{
-   if(!ok){stop('آزمایش ناموفق: ذکر استغفار پخش نشد. متن خطای پخش در وضعیت پایین صفحه آمده است.');return}
-   say('مرحله ۳ از ۳: اکنون ذکر برخاستن پخش می‌شود…');
-   rakatPlayPhrase('بحول الله وقوته أقوم وأقعد',ok2=>{
-    stop(ok2?'آزمایش کامل شد: تکبیر و هر دو ذکر پخش شدند.':'آزمایش ناقص: ذکر برخاستن پخش نشد.');
-   });
+  say('مرحله '+number+' از ۳: '+label+'؛ لطفاً تا پایان صدا صبر کنید…');
+  rakatPlayPhrase(spokenText,ok=>{
+   if(finished)return;
+   if(!ok){stop('آزمایش ناموفق: '+label+' پخش نشد. برای جزئیات، پیام وضعیت پایین صفحه را بخوانید.');return}
+   if(next)next();
   });
  };
- audio.onended=playFirstPhrase;
- audio.onerror=()=>stop('آزمایش ناموفق: فایل صوتی الله‌اکبر باز نشد.');
+ say('مرحله ۱ از ۳: در حال پخش الله‌اکبر…');
+ audio.pause();audio.currentTime=0;audio.volume=1;
+ audio.onended=()=>phrase(2,'ذکر استغفار','أستغفر الله ربي وأتوب إليه',()=>phrase(3,'ذکر برخاستن','بحول الله وقوته أقوم وأقعد',()=>stop('آزمایش کامل شد: هر سه فایل/گفتار به پایان رسیدند.')));
+ audio.onerror=()=>stop('آزمایش ناموفق: فایل الله‌اکبر باز نشد.');
  const promise=audio.play();
- if(promise&&promise.catch)promise.catch(()=>stop('آزمایش ناموفق: پخش فایل الله‌اکبر توسط مرورگر مسدود شد.'));
- watchdog=window.setTimeout(()=>{if(!finished)stop('پخش فایل تکبیر پایان نیافت؛ آزمایش متوقف شد و ذکر بعدی اجرا نشد.')},12000);
+ if(promise&&promise.catch)promise.catch(()=>stop('آزمایش ناموفق: پخش الله‌اکبر توسط مرورگر مسدود شد.'));
+ watchdog=window.setTimeout(()=>{if(!finished)stop('آزمایش متوقف شد: یکی از صداها در زمان مقرر به پایان نرسید؛ مرحله بعدی پخش نشد.')},45000);
+});
 });rakatRender()})();
 
 </script>
