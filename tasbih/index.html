@@ -379,7 +379,7 @@ function rakatSpeak(phrase='اللَّهُ أَكْبَرُ'){
   const voice=voices.find(v=>/^ar([-_]|$)/i.test(v.lang))||voices.find(v=>/^fa([-_]|$)/i.test(v.lang));
   if(voice)u.voice=voice;
   u.onstart=()=>{if(st&&!rakatRunning)st.textContent='صدای مکبر در حال پخش است…'};
-  u.onend=()=>{if(st&&!rakatRunning)st.textContent='آزمایش صدا با موفقیت پخش شد.'};
+  u.onend=()=>{if(st&&!rakatRunning)st.textContent='درخواست گفتار پایان یافت؛ اگر صدا نشنیدید، موتور گفتار گوشی صدایی پخش نکرده است.'};
   u.onerror=(e)=>{if(st)st.textContent='پخش مکبر ناموفق بود ('+(e.error||'خطای موتور گفتار')+'). موتور گفتار و صدای رسانه گوشی را بررسی کنید.'};
   synth.resume();
   synth.speak(u);
