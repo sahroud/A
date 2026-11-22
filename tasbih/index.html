@@ -71,7 +71,7 @@ body{font-size:17px}.brand{font-size:20px}.brand small{font-size:13px}.btn{font-
 <label class="settingRow"><span><b>اذان مغرب</b></span><input type="checkbox" id="adhanMaghrib" checked onchange="savePrayerSettings()"></label>
 <h3>🔔 یادآوری پیش از زمان‌ها</h3><div class="settingsHint">برای هر رویداد جداگانه اعلان را فعال و زمان آن را انتخاب کنید.</div>
 <div class="settingRow"><span><b>طلوع آفتاب</b><small>اعلان پیش از زمان</small></span><div style="display:flex;align-items:center;gap:8px"><input type="checkbox" id="notifySunrise" onchange="savePrayerSettings()"><select id="notifyLeadSunrise" aria-label="دقیقه پیش از طلوع آفتاب" onchange="savePrayerSettings()" style="width:92px;margin:0"><option value="10">۱۰ دقیقه</option><option value="5" selected>۵ دقیقه</option><option value="2">۲ دقیقه</option><option value="1">۱ دقیقه</option></select></div></div><div class="settingRow"><span><b>غروب آفتاب</b><small>اعلان پیش از زمان</small></span><div style="display:flex;align-items:center;gap:8px"><input type="checkbox" id="notifySunset" onchange="savePrayerSettings()"><select id="notifyLeadSunset" aria-label="دقیقه پیش از غروب آفتاب" onchange="savePrayerSettings()" style="width:92px;margin:0"><option value="10">۱۰ دقیقه</option><option value="5" selected>۵ دقیقه</option><option value="2">۲ دقیقه</option><option value="1">۱ دقیقه</option></select></div></div><div class="settingRow"><span><b>اذان صبح</b><small>اعلان پیش از زمان</small></span><div style="display:flex;align-items:center;gap:8px"><input type="checkbox" id="notifyFajr" onchange="savePrayerSettings()"><select id="notifyLeadFajr" aria-label="دقیقه پیش از اذان صبح" onchange="savePrayerSettings()" style="width:92px;margin:0"><option value="10">۱۰ دقیقه</option><option value="5" selected>۵ دقیقه</option><option value="2">۲ دقیقه</option><option value="1">۱ دقیقه</option></select></div></div><div class="settingRow"><span><b>اذان ظهر</b><small>اعلان پیش از زمان</small></span><div style="display:flex;align-items:center;gap:8px"><input type="checkbox" id="notifyDhuhr" onchange="savePrayerSettings()"><select id="notifyLeadDhuhr" aria-label="دقیقه پیش از اذان ظهر" onchange="savePrayerSettings()" style="width:92px;margin:0"><option value="10">۱۰ دقیقه</option><option value="5" selected>۵ دقیقه</option><option value="2">۲ دقیقه</option><option value="1">۱ دقیقه</option></select></div></div><div class="settingRow"><span><b>اذان عصر</b><small>اعلان پیش از زمان</small></span><div style="display:flex;align-items:center;gap:8px"><input type="checkbox" id="notifyAsr" onchange="savePrayerSettings()"><select id="notifyLeadAsr" aria-label="دقیقه پیش از اذان عصر" onchange="savePrayerSettings()" style="width:92px;margin:0"><option value="10">۱۰ دقیقه</option><option value="5" selected>۵ دقیقه</option><option value="2">۲ دقیقه</option><option value="1">۱ دقیقه</option></select></div></div><div class="settingRow"><span><b>اذان مغرب</b><small>اعلان پیش از زمان</small></span><div style="display:flex;align-items:center;gap:8px"><input type="checkbox" id="notifyMaghrib" onchange="savePrayerSettings()"><select id="notifyLeadMaghrib" aria-label="دقیقه پیش از اذان مغرب" onchange="savePrayerSettings()" style="width:92px;margin:0"><option value="10">۱۰ دقیقه</option><option value="5" selected>۵ دقیقه</option><option value="2">۲ دقیقه</option><option value="1">۱ دقیقه</option></select></div></div>
-<button class="btn light" onclick="requestPrayerNotifications()">اجازه اعلان‌های گوشی</button><button class="btn light" onclick="locateForPrayer()">به‌روزرسانی موقعیت و اوقات شرعی</button><button class="btn light" onclick="testReminderBell()">آزمایش صدای ناقوس یادآوری</button><button class="btn light" onclick="testAdhan()">پخش آزمایشی اذان کامل</button><audio id="adhanAudio" controls preload="auto" src="https://dl.namaz.ir/s/c/other/azan/rahim_moazenzadeh.mp3" style="width:100%;margin:10px 0"></audio>
+<button class="btn light" onclick="requestPrayerNotifications()">اجازه اعلان‌های گوشی</button><button class="btn light" onclick="locateForPrayer()">به‌روزرسانی موقعیت و اوقات شرعی</button><button class="btn light" onclick="testReminderBell()">آزمایش صدای ناقوس یادآوری</button><button class="btn light" onclick="testAdhan()">پخش آزمایشی اذان کامل</button><audio id="adhanAudio" controls preload="metadata" src="https://dl.namaz.ir/s/c/other/azan/rahim_moazenzadeh.mp3" style="width:100%;margin:10px 0"></audio>
 <div id="notificationStatus" class="status">برای نمایش اعلان، یک بار اجازه اعلان‌های گوشی را فعال کنید.</div><div id="adhanStatus" class="status">اذان پیش‌فرض برنامه انتخاب شده است.</div>
 <p class="settingsHint">برای اجرای زمان‌بندی، برنامه و مرورگر باید فعال بمانند. اندروید ممکن است اجرای صفحه در پس‌زمینه یا هنگام قفل را متوقف کند؛ اعلان در این حالت تضمین‌شده نیست.</p></div><div class="panel settingsPanel"><h3>📖 تنظیمات قرآن</h3><label class="settingField">اندازه متن عربی<select id="quranFontSize" onchange="applyQuranFontSize()"><option value="29">معمولی</option><option value="33" selected>بزرگ</option><option value="37">خیلی بزرگ</option></select></label><label class="settingField">سرعت پیش‌فرض تلاوت<select id="quranSpeedSetting" onchange="applyQuranSpeed()"><option value="1">۱ برابر</option><option value="1.5">۱٫۵ برابر</option><option value="2">۲ برابر</option></select></label></div><div class="panel settingsPanel"><h3>📜 تنظیمات نهج‌البلاغه</h3><label class="settingField">اندازه متن عربی و ترجمه<select id="nahjFontSize" onchange="applyNahjFontSize()"><option value="18">معمولی</option><option value="21" selected>بزرگ</option><option value="24">خیلی بزرگ</option></select></label></div><div class="panel settingsPanel"><h3>🧭 قبله‌نما</h3><p class="settingsHint">موقعیت مکانی برای محاسبه جهت قبله استفاده می‌شود. اگر گوشی حسگر قطب‌نما نداشته باشد، جهت پیکان با چرخاندن گوشی تغییر نمی‌کند.</p><button class="btn light" onclick="getGPS()">به‌روزرسانی موقعیت قبله</button></div></section>
 <section id="quran" class="page"><button class="btn light back" onclick="page('home')">↩ بازگشت به برنامه</button><h2 class="title">قرآن کریم</h2><div class="panel quranPanel">
@@ -252,7 +252,7 @@ function sendPrayerNotification(title,body,tag){
  else try{new Notification(title,{body,tag})}catch(e){}
 }
 function checkAdhanTime(){
- if(prayerLat===null)return;
+ if(prayerLat===null||!prayerEvents||!Object.keys(prayerEvents).length)return;
  let now=prayerClock(),nowParts=now.split(':').map(Number),nowMinutes=nowParts[0]*60+nowParts[1],day=prayerDayKey();
  const events=[
   {key:'Sunrise',label:'طلوع آفتاب',adhan:false},
@@ -275,16 +275,39 @@ function checkAdhanTime(){
    }
   }
   if(ev.adhan&&$('adhanEnabled').checked&&$(ev.adhanId).checked){
-   let diff=nowMinutes-eventMinutes,stamp=day+'-'+ev.key;
-   if(diff>=0&&diff<=1&&localStorage.getItem('sahroud_adhan_'+stamp)!=='1'){
-    localStorage.setItem('sahroud_adhan_'+stamp,'1');lastPlayed=stamp;localStorage.setItem('sahroud_last_adhan',stamp);
-    let audio=$('adhanAudio');audio.currentTime=0;
-    audio.play().then(()=>$('adhanStatus').textContent='اذان '+ev.label+' در وقت مقرر پخش شد.').catch(()=>$('adhanStatus').textContent='مرورگر اجازه پخش خودکار نداد؛ برنامه را باز نگه دارید و یک بار صفحه را لمس کنید.');
+   const stamp=day+'-'+ev.key,diff=nowMinutes-eventMinutes;
+   if(diff>=0&&diff<=2&&localStorage.getItem('sahroud_adhan_'+stamp)!=='1'&&!window._sahroudAdhanStarting){
+    const audio=$('adhanAudio');if(!audio)continue;
+    window._sahroudAdhanStarting=true;audio.muted=false;audio.volume=1;
+    if(!audio.src||!audio.src.includes('rahim_moazenzadeh.mp3'))audio.src=ADHAN_AUDIO_URL;
+    try{audio.currentTime=0}catch(e){}
+    const p=audio.play();
+    if(p&&p.then)p.then(()=>{
+     localStorage.setItem('sahroud_adhan_'+stamp,'1');lastPlayed=stamp;localStorage.setItem('sahroud_last_adhan',stamp);
+     $('adhanStatus').textContent='اذان '+ev.label+' در وقت مقرر پخش شد.';
+    }).catch(()=>{
+     $('adhanStatus').textContent='پخش خودکار مسدود شد؛ یک بار دکمه پخش آزمایشی اذان را لمس کنید تا پخش فعال شود.';
+    }).finally(()=>{window._sahroudAdhanStarting=false});
+    else{localStorage.setItem('sahroud_adhan_'+stamp,'1');window._sahroudAdhanStarting=false}
    }
   }
  }
 }
-function testAdhan(){let a=$('adhanAudio');if(!a){$('adhanStatus').textContent='پخش‌کننده اذان پیدا نشد.';return}a.pause();a.muted=false;a.volume=1;try{a.currentTime=0}catch(e){}a.onplaying=()=>{$('adhanStatus').textContent='اذان کامل در حال پخش است؛ نوار کنترل زیر را برای بررسی ادامه صدا ببینید.'};a.onended=()=>{$('adhanStatus').textContent='فایل اذان تا انتها پخش شد.'};a.onerror=()=>{$('adhanStatus').textContent='خطا در دریافت یا رمزگشایی فایل اذان؛ اتصال اینترنت را بررسی کنید.'};a.load();const p=a.play();if(p&&p.then)p.then(()=>{const d=Number.isFinite(a.duration)?Math.round(a.duration):0;$('adhanStatus').textContent='پخش آغاز شد'+(d?'؛ مدت فایل '+Math.floor(d/60)+' دقیقه و '+(d%60)+' ثانیه':'؛ در انتظار دریافت مدت فایل')+'. اگر فقط تکبیر اول شنیده شد، زمان‌نمای صوت را بررسی کنید.'}).catch(()=>{$('adhanStatus').textContent='پخش مسدود شد؛ دکمه پخش را مستقیماً روی نوار صوتی لمس کنید.'})}
+function testAdhan(){
+ const a=$('adhanAudio'),st=$('adhanStatus');
+ if(!a){if(st)st.textContent='پخش‌کننده اذان پیدا نشد.';return}
+ a.pause();a.src=ADHAN_AUDIO_URL;a.load();a.muted=false;a.volume=1;
+ a.onplaying=()=>{if(st)st.textContent='صدای اذان در حال پخش است.'};
+ a.onended=()=>{if(st)st.textContent='فایل اذان تا انتها پخش شد.'};
+ a.onerror=()=>{if(st)st.textContent='فایل اذان دریافت نشد؛ اتصال اینترنت یا دسترسی به سرور namaz.ir را بررسی کنید.'};
+ try{a.currentTime=0}catch(e){}
+ const p=a.play();
+ if(p&&p.then)p.then(()=>{
+  window._sahroudAdhanUnlocked=true;
+  const d=Number.isFinite(a.duration)?Math.round(a.duration):0;
+  if(st)st.textContent='پخش آزمایشی آغاز شد'+(d?'؛ مدت فایل '+Math.floor(d/60)+' دقیقه و '+(d%60)+' ثانیه':'')+'.';
+ }).catch(()=>{if(st)st.textContent='مرورگر پخش را مسدود کرد؛ نوار صوتی را مستقیماً لمس کنید.'});
+}
 function startAdhanScheduler(){if(prayerLat===null)return;if(prayerCheck)clearInterval(prayerCheck);checkAdhanTime();prayerCheck=setInterval(checkAdhanTime,5000)}
 function toggleAdhan(){let on=$('adhanEnabled').checked;savePrayerSettings();if(on){$('adhanStatus').textContent='پخش خودکار اذان فعال شد.';if(prayerLat===null)locateForPrayer();else startAdhanScheduler()}else $('adhanStatus').textContent='پخش خودکار اذان غیرفعال شد.'}
 function setTasbihSound(on){clickSoundOn=!!on;localStorage.setItem('sahroud_tasbih_sound',clickSoundOn?'true':'false');if(clickSoundOn)woodClick()}
@@ -301,7 +324,13 @@ function applyQuranFontSize(){let v=Number($('quranFontSize').value)||33;documen
 function applyNahjFontSize(){let v=Number($('nahjFontSize').value)||21;document.documentElement.style.setProperty('--nahj-font-size',v+'px');localStorage.setItem('sahroud_nahj_font',String(v))}
 function applyQuranSpeed(){let v=Number($('quranSpeedSetting').value)||1;localStorage.setItem('sahroud_quran_speed',String(v));if(typeof setSpeed==='function')setSpeed(v)}
 let adhanUnlockAttempted=false;
-window.addEventListener('pointerdown',()=>{if(adhanUnlockAttempted)return;adhanUnlockAttempted=true;let a=$('adhanAudio');if(!a)return;let vol=a.volume;a.volume=0;a.play().then(()=>{a.pause();a.currentTime=0;a.volume=vol;$('adhanStatus').textContent='صدای اذان برای پخش خودکار آماده شد.'}).catch(()=>{a.volume=vol})},{once:true});
+window.addEventListener('pointerdown',()=>{
+ if(adhanUnlockAttempted)return;adhanUnlockAttempted=true;
+ const a=$('adhanAudio');if(!a)return;
+ a.muted=false;a.volume=1;
+ const p=a.play();
+ if(p&&p.then)p.then(()=>{a.pause();try{a.currentTime=0}catch(e){}window._sahroudAdhanUnlocked=true;$('adhanStatus').textContent='پخش اذان برای زمان مقرر آماده شد.'}).catch(()=>{adhanUnlockAttempted=false});
+},{once:true});
 document.addEventListener('visibilitychange',()=>{if(!document.hidden)checkAdhanTime()});
 window.addEventListener('load',()=>{
  initSettings();getGPS();startCompass();$('adhanAudio').src=ADHAN_AUDIO_URL;initPrayerMethod();
