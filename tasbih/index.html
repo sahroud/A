@@ -84,7 +84,7 @@ body{font-size:17px}.brand{font-size:20px}.brand small{font-size:13px}.btn{font-
 <div class="actions"><button class="btn light" onclick="downloadAll()">ذخیره متن برای استفاده آفلاین</button></div><div class="progress" style="margin-top:12px"><i id="dlbar"></i></div><div id="qstatus" class="status">برای شروع، یک سوره یا جزء را انتخاب کنید.</div><div id="qcontent" class="quranContent"></div>
 </div></div></section>
 
-<section id="nahj" class="page"><button class="btn light back" onclick="page('home')">↩ بازگشت به برنامه</button><h2 class="title">نهج‌البلاغه</h2><div class="panel quranPanel"><div class="quranIntro">کلام امیرالمؤمنین علی (ع)</div><div class="nahjControls"><select id="nahjType" class="field" onchange="updateNahjRange();loadNahj()"><option value="khutba">خطبه‌ها</option><option value="nameh">نامه‌ها</option><option value="hekmat">حکمت‌ها</option></select><select id="nahjNumber" class="field" onchange="loadNahj()"></select></div><div id="nahjStatus" class="status">در حال آماده‌سازی…</div><div class="nahjTools" style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin:10px 0"><button class="btn light" onclick="saveNahjBookmark()">★ ذخیره این مطلب</button><button class="btn light" onclick="showNahjBookmarks()">مطالب ذخیره‌شده</button><input id="nahjSearch" class="field" placeholder="جست‌وجوی عبارت در نهج‌البلاغه…" style="grid-column:1/-1;min-width:0"><button class="btn gold" onclick="searchNahjSource()" style="grid-column:1/-1">جست‌وجو در متن کامل نهج‌البلاغه ↗</button></div><div id="nahjBookmarks" hidden class="status" style="text-align:right"></div><div id="nahjStatus" class="status">در حال آماده‌سازی…</div><div id="nahjContent"></div></div></section>
+<section id="nahj" class="page"><button class="btn light back" onclick="page('home')">↩ بازگشت به برنامه</button><h2 class="title">نهج‌البلاغه</h2><div class="panel quranPanel"><div class="quranIntro">کلام امیرالمؤمنین علی (ع)</div><div class="nahjControls"><select id="nahjType" class="field" onchange="updateNahjRange();loadNahj()"><option value="khutba">خطبه‌ها</option><option value="nameh">نامه‌ها</option><option value="hekmat">حکمت‌ها</option></select><select id="nahjNumber" class="field" onchange="loadNahj()"></select></div><div id="nahjStatus" class="status">در حال آماده‌سازی…</div><div class="nahjTools" style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin:10px 0"><button class="btn light" onclick="saveNahjBookmark()">★ ذخیره این مطلب</button><button class="btn light" onclick="showNahjBookmarks()">مطالب ذخیره‌شده</button><input id="nahjSearch" class="field" placeholder="جست‌وجوی عبارت در نهج‌البلاغه…" style="grid-column:1/-1;min-width:0"><button class="btn gold" onclick="searchNahjSource()" style="grid-column:1/-1">جست‌وجو در متن کامل نهج‌البلاغه ↗</button></div><div id="nahjBookmarks" hidden class="status" style="text-align:right"></div><div id="nahjContent"></div></div></section>
 <div id="miniAudio" style="display:none;position:fixed;bottom:10px;left:10px;right:10px;z-index:20;max-width:730px;margin:auto;background:#173d2c;color:#fff4dc;border:1px solid #c49a4a;border-radius:15px;padding:9px;box-shadow:0 5px 20px #0003;align-items:center;justify-content:space-between;gap:8px"><span id="miniAudioText" style="font-size:11px">تلاوت در حال پخش است</span><div style="display:flex;gap:6px"><button class="btn gold" onclick="page('quran')">بازگشت به قرآن</button><button class="btn light" onclick="stopAudio();$('miniAudio').style.display='none'">توقف</button></div></div>
 <div class="foot">تهیه‌کننده: احمد نوری · التماس دعا</div></main>
 <script>
@@ -312,8 +312,9 @@ function updateNahjRange(){
  $('nahjNumber').value='1';
 }
 function nahjUrl(t,n){
- const suffix=t==='khutba'?'-2':t==='hekmat'?'-3':'';
- return 'https://fa.balaghah.net/balagha/'+n+suffix+'/';
+ // Sermon 1 is the exceptional 1-2 slug; later sermons use their number.
+ const slug=t==='khutba'?(n===1?'1-2':String(n)):t==='nameh'?(String(n)+'-2'):(String(n)+'-3');
+ return 'https://fa.balaghah.net/balagha/'+slug+'/';
 }
 function saveNahjStudy(showMsg=false){
  const item={type:$('nahjType').value,number:Number($('nahjNumber').value)||1,savedAt:Date.now()};
@@ -377,7 +378,7 @@ const rakatFa=n=>Number(n).toLocaleString('fa-IR');
 function rakatPlayPhrase(text,onDone){
  const a=document.getElementById('rakatPhraseAudio'),st=document.getElementById('rakatStatus');
  if(!a){if(st)st.textContent='پخش‌کننده ذکر در دسترس نیست.';if(onDone)onDone(false);return}
- let settled=false,watchdog=0,fallbackStarted=false,playStartedAt=0;
+ let settled=false,watchdog=0,remoteStarted=false;
  const finish=(ok,message)=>{
   if(settled)return;settled=true;clearTimeout(watchdog);
   a.onended=null;a.onerror=null;a.onplaying=null;
@@ -385,12 +386,12 @@ function rakatPlayPhrase(text,onDone){
   if(typeof onDone==='function')onDone(ok);
  };
  const speakOnDevice=()=>{
-  if(settled||fallbackStarted)return;fallbackStarted=true;clearTimeout(watchdog);
-  a.onended=null;a.onerror=null;a.onplaying=null;a.pause();a.removeAttribute('src');a.load();
+  if(settled)return;
   if(!('speechSynthesis'in window)||typeof SpeechSynthesisUtterance==='undefined'){
-   finish(false,'ذکر پخش نشد؛ صدای آنلاین در دسترس نبود و موتور گفتار گوشی نیز فعال نیست.');return;
+   finish(false,'ذکر پخش نشد؛ موتور گفتار گوشی در دسترس نیست. اتصال اینترنت و صدای رسانه را بررسی کنید.');return;
   }
   try{
+   a.onended=null;a.onerror=null;a.onplaying=null;a.pause();a.removeAttribute('src');a.load();
    speechSynthesis.cancel();
    const utterance=new SpeechSynthesisUtterance(text);
    utterance.lang='ar-SA';utterance.rate=.78;utterance.pitch=1;utterance.volume=1;
@@ -398,30 +399,23 @@ function rakatPlayPhrase(text,onDone){
    const arabic=voices.find(v=>/^ar([_-]|$)/i.test(v.lang));
    if(arabic)utterance.voice=arabic;
    let began=false;
-   utterance.onstart=()=>{began=true;if(st){st.className='rakatStatus';st.textContent='در حال پخش ذکر با صدای گوشی…'}};
-   utterance.onend=()=>finish(began,began?'ذکر با موتور گفتار گوشی به پایان رسید.':'ذکر توسط موتور گفتار آغاز نشد.');
-   utterance.onerror=e=>finish(false,'ذکر پخش نشد؛ خطای موتور گفتار: '+(e&&e.error?e.error:'نامشخص')+'. زبان عربی گوشی را بررسی کنید.');
+   utterance.onstart=()=>{began=true;if(st){st.className='rakatStatus good';st.textContent='در حال پخش ذکر با صدای گوشی…'}};
+   utterance.onend=()=>finish(began,began?'ذکر با صدای گوشی پخش شد.':'موتور گفتار گوشی پخش ذکر را آغاز نکرد.');
+   utterance.onerror=()=>finish(false,'پخش ذکر با صدای گوشی ناموفق بود؛ موتور گفتار عربی را در تنظیمات گوشی فعال کنید.');
    speechSynthesis.speak(utterance);
-   watchdog=window.setTimeout(()=>{if(!settled){speechSynthesis.cancel();finish(false,'پخش ذکر توسط موتور گفتار در زمان مقرر کامل نشد؛ این مرحله ناموفق است.')}},18000);
-  }catch(e){finish(false,'اجرای صدای گوشی ناموفق بود: '+(e&&e.message?e.message:'خطای ناشناخته'))}
+   watchdog=window.setTimeout(()=>{if(!settled){speechSynthesis.cancel();finish(false,'پخش ذکر توسط موتور گفتار کامل نشد.')}},18000);
+  }catch(e){finish(false,'اجرای صدای گوشی ناموفق بود.')}
  };
- // Remove old handlers BEFORE stopping/resetting the previous phrase, so a stale onended
- // event can never be mistaken for completion of this phrase.
- a.onended=null;a.onerror=null;a.onplaying=null;a.pause();a.removeAttribute('src');a.load();
- a.onplaying=()=>{playStartedAt=Date.now()};
- a.onended=()=>{
-  const elapsed=playStartedAt?Date.now()-playStartedAt:0;
-  // Empty/failed TTS responses can end almost immediately; do not count those as spoken.
-  if(elapsed<1100){speakOnDevice();return}
-  finish(true,'ذکر صوتی به پایان رسید.');
- };
+ a.onended=()=>finish(true,'ذکر صوتی به پایان رسید.');
  a.onerror=()=>speakOnDevice();
+ a.onplaying=()=>{remoteStarted=true};
+ a.pause();a.removeAttribute('src');a.load();
  a.src='https://translate.google.com/translate_tts?ie=UTF-8&tl=ar&client=tw-ob&q='+encodeURIComponent(text);
  a.load();
  if(st){st.className='rakatStatus';st.textContent='در حال دریافت صدای ذکر…'}
  const playPromise=a.play();
  if(playPromise&&playPromise.catch)playPromise.catch(()=>speakOnDevice());
- watchdog=window.setTimeout(()=>{if(!settled&&!fallbackStarted)speakOnDevice()},10000);
+ watchdog=window.setTimeout(()=>{if(!settled){a.pause();speakOnDevice()}},9000);
 }
 function rakatSpeak(after){
  const toggle=document.getElementById('rakatVoiceToggle'),st=document.getElementById('rakatStatus'),audio=document.getElementById('rakatAudio');
