@@ -409,27 +409,38 @@ initSurahs();buildBeads();changeDhikr();setSpeed(1);renderSurahSidebar();if('ser
 let rakatSajdaCount=0,rakatTotal=4,rakatRunning=false,rakatLastTouch=0;
 const rakatFa=n=>Number(n).toLocaleString('fa-IR');
 function rakatPlayPhrase(text,onDone){
- const a=document.getElementById('rakatPhraseAudio'),st=document.getElementById('rakatStatus');
- let settled=false,watchdog=0;
- const finish=(ok,message)=>{if(settled)return;settled=true;clearTimeout(watchdog);if(a){a.onended=null;a.onerror=null;a.onplaying=null}if(st){st.className=ok?'rakatStatus good':'rakatStatus';st.textContent=message}if(typeof onDone==='function')onDone(ok)};
- const deviceSpeech=()=>{
-  if(settled)return;
-  if(!('speechSynthesis'in window)||typeof SpeechSynthesisUtterance==='undefined'){finish(false,'صدای ذکر در دسترس نیست؛ موتور گفتار عربی گوشی را فعال کنید.');return}
-  try{
-   if(a){a.pause();a.removeAttribute('src');a.load()}
-   speechSynthesis.cancel();
-   const u=new SpeechSynthesisUtterance(text);u.lang='ar-SA';u.rate=.82;u.pitch=1;u.volume=1;
-   const voices=speechSynthesis.getVoices()||[],v=voices.find(x=>/^ar([_-]|$)/i.test(x.lang));if(v)u.voice=v;
-   let started=false;
-   u.onstart=()=>{started=true;if(st){st.className='rakatStatus good';st.textContent='در حال خواندن الله‌اکبر و ذکر به‌صورت پیوسته…'}};
-   u.onend=()=>finish(started,started?'الله‌اکبر و ذکر با هم پخش شد.':'موتور گفتار گوشی پخش را آغاز نکرد.');
-   u.onerror=()=>finish(false,'پخش ذکر ناموفق بود؛ زبان عربی موتور گفتار گوشی را بررسی کنید.');
-   speechSynthesis.speak(u);
-   watchdog=window.setTimeout(()=>{if(!settled){speechSynthesis.cancel();finish(false,'خواندن ذکر کامل نشد؛ موتور گفتار گوشی را بررسی کنید.')}},22000);
-  }catch(e){finish(false,'اجرای صدای ذکر در گوشی ناموفق بود.')}
+ const st=document.getElementById('rakatStatus');
+ let settled=false,watchdog=0,index=0,started=false,parts=[];
+ const finish=(ok,message)=>{
+  if(settled)return;settled=true;clearTimeout(watchdog);
+  if(st){st.className=ok?'rakatStatus good':'rakatStatus';st.textContent=message}
+  if(typeof onDone==='function')onDone(ok);
  };
- if(st){st.className='rakatStatus';st.textContent='در حال آماده‌سازی پخش پیوسته ذکر…'}
- deviceSpeech();
+ if(st){st.className='rakatStatus';st.textContent='در حال آماده‌سازی پخش پیوسته تکبیر و ذکر…'}
+ if(!('speechSynthesis'in window)||typeof SpeechSynthesisUtterance==='undefined'){
+  finish(false,'صدای ذکر در دسترس نیست؛ موتور گفتار عربی گوشی را فعال کنید.');return;
+ }
+ // Separate each sentence: some Android TTS engines truncate long Arabic utterances.
+ parts=String(text).split(/[.。؛;!؟]+/).map(x=>x.trim()).filter(Boolean);
+ if(!parts.length){finish(false,'متن ذکر برای پخش موجود نیست.');return}
+ try{
+  speechSynthesis.cancel();
+  const voices=speechSynthesis.getVoices()||[];
+  const voice=voices.find(x=>/^ar([_-]|$)/i.test(x.lang))||null;
+  const speakNext=()=>{
+   if(settled)return;
+   if(index>=parts.length){finish(started,'تکبیر و تمام ذکرهای این مرحله پخش شد.');return}
+   const u=new SpeechSynthesisUtterance(parts[index++]);
+   u.lang='ar-SA';u.rate=.78;u.pitch=1;u.volume=1;
+   if(voice)u.voice=voice;
+   u.onstart=()=>{started=true;if(st){st.className='rakatStatus good';st.textContent='در حال خواندن تکبیر و ذکر، بخش '+index+' از '+parts.length+'…'}};
+   u.onend=()=>{window.setTimeout(speakNext,180)};
+   u.onerror=()=>finish(false,'خواندن یکی از بخش‌های ذکر ناموفق بود؛ موتور گفتار عربی گوشی را بررسی کنید.');
+   speechSynthesis.speak(u);
+  };
+  watchdog=window.setTimeout(()=>{if(!settled){speechSynthesis.cancel();finish(false,'پخش ذکر کامل نشد؛ موتور گفتار گوشی را بررسی کنید.')}},35000);
+  window.setTimeout(speakNext,180);
+ }catch(e){finish(false,'اجرای صدای ذکر در گوشی ناموفق بود.')}
 }
 function rakatSpeak(after){
  const toggle=document.getElementById('rakatVoiceToggle'),st=document.getElementById('rakatStatus'),audio=document.getElementById('rakatAudio');
