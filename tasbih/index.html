@@ -433,7 +433,7 @@ function rakatRender(){
  if(display){display.classList.toggle('sajda-one',rakatRunning&&partial===1);display.classList.toggle('sajda-two',rakatRunning&&partial===0&&rakatSajdaCount>0);}
  document.getElementById('rakatBigNumber').textContent=rakatFa(shown);
  document.getElementById('rakatBigLabel').textContent='رکعت';
- document.getElementById('rakatSubLabel').textContent=completed>=rakatTotal?'نماز کامل شد':rakatRunning?'سجده '+(partial?'اول':'دوم')+' رکعت '+rakatFa(current):'آماده شروع نماز';
+ document.getElementById('rakatSubLabel').textContent=completed>=rakatTotal?'نماز کامل شد':rakatSajdaCount===0?'آماده شروع نماز':rakatRunning?'سجده '+(partial?'اول':'دوم')+' رکعت '+rakatFa(current):'آماده شروع نماز';
 }
 function rakatStart(){const selected=Number(document.getElementById('rakatPrayerTotal').value)||4;if(rakatRunning&&rakatTotal===selected)return;rakatTotal=selected;rakatSajdaCount=0;rakatRunning=true;rakatLastTouch=0;rakatUnlockAudio();document.getElementById('rakat').classList.add('rakat-running');document.getElementById('rakatStatus').className='rakatStatus good';document.getElementById('rakatStatus').textContent='شمارش خودکار آغاز شد؛ برای هر سجده یک بار روی مهر لمس کنید.';rakatRender()}
 function rakatRegisterTouch(){
