@@ -73,7 +73,18 @@ body{font-size:17px}.brand{font-size:20px}.brand small{font-size:13px}.btn{font-
 <div class="settingRow"><span><b>طلوع آفتاب</b><small>اعلان پیش از زمان</small></span><div style="display:flex;align-items:center;gap:8px"><input type="checkbox" id="notifySunrise" onchange="savePrayerSettings()"><select id="notifyLeadSunrise" aria-label="دقیقه پیش از طلوع آفتاب" onchange="savePrayerSettings()" style="width:92px;margin:0"><option value="10">۱۰ دقیقه</option><option value="5" selected>۵ دقیقه</option><option value="2">۲ دقیقه</option><option value="1">۱ دقیقه</option></select></div></div><div class="settingRow"><span><b>غروب آفتاب</b><small>اعلان پیش از زمان</small></span><div style="display:flex;align-items:center;gap:8px"><input type="checkbox" id="notifySunset" onchange="savePrayerSettings()"><select id="notifyLeadSunset" aria-label="دقیقه پیش از غروب آفتاب" onchange="savePrayerSettings()" style="width:92px;margin:0"><option value="10">۱۰ دقیقه</option><option value="5" selected>۵ دقیقه</option><option value="2">۲ دقیقه</option><option value="1">۱ دقیقه</option></select></div></div><div class="settingRow"><span><b>اذان صبح</b><small>اعلان پیش از زمان</small></span><div style="display:flex;align-items:center;gap:8px"><input type="checkbox" id="notifyFajr" onchange="savePrayerSettings()"><select id="notifyLeadFajr" aria-label="دقیقه پیش از اذان صبح" onchange="savePrayerSettings()" style="width:92px;margin:0"><option value="10">۱۰ دقیقه</option><option value="5" selected>۵ دقیقه</option><option value="2">۲ دقیقه</option><option value="1">۱ دقیقه</option></select></div></div><div class="settingRow"><span><b>اذان ظهر</b><small>اعلان پیش از زمان</small></span><div style="display:flex;align-items:center;gap:8px"><input type="checkbox" id="notifyDhuhr" onchange="savePrayerSettings()"><select id="notifyLeadDhuhr" aria-label="دقیقه پیش از اذان ظهر" onchange="savePrayerSettings()" style="width:92px;margin:0"><option value="10">۱۰ دقیقه</option><option value="5" selected>۵ دقیقه</option><option value="2">۲ دقیقه</option><option value="1">۱ دقیقه</option></select></div></div><div class="settingRow"><span><b>اذان عصر</b><small>اعلان پیش از زمان</small></span><div style="display:flex;align-items:center;gap:8px"><input type="checkbox" id="notifyAsr" onchange="savePrayerSettings()"><select id="notifyLeadAsr" aria-label="دقیقه پیش از اذان عصر" onchange="savePrayerSettings()" style="width:92px;margin:0"><option value="10">۱۰ دقیقه</option><option value="5" selected>۵ دقیقه</option><option value="2">۲ دقیقه</option><option value="1">۱ دقیقه</option></select></div></div><div class="settingRow"><span><b>اذان مغرب</b><small>اعلان پیش از زمان</small></span><div style="display:flex;align-items:center;gap:8px"><input type="checkbox" id="notifyMaghrib" onchange="savePrayerSettings()"><select id="notifyLeadMaghrib" aria-label="دقیقه پیش از اذان مغرب" onchange="savePrayerSettings()" style="width:92px;margin:0"><option value="10">۱۰ دقیقه</option><option value="5" selected>۵ دقیقه</option><option value="2">۲ دقیقه</option><option value="1">۱ دقیقه</option></select></div></div>
 <button class="btn light" onclick="requestPrayerNotifications()">اجازه اعلان‌های گوشی</button><button class="btn light" onclick="locateForPrayer()">به‌روزرسانی موقعیت و اوقات شرعی</button><button class="btn light" onclick="testReminderBell()">آزمایش صدای ناقوس یادآوری</button><button class="btn light" onclick="testAdhan()">پخش آزمایشی اذان کامل</button><audio id="adhanAudio" controls preload="metadata" src="https://dl.namaz.ir/s/c/other/azan/rahim_moazenzadeh.mp3" style="width:100%;margin:10px 0"></audio>
 <div id="notificationStatus" class="status">برای نمایش اعلان، یک بار اجازه اعلان‌های گوشی را فعال کنید.</div><div id="adhanStatus" class="status">اذان پیش‌فرض برنامه انتخاب شده است.</div>
-<p class="settingsHint">برای اجرای زمان‌بندی، برنامه و مرورگر باید فعال بمانند. اندروید ممکن است اجرای صفحه در پس‌زمینه یا هنگام قفل را متوقف کند؛ اعلان در این حالت تضمین‌شده نیست.</p></div><div class="panel settingsPanel"><h3>📖 تنظیمات قرآن</h3><label class="settingField">اندازه متن عربی<select id="quranFontSize" onchange="applyQuranFontSize()"><option value="29">معمولی</option><option value="33" selected>بزرگ</option><option value="37">خیلی بزرگ</option></select></label><label class="settingField">سرعت پیش‌فرض تلاوت<select id="quranSpeedSetting" onchange="applyQuranSpeed()"><option value="1">۱ برابر</option><option value="1.5">۱٫۵ برابر</option><option value="2">۲ برابر</option></select></label></div><div class="panel settingsPanel"><h3>📜 تنظیمات نهج‌البلاغه</h3><label class="settingField">اندازه متن عربی و ترجمه<select id="nahjFontSize" onchange="applyNahjFontSize()"><option value="18">معمولی</option><option value="21" selected>بزرگ</option><option value="24">خیلی بزرگ</option></select></label></div><div class="panel settingsPanel"><h3>🧭 قبله‌نما</h3><p class="settingsHint">موقعیت مکانی برای محاسبه جهت قبله استفاده می‌شود. اگر گوشی حسگر قطب‌نما نداشته باشد، جهت پیکان با چرخاندن گوشی تغییر نمی‌کند.</p><button class="btn light" onclick="getGPS()">به‌روزرسانی موقعیت قبله</button></div></section>
+<p class="settingsHint">برای اجرای زمان‌بندی، برنامه و مرورگر باید فعال بمانند. اندروید ممکن است اجرای صفحه در پس‌زمینه یا هنگام قفل را متوقف کند؛ اعلان در این حالت تضمین‌شده نیست.</p></div><div class="panel settingsPanel"><h3>🕌 تنظیمات رکعت‌شمار و مکبر</h3>
+<label class="settingField">روش شمارش سجده
+<select id="rakatModeSetting" onchange="saveRakatSettings()">
+<option value="touch">حالت لمسی — لمس صفحه برای هر سجده</option>
+<option value="proximity">حالت مجاورت — نزدیک‌شدن بینی به حسگر گوشی</option>
+</select></label>
+<label class="settingField">تأخیر صدای مکبر پس از هر سجده
+<select id="rakatDelaySetting" onchange="saveRakatSettings()">
+<option value="1000">۱ ثانیه</option><option value="1500">۱٫۵ ثانیه</option><option value="2000">۲ ثانیه</option>
+</select></label>
+<div class="settingsHint">در حالت مجاورت، هر نزدیک‌شدن فقط یک سجده ثبت می‌کند و برای ثبت سجده بعدی باید ابتدا بینی از حسگر دور شود. پشتیبانی حسگر مجاورت به گوشی و مرورگر بستگی دارد؛ روی Galaxy A12 باید عملاً آزمایش شود.</div>
+<div id="rakatSettingsStatus" class="status">تنظیمات رکعت‌شمار آماده است.</div></div><div class="panel settingsPanel"><h3>📖 تنظیمات قرآن</h3><label class="settingField">اندازه متن عربی<select id="quranFontSize" onchange="applyQuranFontSize()"><option value="29">معمولی</option><option value="33" selected>بزرگ</option><option value="37">خیلی بزرگ</option></select></label><label class="settingField">سرعت پیش‌فرض تلاوت<select id="quranSpeedSetting" onchange="applyQuranSpeed()"><option value="1">۱ برابر</option><option value="1.5">۱٫۵ برابر</option><option value="2">۲ برابر</option></select></label></div><div class="panel settingsPanel"><h3>📜 تنظیمات نهج‌البلاغه</h3><label class="settingField">اندازه متن عربی و ترجمه<select id="nahjFontSize" onchange="applyNahjFontSize()"><option value="18">معمولی</option><option value="21" selected>بزرگ</option><option value="24">خیلی بزرگ</option></select></label></div><div class="panel settingsPanel"><h3>🧭 قبله‌نما</h3><p class="settingsHint">موقعیت مکانی برای محاسبه جهت قبله استفاده می‌شود. اگر گوشی حسگر قطب‌نما نداشته باشد، جهت پیکان با چرخاندن گوشی تغییر نمی‌کند.</p><button class="btn light" onclick="getGPS()">به‌روزرسانی موقعیت قبله</button></div></section>
 <section id="quran" class="page"><button class="btn light back" onclick="page('home')">↩ بازگشت به برنامه</button><h2 class="title">قرآن کریم</h2><div class="panel quranPanel">
 <div class="quranHero"><div class="quranSeal">۞</div><h2>مصحف شریف</h2><p>متن قرآن کریم · ترجمه آیت‌الله مکارم شیرازی</p></div>
 <div id="quranStart" class="quranStart"><p class="quranModeIntro">مطالعه قرآن کریم با متن عربی و ترجمه فارسی</p><button class="btn gold quranContinue" onclick="enterQuranMode('text',false)">شروع مطالعه قرآن</button><button class="btn light quranContinue" onclick="enterQuranMode('text',true)">ادامه از آخرین آیه مطالعه‌شده</button></div>
@@ -405,8 +416,57 @@ initSurahs();buildBeads();changeDhikr();setSpeed(1);renderSurahSidebar();if('ser
   window.addEventListener('focus',update);
  }).catch(()=>{});
 }
-// SAHROUD TASBIH: full-screen touch rak'at counter and delayed mukabbir
+// SAHROUD TASBIH: touch/proximity rak'at counter with configurable delayed mukabbir
 let rakatSajdaCount=0,rakatTotal=4,rakatRunning=false,rakatLastTouch=0;
+let rakatMode='touch',rakatDelay=1000,rakatNear=false,rakatProximitySensor=null,rakatSpeakTimers=[];
+function loadRakatSettings(){
+ try{const v=JSON.parse(localStorage.getItem('sahroud_rakat_settings_v1')||'{}');if(v.mode==='proximity'||v.mode==='touch')rakatMode=v.mode;if([1000,1500,2000].includes(Number(v.delay)))rakatDelay=Number(v.delay)}catch(e){}
+ const m=document.getElementById('rakatModeSetting'),d=document.getElementById('rakatDelaySetting');if(m)m.value=rakatMode;if(d)d.value=String(rakatDelay);
+}
+function saveRakatSettings(){
+ const m=document.getElementById('rakatModeSetting'),d=document.getElementById('rakatDelaySetting');
+ rakatMode=m?m.value:'touch';rakatDelay=d?Number(d.value):1000;
+ try{localStorage.setItem('sahroud_rakat_settings_v1',JSON.stringify({mode:rakatMode,delay:rakatDelay}))}catch(e){}
+ const st=document.getElementById('rakatSettingsStatus');if(st){st.className='status good';st.textContent='تنظیمات ذخیره شد.'}
+ const hint=document.querySelector('#rakat .rakatTouchHint');if(hint)hint.textContent=rakatMode==='touch'?'حالت لمسی فعال است · برای هر سجده یک بار صفحه را لمس کنید':'حالت مجاورت فعال است · بینی را به حسگر بالای گوشی نزدیک و سپس دور کنید';
+ if(rakatRunning&&rakatMode==='proximity')rakatStartProximitySensor();
+ else rakatStopProximitySensor();
+}
+function rakatProximityStatus(message,isError=false){const st=document.getElementById('rakatStatus');if(st){st.className='rakatStatus'+(isError?'':'');st.textContent=message}}
+function rakatSetNear(near){
+ if(!rakatRunning||rakatMode!=='proximity')return;
+ if(near&&!rakatNear){rakatNear=true;rakatRegisterTouch('proximity')}
+ else if(!near){rakatNear=false}
+}
+function rakatStartProximitySensor(){
+ rakatStopProximitySensor();rakatNear=false;
+ if(!('ProximitySensor'in window)){
+  window.addEventListener('userproximity',rakatLegacyUserProximity);
+  window.addEventListener('deviceproximity',rakatLegacyDeviceProximity);
+  rakatProximityStatus('در انتظار حسگر مجاورت؛ اگر وضعیت تغییر نکرد، ممکن است مرورگر این حسگر را ارائه نکند.',true);
+  return;
+ }
+ try{
+  rakatProximitySensor=new ProximitySensor({frequency:5});
+  rakatProximitySensor.addEventListener('reading',()=>rakatSetNear(!!rakatProximitySensor.near));
+  rakatProximitySensor.addEventListener('error',e=>rakatProximityStatus('دسترسی به حسگر مجاورت ممکن نشد: '+(e.error?.message||'حسگر در دسترس نیست'),true));
+  rakatProximitySensor.start();
+  rakatProximityStatus('حسگر مجاورت فعال شد؛ گوشی را ثابت و بینی را به‌آرامی نزدیک حسگر کنید.');
+ }catch(e){
+  rakatProximityStatus('این مرورگر امکان دسترسی به حسگر مجاورت را نداد. حالت لمسی را انتخاب کنید.',true);
+ }
+}
+function rakatLegacyUserProximity(e){rakatSetNear(!!e.near)}
+function rakatLegacyDeviceProximity(e){const distance=Number(e.value);if(Number.isFinite(distance))rakatSetNear(distance<=Math.max(1,Number(e.min)||0.1))}
+function rakatStopProximitySensor(){
+ window.removeEventListener('userproximity',rakatLegacyUserProximity);
+ window.removeEventListener('deviceproximity',rakatLegacyDeviceProximity);
+ if(rakatProximitySensor){try{rakatProximitySensor.stop()}catch(e){}rakatProximitySensor=null}
+ rakatNear=false;
+}
+function rakatCancelSpeakTimers(){rakatSpeakTimers.forEach(t=>clearTimeout(t));rakatSpeakTimers=[]}
+function rakatScheduleSpeak(){const timer=setTimeout(()=>{rakatSpeakTimers=rakatSpeakTimers.filter(x=>x!==timer);rakatSpeak()},rakatDelay);rakatSpeakTimers.push(timer)}
+loadRakatSettings();
 const rakatFa=n=>Number(n).toLocaleString('fa-IR');
 function rakatSpeak(){
  const audio=document.getElementById('rakatAudio'),st=document.getElementById('rakatStatus');
@@ -435,9 +495,11 @@ function rakatRender(){
  document.getElementById('rakatBigLabel').textContent='رکعت';
  document.getElementById('rakatSubLabel').textContent=completed>=rakatTotal?'نماز کامل شد':rakatSajdaCount===0?'آماده شروع نماز':rakatRunning?'سجده '+(partial?'اول':'دوم')+' رکعت '+rakatFa(current):'آماده شروع نماز';
 }
-function rakatStart(){const selected=Number(document.getElementById('rakatPrayerTotal').value)||4;if(rakatRunning&&rakatTotal===selected)return;rakatTotal=selected;rakatSajdaCount=0;rakatRunning=true;rakatLastTouch=0;rakatUnlockAudio();document.getElementById('rakat').classList.add('rakat-running');document.getElementById('rakatStatus').className='rakatStatus good';document.getElementById('rakatStatus').textContent='شمارش خودکار آغاز شد؛ برای هر سجده یک بار روی مهر لمس کنید.';rakatRender()}
-function rakatRegisterTouch(){
+function rakatStart(){const selected=Number(document.getElementById('rakatPrayerTotal').value)||4;if(rakatRunning&&rakatTotal===selected)return;rakatTotal=selected;rakatSajdaCount=0;rakatRunning=true;rakatLastTouch=0;rakatCancelSpeakTimers();rakatUnlockAudio();document.getElementById('rakat').classList.add('rakat-running');if(rakatMode==='proximity')rakatStartProximitySensor();else rakatStopProximitySensor();document.getElementById('rakatStatus').className='rakatStatus good';document.getElementById('rakatStatus').textContent=rakatMode==='touch'?'شمارش لمسی آغاز شد؛ برای هر سجده یک بار صفحه را لمس کنید.':'حالت مجاورت آغاز شد؛ برای هر سجده بینی را به حسگر بالای گوشی نزدیک و سپس دور کنید.';const hint=document.querySelector('#rakat .rakatTouchHint');if(hint)hint.textContent=rakatMode==='touch'?'حالت لمسی فعال است · هر لمس معتبر یک سجده ثبت می‌کند':'حالت مجاورت فعال است · نزدیک‌شدن بینی یک سجده و دورشدن، حسگر را برای سجده بعدی آماده می‌کند';rakatRender()}
+function rakatRegisterTouch(source='touch'){
  if(!rakatRunning||rakatSajdaCount>=rakatTotal*2)return;
+ if(source==='touch'&&rakatMode!=='touch')return;
+ if(source==='proximity'&&rakatMode!=='proximity')return;
  const now=Date.now();if(now-rakatLastTouch<450)return;rakatLastTouch=now;
  rakatSajdaCount++;rakatRender();
  const completed=Math.floor(rakatSajdaCount/2),partial=rakatSajdaCount%2;
@@ -445,12 +507,12 @@ function rakatRegisterTouch(){
  const st=document.getElementById('rakatStatus');
  st.className='rakatStatus good';
  st.textContent=isFirstSajda?'سجده اول رکعت '+rakatFa(completed+1)+' ثبت شد.':(isLastPrayerSajda?'سجده دوم رکعت آخر ثبت شد.':'سجده دوم رکعت '+rakatFa(completed)+' ثبت شد.');
- rakatSpeak();
- if(isLastPrayerSajda){rakatRunning=false;document.getElementById('rakat').classList.remove('rakat-running')}
+ rakatScheduleSpeak();
+ if(isLastPrayerSajda){rakatRunning=false;rakatStopProximitySensor();document.getElementById('rakat').classList.remove('rakat-running')}
 }
-function rakatUndo(){if(rakatSajdaCount>0){rakatSajdaCount--;rakatRunning=true;document.getElementById('rakat').classList.add('rakat-running');document.getElementById('rakatStatus').className='rakatStatus';document.getElementById('rakatStatus').textContent='آخرین سجده برگشت داده شد؛ شمارش را ادامه دهید.';rakatRender()}}
-function rakatReset(){rakatSajdaCount=0;rakatRunning=false;rakatLastTouch=0;document.getElementById('rakat').classList.remove('rakat-running');rakatStart()}
-(()=>{const area=document.getElementById('rakatTouchArea');if(!area)return;area.addEventListener('pointerup',e=>{if(e.target.closest('button,a,input,select,label'))return;e.preventDefault();rakatRegisterTouch()});area.addEventListener('contextmenu',e=>e.preventDefault());document.getElementById('rakatUndo').addEventListener('click',rakatUndo);document.getElementById('rakatReset').addEventListener('click',rakatReset);rakatRender()})();
+function rakatUndo(){if(rakatSajdaCount>0){rakatCancelSpeakTimers();rakatSajdaCount--;rakatRunning=true;if(rakatMode==='proximity')rakatStartProximitySensor();document.getElementById('rakat').classList.add('rakat-running');document.getElementById('rakatStatus').className='rakatStatus';document.getElementById('rakatStatus').textContent='آخرین سجده برگشت داده شد؛ شمارش را ادامه دهید.';rakatRender()}}
+function rakatReset(){rakatCancelSpeakTimers();rakatStopProximitySensor();rakatSajdaCount=0;rakatRunning=false;rakatLastTouch=0;document.getElementById('rakat').classList.remove('rakat-running');rakatStart()}
+(()=>{const area=document.getElementById('rakatTouchArea');if(!area)return;area.addEventListener('pointerup',e=>{if(e.target.closest('button,a,input,select,label'))return;e.preventDefault();if(rakatMode==='touch')rakatRegisterTouch('touch')});area.addEventListener('contextmenu',e=>e.preventDefault());document.getElementById('rakatUndo').addEventListener('click',rakatUndo);document.getElementById('rakatReset').addEventListener('click',rakatReset);rakatRender()})();
 
 </script>
 <!-- SAHROUD COUNTER shared analytics; activates after central API configuration and user consent -->
