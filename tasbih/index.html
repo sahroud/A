@@ -349,25 +349,27 @@ window.addEventListener('load',()=>{
 });
 
 const nahjCounts={khutba:239,nameh:79,hekmat:480};
+const nahjCategoryIds={khutba:422,nameh:536,hekmat:537};
+function nahjCategoryUrl(t){return 'https://fa.balaghah.net/balagha/?jsf=epro-loop-builder&tax=mozoaa%3A'+nahjCategoryIds[t]}
 function updateNahjRange(){
- const t=$('nahjType').value,n=nahjCounts[t];
- $('nahjNumber').innerHTML='';
+ const t=$('nahjType').value,n=nahjCounts[t];$('nahjNumber').innerHTML='';
+ let all=document.createElement('option');all.value='all';all.textContent='همه '+(t==='khutba'?'خطبه‌ها':t==='nameh'?'نامه‌ها':'حکمت‌ها');$('nahjNumber').appendChild(all);
  for(let i=1;i<=n;i++){let o=document.createElement('option');o.value=i;o.textContent=fa(i)+(t==='khutba'?' · خطبه':t==='nameh'?' · نامه':' · حکمت');$('nahjNumber').appendChild(o)}
- $('nahjNumber').value='1';
+ $('nahjNumber').value='all';
 }
 function nahjUrl(t,n){
- // Sermon 1 is the exceptional 1-2 slug; later sermons use their number.
+ if(String(n)==='all')return nahjCategoryUrl(t);
  const slug=t==='khutba'?(n===1?'1-2':String(n)):String(n)+'-2';
  return 'https://fa.balaghah.net/balagha/'+slug+'/';
 }
 function saveNahjStudy(showMsg=false){
- const item={type:$('nahjType').value,number:Number($('nahjNumber').value)||1,savedAt:Date.now()};
+ const raw=$('nahjNumber').value;const item={type:$('nahjType').value,number:raw==='all'?'all':(Number(raw)||1),savedAt:Date.now()};
  localStorage.setItem('sahroud_study_nahj',JSON.stringify(item));
  if(showMsg)$('nahjStatus').textContent='محل مطالعه ذخیره شد.';
 }
 function restoreNahjStudy(){
  const p=readSaved('sahroud_study_nahj');if(!p)return;
- $('nahjType').value=p.type||'khutba';updateNahjRange();$('nahjNumber').value=p.number||1;
+ $('nahjType').value=p.type||'khutba';updateNahjRange();$('nahjNumber').value=String(p.number||'all');
  if(currentPage==='nahj')loadNahj(false);
 }
 window.addEventListener('scroll',()=>{
@@ -382,7 +384,7 @@ function searchNahjSource(){
  window.open('https://fa.balaghah.net/?s='+encodeURIComponent(q),'_blank','noopener');
 }
 function saveNahjBookmark(){
- const item={type:$('nahjType').value,number:Number($('nahjNumber').value)||1,label:($('nahjType').value==='khutba'?'خطبه':$('nahjType').value==='nameh'?'نامه':'حکمت')+' '+fa($('nahjNumber').value),url:nahjUrl($('nahjType').value,Number($('nahjNumber').value)||1)};
+ const raw=$('nahjNumber').value;const type=$('nahjType').value;const category=type==='khutba'?'خطبه‌ها':type==='nameh'?'نامه‌ها':'حکمت‌ها';const item={type,number:raw==='all'?'all':(Number(raw)||1),label:raw==='all'?'همه '+category:(type==='khutba'?'خطبه':type==='nameh'?'نامه':'حکمت')+' '+fa(raw),url:nahjUrl(type,raw)};
  let list=[];try{list=JSON.parse(localStorage.getItem('sahroud_nahj_bookmarks')||'[]')}catch(e){}
  list=list.filter(x=>x.type!==item.type||x.number!==item.number);list.unshift(item);list=list.slice(0,50);
  localStorage.setItem('sahroud_nahj_bookmarks',JSON.stringify(list));
@@ -401,11 +403,11 @@ function openNahjBookmark(index){
  $('nahjBookmarks').hidden=true;
 }
 function loadNahj(save=true){
- const request=++nahjRequestId,t=$('nahjType').value,n=Number($('nahjNumber').value)||1,url=nahjUrl(t,n);
- const box=$('nahjContent'),label=t==='khutba'?'خطبه':t==='nameh'?'نامه':'حکمت';
+ const request=++nahjRequestId,t=$('nahjType').value,raw=$('nahjNumber').value,isAll=raw==='all',n=isAll?'all':(Number(raw)||1),url=nahjUrl(t,n);
+ const box=$('nahjContent'),label=t==='khutba'?'خطبه':t==='nameh'?'نامه':'حکمت',plural=t==='khutba'?'خطبه‌ها':t==='nameh'?'نامه‌ها':'حکمت‌ها';
  if(save)saveNahjStudy(false);
- $('nahjStatus').textContent='در حال بازکردن '+label+' شماره '+fa(n)+' از پایگاه تخصصی نهج‌البلاغه…';
- box.innerHTML='<div class="status" style="padding:10px">در حال بارگذاری متن عربی و ترجمه فارسی…</div><iframe title="متن نهج‌البلاغه" src="'+url+'" loading="eager" referrerpolicy="strict-origin-when-cross-origin" style="width:100%;height:72vh;min-height:560px;border:1px solid #d8c79f;border-radius:13px;background:#fff" onload="if('+request+'===nahjRequestId)document.getElementById(\'nahjStatus\').textContent=\'صفحه منبع بارگذاری شد؛ متن و ترجمه در قاب زیر نمایش داده می‌شود.\'"></iframe><div class="actions"><a class="btn gold" href="'+url+'" target="_blank" rel="noopener" style="text-decoration:none;display:inline-flex;align-items:center">باز کردن مستقیم متن در سایت منبع ↗</a><a class="btn light" href="https://fa.balaghah.net/balagha/" target="_blank" rel="noopener" style="text-decoration:none;display:inline-flex;align-items:center">فهرست و جست‌وجوی نهج‌البلاغه ↗</a></div>';
+ $('nahjStatus').textContent=isAll?'در حال نمایش فهرست همه '+plural+' از پایگاه تخصصی نهج‌البلاغه…':'در حال بازکردن '+label+' شماره '+fa(n)+' از پایگاه تخصصی نهج‌البلاغه…';
+ box.innerHTML='<div class="status" style="padding:10px">'+(isAll?'فهرست '+plural+' در حال بارگذاری است…':'در حال بارگذاری متن عربی و ترجمه فارسی…')+'</div><iframe title="'+(isAll?'فهرست '+plural:'متن نهج‌البلاغه')+'" src="'+url+'" loading="eager" referrerpolicy="strict-origin-when-cross-origin" style="width:100%;height:72vh;min-height:560px;border:1px solid #d8c79f;border-radius:13px;background:#fff"></iframe><div class="actions"><a class="btn gold" href="'+url+'" target="_blank" rel="noopener" style="text-decoration:none;display:inline-flex;align-items:center">'+(isAll?'باز کردن فهرست کامل '+plural:'باز کردن مستقیم متن در سایت منبع')+' ↗</a><a class="btn light" href="https://fa.balaghah.net/balagha/" target="_blank" rel="noopener" style="text-decoration:none;display:inline-flex;align-items:center">فهرست اصلی نهج‌البلاغه ↗</a></div>';
 }
 updateNahjRange();
 
