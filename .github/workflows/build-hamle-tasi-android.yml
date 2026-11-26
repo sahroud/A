@@ -27,7 +27,8 @@ jobs:
         run: |
           npm install
           mkdir -p hamle-tasi-android/app/src/main/assets
-          npm run build:scene\n          npm run build:game
+          npm run build:scene
+          npm run build:game
       - name: Set up Java
         uses: actions/setup-java@v4
         with:
