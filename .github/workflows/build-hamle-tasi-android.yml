@@ -1,4 +1,4 @@
-name: Build Hamle Tasi Android APK
+name: Build Hamle Tasi 3D Android APK
 
 on:
   push:
@@ -6,6 +6,7 @@ on:
     paths:
       - 'games/hamle-tasi/**'
       - 'hamle-tasi-android/**'
+      - 'package.json'
       - '.github/workflows/build-hamle-tasi-android.yml'
   workflow_dispatch:
 
@@ -18,6 +19,15 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
+      - name: Set up Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+      - name: Install and bundle Three.js scene
+        run: |
+          npm install
+          mkdir -p hamle-tasi-android/app/src/main/assets
+          npm run build:scene
       - name: Set up Java
         uses: actions/setup-java@v4
         with:
@@ -27,9 +37,8 @@ jobs:
         uses: gradle/actions/setup-gradle@v4
         with:
           gradle-version: '8.9'
-      - name: Copy original game unchanged
+      - name: Copy original game logic unchanged
         run: |
-          mkdir -p hamle-tasi-android/app/src/main/assets
           cp games/hamle-tasi/index.html hamle-tasi-android/app/src/main/assets/index.html
       - name: Build debug APK
         working-directory: hamle-tasi-android
@@ -37,7 +46,7 @@ jobs:
       - name: Upload APK
         uses: actions/upload-artifact@v4
         with:
-          name: Hamle-Tasi-Android-APK
+          name: Hamle-Tasi-3D-Android-APK
           path: hamle-tasi-android/app/build/outputs/apk/debug/app-debug.apk
           if-no-files-found: error
           retention-days: 30
