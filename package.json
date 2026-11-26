@@ -1,0 +1,15 @@
+{
+  "name": "sahroud-hamle-tasi-3d",
+  "private": true,
+  "version": "1.0.0",
+  "description": "Offline 3D scene layer for Hamle Tasi Android game",
+  "dependencies": {
+    "three": "^0.180.0"
+  },
+  "devDependencies": {
+    "esbuild": "^0.25.0"
+  },
+  "scripts": {
+    "build:scene": "esbuild games/hamle-tasi/scene.js --bundle --format=iife --target=es2020 --outfile=hamle-tasi-android/app/src/main/assets/three-scene.js"
+  }
+}
