@@ -6,12 +6,14 @@ import { RoundedBoxGeometry } from 'three/addons/geometries/RoundedBoxGeometry.j
   const host = document.getElementById('board');
   if (!host || host.dataset.scene3dReady) return;
   host.dataset.scene3dReady = '1';
-  host.innerHTML = '';
-  host.style.cssText = 'position:relative;display:block;aspect-ratio:1;width:100%;max-width:390px;margin:14px auto 18px;padding:0;border:0;border-radius:22px;overflow:hidden;background:radial-gradient(circle at 50% 40%,#17365a,#050b1d 72%);box-shadow:0 14px 38px #000a,inset 0 0 28px #38bdf855;touch-action:none;';
+  const wrapper = document.createElement('div');
+  wrapper.style.cssText = 'position:relative;display:block;aspect-ratio:1;width:100%;max-width:390px;margin:14px auto 18px;border-radius:22px;overflow:hidden;background:radial-gradient(circle at 50% 40%,#17365a,#050b1d 72%);box-shadow:0 14px 38px #000a,inset 0 0 28px #38bdf855;touch-action:none;';
+  host.parentNode.insertBefore(wrapper,host);
+  wrapper.appendChild(host);
   const canvas = document.createElement('canvas');
   canvas.setAttribute('aria-label','میدان سه بعدی حمله تاسی؛ با لمس خانه ها حرکت کنید و با کشیدن انگشت میدان را بچرخانید');
   canvas.style.cssText = 'display:block;width:100%;height:100%;touch-action:none;outline:none;';
-  host.appendChild(canvas);
+  wrapper.appendChild(canvas);
 
   const scene = new THREE.Scene();
   scene.background = new THREE.Color(0x050b1d);
@@ -19,7 +21,10 @@ import { RoundedBoxGeometry } from 'three/addons/geometries/RoundedBoxGeometry.j
   const camera = new THREE.PerspectiveCamera(38,1,0.1,100);
   camera.position.set(0,8.8,10.8);
   camera.lookAt(0,0,0);
-  const renderer = new THREE.WebGLRenderer({canvas,antialias:true,alpha:false,powerPreference:'high-performance'});
+  let renderer;
+  try { renderer = new THREE.WebGLRenderer({canvas,antialias:true,alpha:false,powerPreference:'high-performance'}); }
+  catch(error) { wrapper.parentNode.insertBefore(host,wrapper); wrapper.remove(); host.style.display=''; return; }
+  host.style.display='none';
   renderer.setPixelRatio(Math.min(window.devicePixelRatio||1,1.65));
   renderer.shadowMap.enabled = true;
   renderer.shadowMap.type = THREE.PCFSoftShadowMap;
