@@ -27,7 +27,7 @@ jobs:
         run: |
           npm install
           mkdir -p hamle-tasi-android/app/src/main/assets
-          npm run build:scene
+          npm run build:scene\n          npm run build:game
       - name: Set up Java
         uses: actions/setup-java@v4
         with:
@@ -39,7 +39,7 @@ jobs:
           gradle-version: '8.9'
       - name: Copy original game logic unchanged
         run: |
-          cp games/hamle-tasi/index.html hamle-tasi-android/app/src/main/assets/index.html
+          cp games/hamle-tasi/3d/index.html hamle-tasi-android/app/src/main/assets/index.html
       - name: Build debug APK
         working-directory: hamle-tasi-android
         run: gradle --no-daemon assembleDebug
