@@ -10,6 +10,7 @@
     "esbuild": "^0.25.0"
   },
   "scripts": {
-    "build:scene": "esbuild games/hamle-tasi/scene.js --bundle --format=iife --target=es2020 --outfile=hamle-tasi-android/app/src/main/assets/three-scene.js"
+    "build:scene": "esbuild games/hamle-tasi/scene.js --bundle --format=iife --target=es2020 --outfile=hamle-tasi-android/app/src/main/assets/three-scene.js",
+    "build:game": "esbuild games/hamle-tasi/3d/game.js --bundle --format=iife --target=es2020 --outfile=hamle-tasi-android/app/src/main/assets/three-game.js"
   }
-}
+}\n
