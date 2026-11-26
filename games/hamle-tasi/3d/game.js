@@ -128,13 +128,21 @@ const roleGuide={
 };
 let voiceEnabled=true;
 function sayFa(text){
- if(!voiceEnabled||!('speechSynthesis' in window)||!('SpeechSynthesisUtterance' in window))return;
- try{window.speechSynthesis.cancel();const u=new SpeechSynthesisUtterance(text);u.lang='fa-IR';u.rate=.88;u.pitch=.92;u.volume=1;const voices=window.speechSynthesis.getVoices();const fa=voices.find(v=>(v.lang||'').toLowerCase().startsWith('fa'));if(fa)u.voice=fa;window.speechSynthesis.speak(u);}catch(e){}
+ if(!voiceEnabled)return;
+ try{
+   if(window.AndroidTTS&&typeof window.AndroidTTS.speak==='function'){window.AndroidTTS.speak(String(text));return;}
+   if('speechSynthesis' in window&&'SpeechSynthesisUtterance' in window){
+     window.speechSynthesis.cancel();
+     const u=new SpeechSynthesisUtterance(text);u.lang='fa-IR';u.rate=.88;u.pitch=.92;u.volume=1;
+     const voices=window.speechSynthesis.getVoices();const fa=voices.find(v=>(v.lang||'').toLowerCase().startsWith('fa'));if(fa)u.voice=fa;
+     window.speechSynthesis.speak(u);
+   } else {guide('صدای گفتار در این دستگاه در دسترس نیست؛ زیرنویس فارسی فعال است.',false);}
+ }catch(e){guide('پخش صدای راهنما ناموفق بود؛ زیرنویس فارسی را دنبال کنید.',false);}
 }
 function guide(text,spoken=true){const el=document.getElementById('subtitle');if(el)el.textContent=text;if(spoken)sayFa(text);}
 function updateHud(msg){document.getElementById('message').textContent=msg;document.getElementById('turn').textContent=state.owner===0?'نوبت شما':'نوبت ربات';document.getElementById('score').textContent=state.score.join(' - ');guide(msg);}
 function updateButtons(){document.querySelectorAll('.unit').forEach(b=>b.classList.toggle('active',b.dataset.kind===state.selected));document.getElementById('roll').disabled=state.rolled!==null;}
-document.getElementById('voice').onclick=()=>{voiceEnabled=!voiceEnabled;document.getElementById('voice').textContent=voiceEnabled?'🔊 راهنمای صوتی: روشن':'🔇 راهنمای صوتی: خاموش';if(voiceEnabled){guide('راهنمای فارسی فعال شد. برای شروع، یک شخصیت انتخاب کنید.');}else if('speechSynthesis' in window){window.speechSynthesis.cancel();}};
+document.getElementById('voice').onclick=()=>{voiceEnabled=!voiceEnabled;document.getElementById('voice').textContent=voiceEnabled?'🔊 راهنمای صوتی: روشن':'🔇 راهنمای صوتی: خاموش';if(voiceEnabled){guide('راهنمای فارسی فعال شد. برای آزمایش صدا، این جمله را می‌شنوید.');sayFa('سلام. راهنمای صوتی بازی حمله تاسی فعال است.');}else{if(window.AndroidTTS&&window.AndroidTTS.stop)window.AndroidTTS.stop();if('speechSynthesis' in window)window.speechSynthesis.cancel();}};
 document.querySelectorAll('.unit').forEach(b=>b.onclick=()=>{if(state.owner!==0)return;state.selected=b.dataset.kind;updateButtons();const detail=roleGuide[state.selected]||'';updateHud('نیروی '+b.textContent+' انتخاب شد؛ تاس بیندازید.');guide(detail);});
 document.getElementById('roll').onclick=()=>{if(state.owner!==0||state.rolled!==null)return;state.rolled=1+Math.floor(Math.random()*6);updateButtons();updateHud('عدد تاس: '+state.rolled+' — خانه‌ای خالی را انتخاب کنید.');guide('عدد تاس '+state.rolled+' است. اکنون یکی از خانه‌های خالی میدان را لمس کنید.');};
 function lineCheck(){const lines=[[0,1,2],[3,4,5],[6,7,8],[0,3,6],[1,4,7],[2,5,8]];for(const line of lines){const a=line.map(i=>state.board[i]);if(a.every(Boolean)){const sums=[0,0];a.forEach(p=>sums[p.owner]+=p.hp);if(sums[0]!==sums[1]){const win=sums[0]>sums[1]?0:1;state.score[win]++;line.forEach(i=>{const p=state.board[i];arena.remove(p.mesh);state.pieces=state.pieces.filter(x=>x!==p.mesh);state.board[i]=null;});updateHud(win===0?'خط به سود شما تمام شد.':'خط به سود ربات تمام شد.');return true;}}}return false;}
