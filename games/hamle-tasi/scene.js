@@ -209,7 +209,7 @@ import { RoundedBoxGeometry } from 'three/addons/geometries/RoundedBoxGeometry.j
       present.add(index);
       const old=pieceRoots.get(index);
       if(old&&old.userData.signature===signature)return;
-      if(old){platform.remove(old);pieceRoots.delete(index);}
+      if(old){platform.remove(old);if(old.userData.shield)platform.remove(old.userData.shield);pieceRoots.delete(index);}
       const root=makeRobot(code,owner,hp,index);root.userData.signature=signature;
       platform.add(root);pieceRoots.set(index,root);
       const shield=cell.querySelector('.shield-mark');
@@ -238,10 +238,10 @@ import { RoundedBoxGeometry } from 'three/addons/geometries/RoundedBoxGeometry.j
   });
 
   function resize(){
-    const w=Math.max(1,host.clientWidth),h=Math.max(1,host.clientHeight);
+    const w=Math.max(1,wrapper.clientWidth),h=Math.max(1,wrapper.clientHeight);
     renderer.setSize(w,h,false);camera.aspect=w/h;camera.updateProjectionMatrix();
   }
-  new ResizeObserver(resize).observe(host);resize();
+  new ResizeObserver(resize).observe(wrapper);resize();
   const clock=new THREE.Clock();
   function animate(){
     requestAnimationFrame(animate);
