@@ -646,4 +646,13 @@ window.addEventListener('beforeunload',e=>{if(match&&!match.over){e.preventDefau
 window.addEventListener('pagehide',()=>{if(match&&!match.over)finishMatch(1);});
 loadGameState();applyTimedCoins();syncInventory();saveGameState();
 refresh();helpTo('basic');setInterval(updateChestUI,15000);setInterval(()=>{const before=coins;applyTimedCoins();if(coins!==before)refresh();},60000);
-</script></body></html>
+</script>
+<script>
+window.__hamle3dTap=function(index){
+  if(!match||match.over||match.turn!==0)return;
+  if(actionMode||selectedPiece){onCell(index);return;}
+  if(match.board[index])showDieInfo(index);else onCell(index);
+};
+</script>
+<script src="three-scene.js"></script>
+</body></html>
