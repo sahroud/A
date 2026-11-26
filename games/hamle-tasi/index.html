@@ -63,6 +63,35 @@ footer{text-align:center;color:#c9a77a;font-size:10px;margin:16px 0 4px}
 
 
 .chest-reward-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;margin:14px 0}.chest-reward-item{text-align:center;font-size:10px;line-height:1.6;color:#ffe8b9;min-width:0}.chest-reward-item .die{width:58px;max-width:100%;margin:0 auto 6px;font-size:23px}.chest-reward-item .die.potion{width:48px}
+
+/* SAHROUD 3D SPACE UI */
+:root{--wood:#0b1730;--cream:#e5f4ff;--gold:#69d9ff;--green:#3fe2a0;--red:#ff607d}
+body{background:radial-gradient(ellipse at 50% 0%,#173a68 0%,#08152d 48%,#030817 100%);color:#e8f6ff}
+.app{max-width:560px;background:linear-gradient(160deg,rgba(12,29,56,.97),rgba(4,11,27,.98));box-shadow:0 0 48px #000b;border-left:1px solid #24517a;border-right:1px solid #24517a}
+header{border:1px solid #39bdf8;border-radius:18px;background:radial-gradient(ellipse at 50% 0%,#205b88,#0a1a36 72%);box-shadow:inset 0 0 25px #22aaff22,0 0 22px #078bd533}
+h1{color:#e9faff;text-shadow:0 0 16px #36bfff,0 2px 3px #020817}
+.sub{color:#9bdfff;letter-spacing:.4px}
+.panel{background:linear-gradient(145deg,rgba(19,48,82,.97),rgba(7,19,42,.98));border:1px solid #2776a7;border-radius:16px;box-shadow:inset 0 0 20px #2abaff12,0 8px 24px #0007}
+button{color:#eafaff;border:1px solid #61d8ff;border-radius:11px;background:linear-gradient(145deg,#17608d,#12345f);box-shadow:0 4px 0 #07162c,0 0 15px #1ba8e522;text-shadow:0 1px #061629}
+button:active{box-shadow:0 2px 0 #07162c,0 0 20px #3bc5ff55}
+button.secondary{color:#d5eaff;border-color:#487eaa;background:linear-gradient(145deg,#1b385d,#122644)}
+h2,h3{color:#8fe4ff;text-shadow:0 0 10px #1c8fca55}
+.small,.item-desc,.help-section p,.help-section li{color:#b5d4eb}
+.coins{color:#ffe18b;text-shadow:0 0 8px #f5bd4d55}
+.info,.game-stat,.stat,.help-section,.setup-note,.grave-side{background:rgba(3,13,31,.8);border:1px solid #24577e;color:#d9efff}
+.stat b,.game-stat b{color:#7de3ff}
+.badge{background:#123d60;color:#9ceaff}
+.selectbox{background:#102b4a;color:#eaf7ff;border:1px solid #3a9acb}
+.item{border-color:#25577e}
+.item-title{color:#e5f7ff}
+.hand-card{background:linear-gradient(145deg,#163d64,#0a1c35);border:1px solid #4b9ec9;color:#e8f8ff}
+.hand-card.selected{outline:2px solid #ffe18b;background:#24577a}
+.finish-panel{background:#071b34;border:1px solid #56cfff}
+.die-info-card{background:linear-gradient(145deg,#14395e,#07162d);border:1px solid #53cfff}
+footer{color:#6d9cbd}
+#game .row:first-child{color:#dff7ff}
+#eventLog{color:#c1def1}
+@media(max-width:420px){.app{padding:8px}.panel{padding:10px}.menu{gap:9px}}
 </style></head>
 <body><main class="app">
 <header><h1>حمله تاسی</h1><div class="sub">نبردی از جنس شانس و استراتژی</div></header>
