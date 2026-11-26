@@ -26,18 +26,18 @@ function cyl(parent,x,y,z,rt,rb,h,m,n=12){const o=new THREE.Mesh(new THREE.Cylin
 function makeWarrior(owner,kind,hp){
  const group=new THREE.Group();
  const faction=owner===0;
- const cloth=mat(faction?0x174c70:0x762b42,.55,.3);
- const clothLight=mat(faction?0x2d89a7:0xb13e59,.5,.28);
- const skin=mat(faction?0xc98e68:0x9d654f,.12,.72);
- const skinLight=mat(faction?0xe5b18a:0xc58b69,.08,.7);
- const metal=mat(faction?0x9bb7c8:0x9d7180,.82,.2);
+ const cloth=mat(faction?0x354b58:0x554047,.38,.62);
+ const clothLight=mat(faction?0x667b82:0x80636a,.32,.58);
+ const skin=mat(faction?0x98745d:0x80614f,.05,.88);
+ const skinLight=mat(faction?0xb18b70:0x9b765f,.04,.86);
+ const metal=mat(faction?0x89969b:0x897b79,.78,.34);
  const darkMetal=mat(0x202b3a,.8,.25);
- const gold=mat(0xf5bd4e,.72,.2,0x70400a);
+ const gold=mat(0xa88b56,.68,.38,0x241606);
  const eyeWhite=mat(0xf5f0dc,.08,.25);
  const iris=mat(faction?0x21c8d8:0xff586b,.28,.16,0x401018);
  const black=mat(0x17131a,.05,.65);
  const beard=mat(kind==='mage'?0xddd4c0:(faction?0x382a25:0x241d2c),.05,.9);
- const glow=mat(faction?0x52eaff:0xff5d91,.25,.16,faction?0x087b9a:0x870b35);
+ const glow=mat(faction?0x6b9b9b:0xa07879,.25,.42,faction?0x102b2b:0x301719);
  const armor=kind==='king'?gold:(kind==='mage'?clothLight:metal);
  // Boots, legs, torso and layered shoulder armor
  cyl(group,0,.16,0,.19,.22,.3,darkMetal,10);
@@ -120,15 +120,27 @@ function makeWarrior(owner,kind,hp){
  return group;
 }
 function placePiece(index,owner,kind,hp){const p=makeWarrior(owner,kind,hp);const r=Math.floor(index/3),c=index%3;p.position.set((c-1)*2.75,.34,(r-1)*2.75);arena.add(p);state.pieces.push(p);state.board[index]={owner,kind,hp,mesh:p};return p;}
-function updateHud(msg){document.getElementById('message').textContent=msg;document.getElementById('turn').textContent=state.owner===0?'نوبت شما':'نوبت ربات';document.getElementById('score').textContent=state.score.join(' - ');}
+const roleGuide={
+ king:'پادشاه: فرمانده میدان؛ مهره‌ای ارزشمند برای ساختن خط‌های پیروزی. عدد تاس، قدرت این مهره را تعیین می‌کند.',
+ die:'جنگاور: نیروی تهاجمی میدان؛ با قدرت تاس وارد خانه می‌شود و در جمع قدرت خط‌ها اثر می‌گذارد.',
+ guard:'سپر‌دار: نگهبان خط؛ زره و سپر او نماد دفاع است. جای‌گذاری هوشمندانه‌اش می‌تواند نتیجه نبرد را عوض کند.',
+ mage:'جادوگر: استاد نیروهای اسرارآمیز؛ قدرت عدد تاس او در محاسبه خط‌ها منظور می‌شود.'
+};
+let voiceEnabled=true;
+function sayFa(text){
+ if(!voiceEnabled||!('speechSynthesis' in window)||!('SpeechSynthesisUtterance' in window))return;
+ try{window.speechSynthesis.cancel();const u=new SpeechSynthesisUtterance(text);u.lang='fa-IR';u.rate=.88;u.pitch=.92;u.volume=1;const voices=window.speechSynthesis.getVoices();const fa=voices.find(v=>(v.lang||'').toLowerCase().startsWith('fa'));if(fa)u.voice=fa;window.speechSynthesis.speak(u);}catch(e){}
+}
+function guide(text,spoken=true){const el=document.getElementById('subtitle');if(el)el.textContent=text;if(spoken)sayFa(text);}
+function updateHud(msg){document.getElementById('message').textContent=msg;document.getElementById('turn').textContent=state.owner===0?'نوبت شما':'نوبت ربات';document.getElementById('score').textContent=state.score.join(' - ');guide(msg);}
 function updateButtons(){document.querySelectorAll('.unit').forEach(b=>b.classList.toggle('active',b.dataset.kind===state.selected));document.getElementById('roll').disabled=state.rolled!==null;}
-document.querySelectorAll('.unit').forEach(b=>b.onclick=()=>{if(state.owner!==0)return;state.selected=b.dataset.kind;updateButtons();updateHud('نیروی '+b.textContent+' انتخاب شد؛ تاس بیندازید.');});
-document.getElementById('roll').onclick=()=>{if(state.owner!==0||state.rolled!==null)return;state.rolled=1+Math.floor(Math.random()*6);updateButtons();updateHud('عدد تاس: '+state.rolled+' — خانه‌ای خالی را انتخاب کنید.');};
+document.querySelectorAll('.unit').forEach(b=>b.onclick=()=>{if(state.owner!==0)return;state.selected=b.dataset.kind;updateButtons();const detail=roleGuide[state.selected]||'';updateHud('نیروی '+b.textContent+' انتخاب شد؛ تاس بیندازید.');guide(detail);});
+document.getElementById('roll').onclick=()=>{if(state.owner!==0||state.rolled!==null)return;state.rolled=1+Math.floor(Math.random()*6);updateButtons();updateHud('عدد تاس: '+state.rolled+' — خانه‌ای خالی را انتخاب کنید.');guide('عدد تاس '+state.rolled+' است. اکنون یکی از خانه‌های خالی میدان را لمس کنید.');};
 function lineCheck(){const lines=[[0,1,2],[3,4,5],[6,7,8],[0,3,6],[1,4,7],[2,5,8]];for(const line of lines){const a=line.map(i=>state.board[i]);if(a.every(Boolean)){const sums=[0,0];a.forEach(p=>sums[p.owner]+=p.hp);if(sums[0]!==sums[1]){const win=sums[0]>sums[1]?0:1;state.score[win]++;line.forEach(i=>{const p=state.board[i];arena.remove(p.mesh);state.pieces=state.pieces.filter(x=>x!==p.mesh);state.board[i]=null;});updateHud(win===0?'خط به سود شما تمام شد.':'خط به سود ربات تمام شد.');return true;}}}return false;}
 function chooseTile(i){if(state.owner!==0||state.rolled===null||state.board[i])return;placePiece(i,0,state.selected,state.rolled);state.rolled=null;updateButtons();lineCheck();state.owner=1;state.turns++;updateHud('ربات در حال انتخاب حرکت است…');setTimeout(botMove,700);}
 function botMove(){const free=state.board.map((p,i)=>p?null:i).filter(i=>i!==null);if(!free.length){state.owner=0;updateHud('زمین پر شد؛ شروع دور تازه.');return;}const i=free[Math.floor(Math.random()*free.length)],kind=['king','die','guard','mage'][Math.floor(Math.random()*4)],hp=1+Math.floor(Math.random()*6);placePiece(i,1,kind,hp);lineCheck();state.owner=0;updateHud('نوبت شماست؛ نیروی بعدی را انتخاب کنید.');}
 const ray=new THREE.Raycaster(),pointer=new THREE.Vector2();renderer.domElement.addEventListener('pointerup',e=>{pointer.x=e.clientX/innerWidth*2-1;pointer.y=-(e.clientY/innerHeight)*2+1;ray.setFromCamera(pointer,camera);const hits=ray.intersectObjects(tileMeshes,true);if(hits.length){let o=hits[0].object;while(o.parent&&!tileMeshes.includes(o))o=o.parent;const i=tileMeshes.indexOf(o);if(i>=0)chooseTile(i);}});
 document.getElementById('reset').onclick=()=>{state.pieces.forEach(p=>arena.remove(p));state.pieces=[];state.board=Array(9).fill(null);state.owner=0;state.rolled=null;state.score=[0,0];state.turns=0;updateButtons();updateHud('میدان تازه آماده است؛ نیرو انتخاب کنید.');};
-function animate(t){requestAnimationFrame(animate);const time=t*.001;state.pieces.forEach(p=>{p.position.y=.34+Math.sin(time*2+p.userData.phase)*.045;p.rotation.y=Math.sin(time*.7+p.userData.phase)*.08;});controls.update();renderer.render(scene,camera);}animate(0);
+function animate(t){requestAnimationFrame(animate);controls.update();renderer.render(scene,camera);}animate(0);
 addEventListener('resize',()=>{camera.aspect=innerWidth/innerHeight;camera.updateProjectionMatrix();renderer.setSize(innerWidth,innerHeight);});
 updateButtons();updateHud('میدان سه‌بعدی آماده است. برای شروع نیرو انتخاب کنید.');
