@@ -144,6 +144,46 @@ import { RoundedBoxGeometry } from 'three/addons/geometries/RoundedBoxGeometry.j
     rod(root,[-.13,.38,0],[-.17,.22,.04],.085,dark);
     rod(root,[.13,.38,0],[.17,.22,.04],.085,dark);
     sphere(root,.09,[-.17,.21,.08],main);sphere(root,.09,[.17,.21,.08],main);
+    // High-detail armored anatomy: layered chest plate, shoulder armor, joints,
+    // forearm guards, segmented legs, boots, reactor pack and luminous visor.
+    const armorMat = mat(owner===0?0x244c52:0x542b43,.82,.2,owner===0?0x063d35:0x4a1024);
+    const trimMat = mat(owner===0?0x8bffe0:0xffb3c8,.72,.18,owner===0?0x168c75:0x9b2348);
+    const chest = new THREE.Mesh(new RoundedBoxGeometry(.43,.36,.16,5,.07),armorMat);
+    chest.position.set(0,.76,.255); chest.castShadow=true; root.add(chest);
+    const chestCore = new THREE.Mesh(new THREE.OctahedronGeometry(.105,1),trimMat);
+    chestCore.position.set(0,.78,.36); chestCore.rotation.z=Math.PI/4; root.add(chestCore);
+    const visor = new THREE.Mesh(new RoundedBoxGeometry(.245,.075,.045,4,.025),light);
+    visor.position.set(0,1.145,.244); visor.castShadow=true; root.add(visor);
+    const brow = new THREE.Mesh(new RoundedBoxGeometry(.31,.045,.07,3,.018),dark);
+    brow.position.set(0,1.205,.22); root.add(brow);
+    for(const side of [-1,1]){
+      const shoulder=sphere(root,.17,[side*.32,.88,0],armorMat,[1.05,.82,1.12]);
+      shoulder.rotation.z=side*-.22;
+      const shoulderBadge=new THREE.Mesh(new THREE.CylinderGeometry(.095,.11,.035,8),trimMat);
+      shoulderBadge.position.set(side*.34,.9,.11); shoulderBadge.rotation.x=Math.PI/2; root.add(shoulderBadge);
+      sphere(root,.105,[side*.43,.52,.02],dark);
+      const forearm=new THREE.Mesh(new RoundedBoxGeometry(.14,.23,.17,4,.045),main);
+      forearm.position.set(side*.43,.39,.045); forearm.rotation.z=side*-.12; forearm.castShadow=true; root.add(forearm);
+      sphere(root,.105,[side*.15,.34,0],dark);
+      const thigh=new THREE.Mesh(new RoundedBoxGeometry(.17,.22,.19,4,.045),armorMat);
+      thigh.position.set(side*.15,.34,.025); thigh.castShadow=true; root.add(thigh);
+      const shin=new THREE.Mesh(new RoundedBoxGeometry(.15,.19,.18,4,.04),main);
+      shin.position.set(side*.17,.19,.07); shin.castShadow=true; root.add(shin);
+      const boot=new THREE.Mesh(new RoundedBoxGeometry(.19,.105,.28,4,.035),dark);
+      boot.position.set(side*.17,.105,.105); boot.castShadow=true; root.add(boot);
+      const knee=new THREE.Mesh(new THREE.SphereGeometry(.09,14,12),trimMat);
+      knee.position.set(side*.17,.285,.13); root.add(knee);
+      const ear=new THREE.Mesh(new THREE.CylinderGeometry(.07,.07,.11,12),trimMat);
+      ear.rotation.z=Math.PI/2; ear.position.set(side*.235,1.08,0); root.add(ear);
+    }
+    const backpack=new THREE.Mesh(new RoundedBoxGeometry(.3,.43,.18,4,.06),dark);
+    backpack.position.set(0,.72,-.25); backpack.castShadow=true; root.add(backpack);
+    for(let j=0;j<3;j++){
+      const vent=new THREE.Mesh(new THREE.BoxGeometry(.19,.035,.025),trimMat);
+      vent.position.set(0,.83-j*.105,-.35); root.add(vent);
+    }
+    const waist=new THREE.Mesh(new THREE.TorusGeometry(.22,.035,8,28),trimMat);
+    waist.position.y=.48; waist.rotation.x=Math.PI/2; root.add(waist);
     // Individual silhouettes for kings, specialists and support units.
     if(code.startsWith('king_')){
       rod(root,[0,1.31,0],[0,1.52,0],.035,mat(0xffd56a,.8,.18,0xff9c18));
