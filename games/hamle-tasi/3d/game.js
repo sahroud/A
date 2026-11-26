@@ -23,16 +23,102 @@ const colors=[0x34e0a0,0xff466f];
 function mat(color,metal=.45,rough=.3,emissive=0){return new THREE.MeshStandardMaterial({color,metalness:metal,roughness:rough,emissive,emissiveIntensity:.8});}
 function sphere(parent,x,y,z,sx,sy,sz,m){const o=new THREE.Mesh(new THREE.SphereGeometry(1,18,14),m);o.position.set(x,y,z);o.scale.set(sx,sy,sz);o.castShadow=true;o.receiveShadow=true;parent.add(o);return o;}
 function cyl(parent,x,y,z,rt,rb,h,m,n=12){const o=new THREE.Mesh(new THREE.CylinderGeometry(rt,rb,h,n),m);o.position.set(x,y,z);o.castShadow=true;o.receiveShadow=true;parent.add(o);return o;}
-function makeWarrior(owner,kind,hp){const group=new THREE.Group(),main=mat(colors[owner],.65,.23,colors[owner]),dark=mat(0x142438,.8,.25),gold=mat(kind==='king'?0xffc65a:0x9bdfff,.7,.2,0x24445a),visor=mat(owner?0xffa1ba:0x8ffff0,.25,.12,owner?0xff1655:0x00dca8);
-cyl(group,0,.52,0,.34,.42,.62,main);sphere(group,0,1.03,0,.29,.32,.27,dark);sphere(group,0,1.08,.22,.2,.11,.08,visor);
-sphere(group,-.43,.55,0,.13,.3,.14,main);sphere(group,.43,.55,0,.13,.3,.14,main);
-cyl(group,-.17,.16,0,.13,.16,.32,dark);cyl(group,.17,.16,0,.13,.16,.32,dark);
-if(kind==='king'){cyl(group,0,1.39,0,.22,.29,.16,gold,8);for(let i=0;i<5;i++){const a=i*Math.PI*2/5;sphere(group,Math.cos(a)*.18,1.52,Math.sin(a)*.18,.055,.13,.055,gold);}sphere(group,0,1.48,0,.09,.1,.09,mat(0xffffff,.3,.15,0xffd24d));}
-if(kind==='mage'){const staff=cyl(group,.55,.76,0,.045,.055,.95,gold,8);staff.rotation.z=-.12;sphere(group,.55,1.28,0,.13,.13,.13,visor);}
-if(kind==='guard'){const shield=new THREE.Mesh(new THREE.BoxGeometry(.12,.62,.48),gold);shield.position.set(.5,.68,.12);shield.rotation.z=-.12;shield.castShadow=true;group.add(shield);}
-const hpRing=new THREE.Mesh(new THREE.TorusGeometry(.39,.035,8,32),mat(0x6feaff,.4,.25,0x126bff));hpRing.rotation.x=Math.PI/2;hpRing.position.y=1.65;group.add(hpRing);
-const tag=new THREE.Group();for(let i=0;i<Math.min(6,hp);i++){const dot=sphere(tag,(i-2.5)*.12,0,0,.045,.045,.045,mat(0xffd66b,.2,.2,0xff9b00));}tag.position.y=1.85;group.add(tag);
-group.userData={owner,kind,hp,baseY:0,phase:Math.random()*6};return group;}
+function makeWarrior(owner,kind,hp){
+ const group=new THREE.Group();
+ const faction=owner===0;
+ const cloth=mat(faction?0x174c70:0x762b42,.55,.3);
+ const clothLight=mat(faction?0x2d89a7:0xb13e59,.5,.28);
+ const skin=mat(faction?0xc98e68:0x9d654f,.12,.72);
+ const skinLight=mat(faction?0xe5b18a:0xc58b69,.08,.7);
+ const metal=mat(faction?0x9bb7c8:0x9d7180,.82,.2);
+ const darkMetal=mat(0x202b3a,.8,.25);
+ const gold=mat(0xf5bd4e,.72,.2,0x70400a);
+ const eyeWhite=mat(0xf5f0dc,.08,.25);
+ const iris=mat(faction?0x21c8d8:0xff586b,.28,.16,0x401018);
+ const black=mat(0x17131a,.05,.65);
+ const beard=mat(kind==='mage'?0xddd4c0:(faction?0x382a25:0x241d2c),.05,.9);
+ const glow=mat(faction?0x52eaff:0xff5d91,.25,.16,faction?0x087b9a:0x870b35);
+ const armor=kind==='king'?gold:(kind==='mage'?clothLight:metal);
+ // Boots, legs, torso and layered shoulder armor
+ cyl(group,0,.16,0,.19,.22,.3,darkMetal,10);
+ cyl(group,-.17,.28,0,.105,.13,.38,darkMetal,10);
+ cyl(group,.17,.28,0,.105,.13,.38,darkMetal,10);
+ cyl(group,0,.68,0,.32,.39,.62,cloth,12);
+ const breast=new THREE.Mesh(new THREE.SphereGeometry(1,18,12),armor);
+ breast.position.set(0,.73,.18);breast.scale.set(.29,.3,.12);breast.castShadow=true;group.add(breast);
+ sphere(group,-.36,.83,0,.17,.16,.2,armor);
+ sphere(group,.36,.83,0,.17,.16,.2,armor);
+ // Neck and sculpted head
+ cyl(group,0,1.12,0,.12,.13,.2,skin,12);
+ sphere(group,0,1.43,.015,.285,.345,.245,skin);
+ // ears
+ sphere(group,-.285,1.43,0,.065,.105,.07,skinLight);
+ sphere(group,.285,1.43,0,.065,.105,.07,skinLight);
+ // cheekbones, nose, eyes facing camera/front (+Z)
+ sphere(group,-.13,1.39,.214,.105,.085,.055,skinLight);
+ sphere(group,.13,1.39,.214,.105,.085,.055,skinLight);
+ sphere(group,0,1.43,.265,.043,.09,.055,skinLight);
+ for(const x of [-.105,.105]){
+   sphere(group,x,1.51,.226,.075,.048,.035,eyeWhite);
+   sphere(group,x,1.51,.257,.028,.034,.018,iris);
+   sphere(group,x,1.51,.272,.012,.02,.009,black);
+   const brow=sphere(group,x,1.585,.228,.085,.025,.035,kind==='mage'?beard:darkMetal);
+   brow.rotation.z=x<0?.13:-.13;
+ }
+ // mouth and facial hair give each role a recognizable silhouette
+ sphere(group,0,1.315,.248,.075,.018,.022,black);
+ if(kind==='king'||kind==='mage'){
+   sphere(group,0,1.245,.22,.19,.13,.09,beard);
+   const beardTip=sphere(group,0,1.105,.205,.105,kind==='mage'?.22:.14,.085,beard);
+   beardTip.rotation.z=kind==='mage'?.08:0;
+   sphere(group,-.17,1.30,.20,.075,.11,.07,beard);
+   sphere(group,.17,1.30,.20,.075,.11,.07,beard);
+ } else {
+   sphere(group,-.12,1.29,.22,.07,.07,.05,beard);
+   sphere(group,.12,1.29,.22,.07,.07,.05,beard);
+ }
+ if(kind==='king'){
+   // jeweled royal crown, five raised points and forehead jewel
+   cyl(group,0,1.755,0,.27,.29,.13,gold,10);
+   for(let i=0;i<7;i++){const x=-.23+i*.076;const spike=new THREE.Mesh(new THREE.ConeGeometry(.045,.19,5),gold);spike.position.set(x,1.89,.015);spike.castShadow=true;group.add(spike);}
+   sphere(group,0,1.78,.27,.065,.07,.035,glow);
+   const cape=new THREE.Mesh(new THREE.ConeGeometry(.48,.9,4,1,true),clothLight);cape.position.set(0,.62,-.31);cape.rotation.x=-.16;cape.castShadow=true;group.add(cape);
+   // royal shoulder chains
+   const chain=new THREE.Mesh(new THREE.TorusGeometry(.24,.025,8,32,Math.PI),gold);chain.position.set(0,.88,.25);chain.rotation.z=Math.PI;group.add(chain);
+ } else if(kind==='mage'){
+   // tall cloth wizard hat with brim and glowing runic orb
+   const brim=new THREE.Mesh(new THREE.CylinderGeometry(.38,.38,.07,24),cloth);brim.position.y=1.79;group.add(brim);
+   const hat=new THREE.Mesh(new THREE.ConeGeometry(.255,.68,20),clothLight);hat.position.set(0,2.12,-.015);hat.rotation.z=-.12;hat.castShadow=true;group.add(hat);
+   const band=new THREE.Mesh(new THREE.TorusGeometry(.255,.035,8,24),gold);band.position.y=1.91;group.add(band);
+   for(let i=0;i<3;i++){const rune=sphere(group,-.13+i*.13,1.91,.23,.025,.025,.018,glow);}
+   const staff=cyl(group,.57,.85,-.02,.045,.06,1.35,darkMetal,10);staff.rotation.z=-.08;
+   const orb=sphere(group,.57,1.58,-.02,.16,.16,.16,glow);
+   const halo=new THREE.Mesh(new THREE.TorusGeometry(.23,.018,8,32),gold);halo.position.copy(orb.position);halo.rotation.x=.9;group.add(halo);
+   for(let i=0;i<4;i++){const star=sphere(group,.57+Math.cos(i*Math.PI/2)*.25,1.58+Math.sin(i*Math.PI/2)*.25,-.02,.035,.035,.035,gold);}
+ } else if(kind==='guard'){
+   // helmet with nose guard, cheek plates and a visible face opening
+   const helmet=new THREE.Mesh(new THREE.SphereGeometry(.31,18,12,0,Math.PI*2,0,Math.PI*.55),metal);helmet.position.set(0,1.58,0);helmet.castShadow=true;group.add(helmet);
+   cyl(group,0,1.64,0,.32,.32,.07,darkMetal,16);
+   const noseGuard=new THREE.Mesh(new THREE.BoxGeometry(.055,.22,.08),gold);noseGuard.position.set(0,1.43,.29);group.add(noseGuard);
+   const shield=new THREE.Mesh(new THREE.CylinderGeometry(.34,.3,.1,6),clothLight);shield.position.set(.52,.72,.1);shield.rotation.z=-.1;shield.rotation.x=.15;shield.castShadow=true;group.add(shield);
+   const shieldBoss=sphere(group,.52,.72,.19,.1,.1,.06,gold);
+   const sword=cyl(group,-.53,.79,.04,.035,.045,.85,metal,8);sword.rotation.z=-.12;
+ } else {
+   // dice warrior: angular battle mask, cheek plates and crossed chest straps
+   const mask=new THREE.Mesh(new THREE.BoxGeometry(.39,.13,.075),gold);mask.position.set(0,1.46,.25);group.add(mask);
+   const strap=cyl(group,0,.7,.245,.035,.035,.65,gold,8);strap.rotation.z=.42;
+   const blade=cyl(group,.52,.78,0,.035,.045,.9,metal,8);blade.rotation.z=-.18;
+   const pommel=sphere(group,.52,1.27,0,.075,.075,.075,glow);
+ }
+ // shoulder insignia and faction crest
+ const crest=sphere(group,0,.9,.315,.09,.09,.035,gold);
+ const hpRing=new THREE.Mesh(new THREE.TorusGeometry(.39,.025,8,32),glow);hpRing.rotation.x=Math.PI/2;hpRing.position.y=2.02;group.add(hpRing);
+ const tag=new THREE.Group();
+ for(let i=0;i<Math.min(6,hp);i++)sphere(tag,(i-2.5)*.12,0,0,.035,.035,.035,gold);
+ tag.position.y=2.19;group.add(tag);
+ group.userData={owner,kind,hp,baseY:0,phase:Math.random()*6};
+ return group;
+}
 function placePiece(index,owner,kind,hp){const p=makeWarrior(owner,kind,hp);const r=Math.floor(index/3),c=index%3;p.position.set((c-1)*2.75,.34,(r-1)*2.75);arena.add(p);state.pieces.push(p);state.board[index]={owner,kind,hp,mesh:p};return p;}
 function updateHud(msg){document.getElementById('message').textContent=msg;document.getElementById('turn').textContent=state.owner===0?'نوبت شما':'نوبت ربات';document.getElementById('score').textContent=state.score.join(' - ');}
 function updateButtons(){document.querySelectorAll('.unit').forEach(b=>b.classList.toggle('active',b.dataset.kind===state.selected));document.getElementById('roll').disabled=state.rolled!==null;}
