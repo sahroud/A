@@ -17,6 +17,7 @@ public class MainActivity extends Activity {
     private WebView gameView;
     private TextToSpeech persianTts;
     private boolean ttsReady = false;
+    private boolean ttsInitialized = false;
     private String pendingSpeech = null;
 
     private class AndroidTtsBridge {
@@ -27,6 +28,11 @@ public class MainActivity extends Activity {
                 if (!ttsReady) { pendingSpeech = message; return; }
                 speakNow(message);
             });
+        }
+        @JavascriptInterface
+        public String getStatus() {
+            if (ttsReady) return "ready";
+            return ttsInitialized ? "unavailable" : "loading";
         }
         @JavascriptInterface
         public void stop() {
@@ -54,6 +60,7 @@ public class MainActivity extends Activity {
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
                              WindowManager.LayoutParams.FLAG_FULLSCREEN);
         persianTts = new TextToSpeech(this, status -> {
+            ttsInitialized = true;
             if (status == TextToSpeech.SUCCESS) {
                 int language = persianTts.setLanguage(new Locale("fa", "IR"));
                 if (language == TextToSpeech.LANG_MISSING_DATA || language == TextToSpeech.LANG_NOT_SUPPORTED) {
