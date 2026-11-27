@@ -146,6 +146,15 @@ document.getElementById('voice').onclick=()=>{voiceEnabled=!voiceEnabled;documen
 document.querySelectorAll('.unit').forEach(b=>b.onclick=()=>{if(state.owner!==0)return;state.selected=b.dataset.kind;updateButtons();const detail=roleGuide[state.selected]||'';updateHud('نیروی '+b.textContent+' انتخاب شد؛ تاس بیندازید.');guide(detail);});
 
 let diceFx=null;
+let plannedBot=null;
+const actionNames={king:'پادشاه',die:'تاس جنگی',guard:'سپر‌دار',mage:'جادوگر'};
+function showActionPage(value){
+ if(!plannedBot){plannedBot={kind:['king','die','guard','mage'][Math.floor(Math.random()*4)],hp:1+Math.floor(Math.random()*6)};}
+ document.getElementById('action-player').textContent='شما: '+(actionNames[state.selected]||state.selected)+' — قدرت تاس '+value;
+ document.getElementById('action-opponent').textContent='حریف: '+actionNames[plannedBot.kind]+' — قدرت انتخابی '+plannedBot.hp;
+ document.getElementById('action-page').classList.add('visible');
+}
+document.getElementById('action-return').onclick=()=>{document.getElementById('action-page').classList.remove('visible');updateHud('عدد تاس: '+state.rolled+' — حالا خانهٔ خالی را انتخاب کنید.');};
 function pipTexture(value){
  const c=document.createElement('canvas');c.width=256;c.height=256;const x=c.getContext('2d');
  x.fillStyle='#f4f0e5';x.fillRect(0,0,256,256);
@@ -179,6 +188,7 @@ function tickDice(now){
  if(d.phase==='rolling'){
    d.phase='show';d.shownAt=now;d.label.textContent='عدد تاس: '+d.value;d.label.style.opacity='1';
    d.done();
+   showActionPage(d.value);
  }else if(d.phase==='show'&&now-d.shownAt>=1000){
    d.phase='fade';d.fadeAt=now;
  }else if(d.phase==='fade'){
@@ -189,8 +199,8 @@ function tickDice(now){
 
 document.getElementById('roll').onclick=()=>{if(state.owner!==0||state.rolled!==null||diceFx)return;const value=1+Math.floor(Math.random()*6);state.rolled=value;updateButtons();updateHud('تاس در حال چرخش است…');showDice(value,()=>{updateButtons();updateHud('عدد تاس: '+value+' — خانه‌ای خالی را انتخاب کنید.');});};
 function lineCheck(){const lines=[[0,1,2],[3,4,5],[6,7,8],[0,3,6],[1,4,7],[2,5,8]];for(const line of lines){const a=line.map(i=>state.board[i]);if(a.every(Boolean)){const sums=[0,0];a.forEach(p=>sums[p.owner]+=p.hp);if(sums[0]!==sums[1]){const win=sums[0]>sums[1]?0:1;state.score[win]++;line.forEach(i=>{const p=state.board[i];arena.remove(p.mesh);state.pieces=state.pieces.filter(x=>x!==p.mesh);state.board[i]=null;});updateHud(win===0?'خط به سود شما تمام شد.':'خط به سود ربات تمام شد.');return true;}}}return false;}
-function chooseTile(i){if(state.owner!==0||state.rolled===null||state.board[i])return;placePiece(i,0,state.selected,state.rolled);state.rolled=null;updateButtons();lineCheck();state.owner=1;state.turns++;updateHud('ربات در حال انتخاب حرکت است…');setTimeout(botMove,700);}
-function botMove(){const free=state.board.map((p,i)=>p?null:i).filter(i=>i!==null);if(!free.length){state.owner=0;updateHud('زمین پر شد؛ شروع دور تازه.');return;}const i=free[Math.floor(Math.random()*free.length)],kind=['king','die','guard','mage'][Math.floor(Math.random()*4)],hp=1+Math.floor(Math.random()*6);placePiece(i,1,kind,hp);lineCheck();state.owner=0;updateHud('نوبت شماست؛ نیروی بعدی را انتخاب کنید.');}
+function chooseTile(i){if(document.getElementById('action-page').classList.contains('visible')||state.owner!==0||state.rolled===null||state.board[i])return;placePiece(i,0,state.selected,state.rolled);state.rolled=null;updateButtons();lineCheck();state.owner=1;state.turns++;updateHud('ربات در حال انتخاب حرکت است…');setTimeout(botMove,700);}
+function botMove(){const free=state.board.map((p,i)=>p?null:i).filter(i=>i!==null);if(!free.length){state.owner=0;updateHud('زمین پر شد؛ شروع دور تازه.');return;}const i=free[Math.floor(Math.random()*free.length)],kind=plannedBot?.kind||['king','die','guard','mage'][Math.floor(Math.random()*4)],hp=plannedBot?.hp||(1+Math.floor(Math.random()*6));plannedBot=null;placePiece(i,1,kind,hp);lineCheck();state.owner=0;updateHud('نوبت شماست؛ نیروی بعدی را انتخاب کنید.');}
 const ray=new THREE.Raycaster(),pointer=new THREE.Vector2();renderer.domElement.addEventListener('pointerup',e=>{pointer.x=e.clientX/innerWidth*2-1;pointer.y=-(e.clientY/innerHeight)*2+1;ray.setFromCamera(pointer,camera);const hits=ray.intersectObjects(tileMeshes,true);if(hits.length){let o=hits[0].object;while(o.parent&&!tileMeshes.includes(o))o=o.parent;const i=tileMeshes.indexOf(o);if(i>=0)chooseTile(i);}});
 document.getElementById('reset').onclick=()=>{state.pieces.forEach(p=>arena.remove(p));state.pieces=[];state.board=Array(9).fill(null);state.owner=0;state.rolled=null;state.score=[0,0];state.turns=0;updateButtons();updateHud('میدان تازه آماده است؛ نیرو انتخاب کنید.');};
 function animate(t){requestAnimationFrame(animate);tickDice(t);controls.update();renderer.render(scene,camera);}animate(0);
