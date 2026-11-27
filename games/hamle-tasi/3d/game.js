@@ -127,22 +127,39 @@ const roleGuide={
  mage:'جادوگر: استاد نیروهای اسرارآمیز؛ قدرت عدد تاس او در محاسبه خط‌ها منظور می‌شود.'
 };
 let voiceEnabled=true;
-function sayFa(text){
- if(!voiceEnabled)return;
+let pendingWebSpeech='';
+function speakWebFa(message){
+ if(!('speechSynthesis' in window)||!('SpeechSynthesisUtterance' in window)){
+   guide('موتور گفتار فارسی در دسترس نیست؛ زیرنویس فارسی فعال است.',false);return;
+ }
  try{
-   if(window.AndroidTTS&&typeof window.AndroidTTS.speak==='function'){window.AndroidTTS.speak(String(text));return;}
-   if('speechSynthesis' in window&&'SpeechSynthesisUtterance' in window){
-     window.speechSynthesis.cancel();
-     const u=new SpeechSynthesisUtterance(text);u.lang='fa-IR';u.rate=.88;u.pitch=.92;u.volume=1;
-     const voices=window.speechSynthesis.getVoices();const fa=voices.find(v=>(v.lang||'').toLowerCase().startsWith('fa'));if(fa)u.voice=fa;
-     window.speechSynthesis.speak(u);
-   } else {guide('صدای گفتار در این دستگاه در دسترس نیست؛ زیرنویس فارسی فعال است.',false);}
- }catch(e){guide('پخش صدای راهنما ناموفق بود؛ زیرنویس فارسی را دنبال کنید.',false);}
+   const synth=window.speechSynthesis;
+   synth.cancel();
+   const utterance=new SpeechSynthesisUtterance(String(message));
+   utterance.lang='fa-IR';utterance.rate=.88;utterance.pitch=.96;utterance.volume=1;
+   const voices=synth.getVoices();
+   const fa=voices.find(v=>(v.lang||'').toLowerCase()==='fa-ir')||voices.find(v=>(v.lang||'').toLowerCase().startsWith('fa'));
+   if(fa)utterance.voice=fa;
+   utterance.onerror=()=>guide('صدای فارسی روی این مرورگر آماده نیست؛ زیرنویس را دنبال کنید.',false);
+   synth.speak(utterance);
+ }catch(e){guide('پخش صدای فارسی ممکن نشد؛ زیرنویس فارسی فعال است.',false);}
+}
+function sayFa(message){
+ if(!voiceEnabled)return;
+ const value=String(message);
+ try{
+   if(window.AndroidTTS&&typeof window.AndroidTTS.speak==='function'){
+     const status=typeof window.AndroidTTS.getStatus==='function'?window.AndroidTTS.getStatus():'ready';
+     if(status==='ready'||status==='loading'){window.AndroidTTS.speak(value);return;}
+   }
+   speakWebFa(value);
+ }catch(e){speakWebFa(value);}
 }
 function guide(text,spoken=true){const el=document.getElementById('subtitle');if(el)el.textContent=text;if(spoken)sayFa(text);}
+if('speechSynthesis' in window){window.speechSynthesis.getVoices();window.speechSynthesis.onvoiceschanged=()=>{if(pendingWebSpeech){const p=pendingWebSpeech;pendingWebSpeech='';speakWebFa(p);}};}
 function updateHud(msg){document.getElementById('message').textContent=msg;document.getElementById('turn').textContent=state.owner===0?'نوبت شما':'نوبت ربات';document.getElementById('score').textContent=state.score.join(' - ');guide(msg);}
 function updateButtons(){document.querySelectorAll('.unit').forEach(b=>b.classList.toggle('active',b.dataset.kind===state.selected));document.getElementById('roll').disabled=state.rolled!==null;}
-document.getElementById('voice').onclick=()=>{voiceEnabled=!voiceEnabled;document.getElementById('voice').textContent=voiceEnabled?'🔊 راهنمای صوتی: روشن':'🔇 راهنمای صوتی: خاموش';if(voiceEnabled){guide('راهنمای فارسی فعال شد. برای آزمایش صدا، این جمله را می‌شنوید.');sayFa('سلام. راهنمای صوتی بازی حمله تاسی فعال است.');}else{if(window.AndroidTTS&&window.AndroidTTS.stop)window.AndroidTTS.stop();if('speechSynthesis' in window)window.speechSynthesis.cancel();}};
+document.getElementById('voice').onclick=()=>{voiceEnabled=!voiceEnabled;document.getElementById('voice').textContent=voiceEnabled?'🔊 راهنمای صوتی: روشن':'🔇 راهنمای صوتی: خاموش';if(voiceEnabled){guide('آزمایش صدا: اگر صدای فارسی شنیده نمی‌شود، دادهٔ گفتار فارسی را در تنظیمات موتور تبدیل متن به گفتار گوشی نصب کنید.');}else{if(window.AndroidTTS&&window.AndroidTTS.stop)window.AndroidTTS.stop();if('speechSynthesis' in window)window.speechSynthesis.cancel();}};
 document.querySelectorAll('.unit').forEach(b=>b.onclick=()=>{if(state.owner!==0)return;state.selected=b.dataset.kind;updateButtons();const detail=roleGuide[state.selected]||'';updateHud('نیروی '+b.textContent+' انتخاب شد؛ تاس بیندازید.');guide(detail);});
 
 let diceFx=null;
