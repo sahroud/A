@@ -177,7 +177,7 @@ function tickDice(now){
  if(p<1){d.group.rotation.set(d.topRot[0]+(1-ease)*Math.PI*8,d.topRot[1]+(1-ease)*Math.PI*10,d.topRot[2]+(1-ease)*Math.PI*6);d.group.position.y=3.4+Math.sin(p*Math.PI*7)*.35;return;}
  d.group.rotation.set(...d.topRot);d.group.position.y=2.9;
  if(d.phase==='rolling'){
-   d.phase='show';d.shownAt=now;d.label.textContent='عدد تاس: '+d.value;d.label.style.opacity='1';sayFa('عدد تاس '+d.value);
+   d.phase='show';d.shownAt=now;d.label.textContent='عدد تاس: '+d.value;d.label.style.opacity='1';
    d.done();
  }else if(d.phase==='show'&&now-d.shownAt>=1000){
    d.phase='fade';d.fadeAt=now;
