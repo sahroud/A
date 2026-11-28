@@ -452,7 +452,7 @@ initSurahs();buildBeads();changeDhikr();setSpeed(1);renderSurahSidebar();if('ser
  }).catch(()=>{});
 }
 // SAHROUD TASBIH: touch/proximity rak'at counter with configurable delayed mukabbir
-let rakatSajdaCount=0,rakatTotal=4,rakatRunning=false,rakatLastTouch=0;
+let rakatSajdaCount=0,rakatTotal=4,rakatRunning=false,rakatLastTouch=0,rakatPrayerSelected=false;
 let rakatMode='touch',rakatDelay=1000,rakatNear=false,rakatProximitySensor=null,rakatSpeakTimers=[];
 function loadRakatSettings(){
  try{const v=JSON.parse(localStorage.getItem('sahroud_rakat_settings_v1')||'{}');if(v.mode==='proximity'||v.mode==='touch')rakatMode=v.mode;if([1000,1500,2000].includes(Number(v.delay)))rakatDelay=Number(v.delay)}catch(e){}
@@ -540,16 +540,15 @@ function rakatRender(){
   ritual.hidden=false;
  }else{ritual.hidden=true;ritual.textContent=''}
  done.hidden=!isFinal;
- const welcome=document.getElementById('rakatWelcome');if(welcome)welcome.hidden=true;
  document.querySelectorAll('#rakat .rakatPrayerBtn').forEach(btn=>{
-  const active=Number(btn.dataset.total)===rakatTotal&&rakatTotal>0;
+  const active=rakatPrayerSelected&&Number(btn.dataset.total)===rakatTotal;
   btn.classList.toggle('active',active);btn.setAttribute('aria-pressed',active?'true':'false');
  });
 }
 function rakatStart(total){
  const selected=Number(total||document.getElementById('rakatPrayerTotal').value)||4;
  if(rakatRunning&&rakatTotal===selected)return;
- rakatTotal=selected;document.getElementById('rakatPrayerTotal').value=String(selected);
+ rakatTotal=selected;rakatPrayerSelected=true;document.getElementById('rakatPrayerTotal').value=String(selected);
  rakatSajdaCount=0;rakatRunning=true;rakatLastTouch=0;rakatCancelSpeakTimers();rakatUnlockAudio();
  const welcome=document.getElementById('rakatWelcome');if(welcome)welcome.hidden=true;
  document.getElementById('rakat').classList.add('rakat-running');
