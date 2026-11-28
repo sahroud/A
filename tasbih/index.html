@@ -66,7 +66,13 @@ body{font-size:17px}.brand{font-size:20px}.brand small{font-size:13px}.btn{font-
 #rakat .rakatDoneText{z-index:2;position:relative;flex:0 0 auto;color:#ffe2a6;font-family:"Noto Naskh Arabic","Traditional Arabic",serif;font-size:clamp(20px,5.5vw,29px);font-weight:900;line-height:1.25;text-shadow:0 3px 6px #32170e;padding:2px 0}
 #rakat.rakat-running .rakatPrayerBtn{opacity:.92}
 @media(max-width:390px){#rakat .rakatPrayerBtn{font-size:12px;min-height:46px}#rakat .rakatDisplay.has-ritual{min-height:330px;padding:10px 12px}#rakat .rakatRitualText{font-size:15px;line-height:1.8;max-height:49%}}
-#nahjContent{max-height:none!important;overflow:visible!important;padding:4px 0 18px}#nahjContent iframe{display:block;max-width:100%;background:#fff}#nahjContent .actions{margin-top:12px}</style></head><body><main class="app"><header class="head"><div class="brand">SAHROUD TASBIH<small>ذکر، تلاوت و نیایش روزانه</small></div><div class="seal">﷽</div></header>
+#nahjContent{max-height:none!important;overflow:visible!important;padding:4px 0 18px}#nahjContent iframe{display:block;max-width:100%;background:#fff}#nahjContent .actions{margin-top:12px}
+/* Keep sajda guide lines on one fixed lower baseline on every prayer screen.
+   Reserve a clear text-safe zone so the lines never cross tashahhud or salam. */
+#rakat .rakatSajdaLine{top:auto!important;bottom:18px!important;transform:none!important}
+#rakat .rakatRitualText{padding-bottom:38px!important}
+#rakat .rakatDoneText{margin-bottom:32px!important}
+</style></head><body><main class="app"><header class="head"><div class="brand">SAHROUD TASBIH<small>ذکر، تلاوت و نیایش روزانه</small></div><div class="seal">﷽</div></header>
 <section id="home" class="page active">
 <div class="homeVerseBg" aria-hidden="true"><div>أَلَا بِذِكْرِ اللَّهِ تَطْمَئِنُّ الْقُلُوبُ</div><small>آگاه باشید که با یاد خدا دل‌ها آرام می‌گیرد</small></div><section class="panel prayerPanel" id="prayerPanel"><div class="prayerHead"><span>🕌 اوقات شرعی محل شما</span><small id="prayerPlace">در انتظار تعیین موقعیت</small></div><div class="prayerTimes"><div><small>اذان صبح</small><b id="pFajr">—:—</b></div><div><small>طلوع آفتاب</small><b id="pSunrise">—:—</b></div><div><small>اذان ظهر</small><b id="pDhuhr">—:—</b></div><div><small>اذان مغرب</small><b id="pMaghrib">—:—</b></div></div></section>
 <div class="homeLabel">درگاه نیایش</div><div class="grid homeGrid">
