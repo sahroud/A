@@ -72,6 +72,26 @@ body{font-size:17px}.brand{font-size:20px}.brand small{font-size:13px}.btn{font-
 #rakat .rakatSajdaLine{top:auto!important;bottom:18px!important;transform:none!important}
 #rakat .rakatRitualText{padding-bottom:38px!important}
 #rakat .rakatDoneText{margin-bottom:32px!important}
+
+/* SAHROUD spiritual luminous sajda guides: triple thickness, raised baseline and gentle breathing glow */
+#rakat .rakatSajdaLine{
+  height:39px!important;
+  bottom:57px!important;
+  transform:none!important;
+  border:3px solid #fff0b3!important;
+  border-radius:9px!important;
+  background:linear-gradient(180deg,#fffef0 0%,#fff0ae 24%,#f4cf68 52%,#c89435 78%,#fff7d7 100%)!important;
+  box-shadow:0 0 7px 2px #fff0ad,0 0 17px 6px #ffd76a,0 0 29px 10px #b8e6bd, inset 0 0 8px #fffef0!important;
+  animation:rakatSacredGlow 2.2s ease-in-out infinite alternate;
+  z-index:5!important;
+}
+@keyframes rakatSacredGlow{
+  0%{opacity:.72;filter:brightness(.88);box-shadow:0 0 5px 1px #fff0ad,0 0 12px 4px #ffd76a,0 0 20px 6px #b8e6bd,inset 0 0 5px #fffef0}
+  100%{opacity:1;filter:brightness(1.28);box-shadow:0 0 11px 4px #fff8d8,0 0 25px 10px #ffe18a,0 0 38px 15px #b8f0c7,inset 0 0 12px #fff}
+}
+#rakat .rakatRitualText{padding-bottom:108px!important}
+#rakat .rakatDoneText{margin-bottom:102px!important}
+@media(prefers-reduced-motion:reduce){#rakat .rakatSajdaLine{animation:none!important;opacity:1;filter:brightness(1.12)}}
 </style></head><body><main class="app"><header class="head"><div class="brand">SAHROUD TASBIH<small>ذکر، تلاوت و نیایش روزانه</small></div><div class="seal">﷽</div></header>
 <section id="home" class="page active">
 <div class="homeVerseBg" aria-hidden="true"><div>أَلَا بِذِكْرِ اللَّهِ تَطْمَئِنُّ الْقُلُوبُ</div><small>آگاه باشید که با یاد خدا دل‌ها آرام می‌گیرد</small></div><section class="panel prayerPanel" id="prayerPanel"><div class="prayerHead"><span>🕌 اوقات شرعی محل شما</span><small id="prayerPlace">در انتظار تعیین موقعیت</small></div><div class="prayerTimes"><div><small>اذان صبح</small><b id="pFajr">—:—</b></div><div><small>طلوع آفتاب</small><b id="pSunrise">—:—</b></div><div><small>اذان ظهر</small><b id="pDhuhr">—:—</b></div><div><small>اذان مغرب</small><b id="pMaghrib">—:—</b></div></div></section>
