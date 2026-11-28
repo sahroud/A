@@ -609,7 +609,7 @@ function rakatRender(){
  const current=shown||1,isFinal=completed>=rakatTotal&&rakatSajdaCount>=rakatTotal*2;
  // Show tashahhud after the second rak'ah only when another full rak'ah remains;
  // the rak'ah immediately before the final one displays only its number.
- const showRitual=isFinal||(partial===0&&completed===2&&rakatTotal>=3);
+ const showRitual=isFinal||(rakatSajdaCount===4&&rakatTotal>=3);
  const display=document.querySelector('#rakat .rakatDisplay');
  if(display){
   display.classList.toggle('sajda-one',rakatRunning&&partial===1);
